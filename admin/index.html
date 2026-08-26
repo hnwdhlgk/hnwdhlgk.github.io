@@ -2,33 +2,56 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>网站管理后台</title>
-
 <style>
-*{
-  box-sizing:border-box;
-}
-
-html,body{
-  margin:0;
-  padding:0;
-  width:100%;
-  min-height:100%;
-}
-
+*{box-sizing:border-box}
 body{
+  margin:0;
   background:#f4f7fb;
   color:#183b60;
-  font-family:Arial,"Microsoft YaHei","PingFang SC",sans-serif;
+  font-family:Arial,"Microsoft YaHei",sans-serif
 }
-
-button,
-input,
+.wrap{
+  width:min(1080px,94%);
+  margin:25px auto
+}
+.card{
+  background:#fff;
+  border:1px solid #dfe7ef;
+  border-radius:16px;
+  padding:20px;
+  margin-bottom:16px
+}
+h1{margin-top:0}
+.muted{color:#71859a;font-size:13px}
+.ok{color:#137333}
+.err{color:#b3261e}
+.wait{color:#8a5a00}
+.notice{
+  padding:12px;
+  border-radius:9px;
+  background:#f6f8fa;
+  margin-top:10px;
+  white-space:pre-wrap;
+  line-height:1.6
+}
+label{
+  display:block;
+  margin-top:8px
+}
+input,textarea{
+  width:100%;
+  padding:11px;
+  border:1px solid #d6e2ed;
+  border-radius:9px;
+  margin:6px 0 12px;
+  font:inherit
+}
 textarea{
-  font:inherit;
+  min-height:90px;
+  resize:vertical
 }
-
 button{
   border:0;
   background:#0d47a1;
@@ -37,231 +60,49 @@ button{
   border-radius:9px;
   cursor:pointer;
   margin:3px;
-  font-size:15px;
-  transition:.15s;
+  font-size:15px
 }
-
-button:hover{
-  filter:brightness(.92);
-}
-
-button:active{
-  transform:translateY(1px);
-}
-
+button:hover{filter:brightness(.92)}
 button:disabled{
   opacity:.55;
-  cursor:not-allowed;
-  transform:none;
+  cursor:not-allowed
 }
-
-.danger{
-  background:#b3261e;
-}
-
-.secondary{
-  background:#607d8b;
-}
-
-.success{
-  background:#137333;
-}
-
-.wrap{
-  width:min(1080px,94%);
-  margin:25px auto;
-}
-
-.card{
-  background:#fff;
-  border:1px solid #dfe7ef;
-  border-radius:16px;
-  padding:20px;
-  margin-bottom:16px;
-  box-shadow:0 2px 8px rgba(24,59,96,.04);
-}
-
-h1{
-  margin:0 0 18px;
-}
-
-h2{
-  margin-top:0;
-}
-
-.muted{
-  color:#71859a;
-  font-size:13px;
-}
-
-.ok{
-  color:#137333;
-}
-
-.err{
-  color:#b3261e;
-}
-
-.wait{
-  color:#8a5a00;
-}
-
-.notice{
-  padding:12px;
-  border-radius:9px;
-  background:#f6f8fa;
-  margin-top:10px;
-  white-space:pre-wrap;
-  line-height:1.6;
-  word-break:break-word;
-}
-
-.notice.ok{
-  background:#edf7ed;
-}
-
-.notice.err{
-  background:#fff1f0;
-}
-
-.notice.wait{
-  background:#fff8e1;
-}
-
-label{
-  display:block;
-  margin-top:8px;
-  font-weight:600;
-}
-
-input,
-textarea{
-  width:100%;
-  padding:11px;
-  border:1px solid #d6e2ed;
-  border-radius:9px;
-  margin:6px 0 12px;
-  background:#fff;
-  color:#183b60;
-  outline:none;
-}
-
-input:focus,
-textarea:focus{
-  border-color:#0d47a1;
-  box-shadow:0 0 0 3px rgba(13,71,161,.08);
-}
-
-textarea{
-  min-height:90px;
-  resize:vertical;
-}
-
+.danger{background:#b3261e}
+.gray{background:#607d8b}
 .row{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:14px;
+  gap:14px
 }
-
 .item{
   border-top:1px solid #edf2f6;
-  padding:15px 0;
+  padding:15px 0
 }
-
-.item:first-child{
-  border-top:0;
-}
-
 .toolbar{
   display:flex;
   align-items:center;
-  flex-wrap:wrap;
-  gap:5px;
+  flex-wrap:wrap
 }
-
-.toolbar .status{
-  margin-left:8px;
-}
-
-.empty{
-  padding:20px;
-  text-align:center;
-  color:#71859a;
-  background:#f8fafc;
-  border-radius:10px;
-}
-
-.small{
-  font-size:12px;
-}
-
 .badge{
   display:inline-block;
   padding:3px 8px;
   border-radius:20px;
   background:#edf2f7;
-  color:#607d8b;
-  font-size:12px;
-  margin-left:5px;
+  font-size:12px
 }
-
-.badge.ok{
-  background:#e8f5e9;
-  color:#137333;
+.empty{
+  padding:18px;
+  text-align:center;
+  color:#71859a;
+  background:#f8fafc;
+  border-radius:9px
 }
-
-.badge.pending{
-  background:#fff8e1;
-  color:#8a5a00;
-}
-
-.badge.rejected{
-  background:#ffebee;
-  color:#b3261e;
-}
-
-hr{
-  border:0;
-  border-top:1px solid #edf2f6;
-  margin:18px 0;
-}
-
 @media(max-width:700px){
-
-  .wrap{
-    width:94%;
-    margin:15px auto;
-  }
-
-  .card{
-    padding:15px;
-    border-radius:13px;
-  }
-
-  h1{
-    font-size:24px;
-  }
-
-  h2{
-    font-size:19px;
-  }
-
-  .row{
-    grid-template-columns:1fr;
-    gap:0;
-  }
-
-  button{
-    padding:10px 14px;
-  }
-
-  .toolbar{
-    align-items:stretch;
-  }
-
-  .toolbar button{
-    flex:1;
-  }
+  .wrap{width:94%;margin:15px auto}
+  .card{padding:15px}
+  .row{grid-template-columns:1fr}
+  h1{font-size:24px}
+  button{padding:10px 14px}
 }
 </style>
 </head>
@@ -270,147 +111,89 @@ hr{
 
 <div class="wrap">
 
-  <h1>网站管理后台</h1>
+<h1>网站管理后台</h1>
 
-  <!-- 登录 -->
-  <div id="login" class="card">
+<div id="login" class="card">
 
-    <h2>GitHub 授权</h2>
+<h2>GitHub 授权</h2>
 
-    <p class="muted">
-      纯 GitHub 无服务器后台。Token 只保存在当前浏览器会话。
-    </p>
+<p class="muted">
+纯 GitHub 无服务器后台。Token 只保存在当前浏览器会话。
+</p>
 
-    <label for="user">GitHub 用户名</label>
-    <input
-      id="user"
-      value="hnwdhlgk"
-      autocomplete="username"
-      placeholder="例如：hnwdhlgk"
-    >
+<label>GitHub 用户名</label>
+<input id="user" value="hnwdhlgk" autocomplete="username">
 
-    <label for="repo">仓库</label>
-    <input
-      id="repo"
-      value="hnwdhlgk.github.io"
-      autocomplete="off"
-      placeholder="例如：hnwdhlgk.github.io"
-    >
+<label>仓库</label>
+<input id="repo" value="hnwdhlgk.github.io">
 
-    <label for="token">Fine-grained Token</label>
-    <input
-      id="token"
-      type="password"
-      placeholder="github_pat_..."
-      autocomplete="off"
-    >
+<label>Fine-grained Token</label>
+<input id="token" type="password" placeholder="github_pat_..." autocomplete="off">
 
-    <button
-      id="connectBtn"
-      type="button"
-      onclick="connectGithub()"
-    >
-      连接
-    </button>
+<button id="connectBtn" type="button" onclick="connect()">
+连接
+</button>
 
-    <button
-      id="clearTokenBtn"
-      type="button"
-      class="secondary"
-      onclick="clearSavedLogin()"
-    >
-      清除登录信息
-    </button>
+<button type="button" class="gray" onclick="clearLogin()">
+清除登录信息
+</button>
 
-    <div
-      id="msg"
-      class="notice muted"
-    >
-      后台脚本正在加载…
-    </div>
+<div id="msg" class="notice muted">
+后台脚本正在加载…
+</div>
 
-  </div>
+</div>
 
 
-  <!-- 后台 -->
-  <div
-    id="app"
-    style="display:none"
-  >
+<div id="app" style="display:none">
 
-    <!-- 顶部 -->
-    <div class="card">
+<div class="card">
 
-      <div class="toolbar">
+<div class="toolbar">
 
-        <button
-          type="button"
-          onclick="loadAll()"
-          id="refreshBtn"
-        >
-          刷新
-        </button>
+<button id="refreshBtn" type="button" onclick="loadAll()">
+刷新
+</button>
 
-        <button
-          type="button"
-          class="danger"
-          onclick="logoutGithub()"
-        >
-          退出
-        </button>
+<button type="button" class="danger" onclick="logout()">
+退出
+</button>
 
-        <span
-          id="status"
-          class="status muted"
-        >
-          已连接
-        </span>
+<span id="status" class="muted">
+等待操作
+</span>
 
-      </div>
+</div>
 
-    </div>
+</div>
 
 
-    <!-- 分类 -->
-    <div class="card">
+<div class="card">
 
-      <h2>8项筛选 / 分类管理</h2>
+<h2>8项筛选 / 分类管理</h2>
 
-      <div
-        id="cats"
-      ></div>
+<div id="cats"></div>
 
-      <button
-        type="button"
-        onclick="addCategory()"
-        id="addCategoryBtn"
-      >
-        新增分类
-      </button>
+<button id="addCatBtn" type="button" onclick="addCategory()">
+新增分类
+</button>
 
-    </div>
+</div>
 
 
-    <!-- 兼职 -->
-    <div class="card">
+<div class="card">
 
-      <h2>兼职发布 / 审核</h2>
+<h2>兼职发布 / 审核</h2>
 
-      <button
-        type="button"
-        onclick="newJob()"
-        id="newJobBtn"
-      >
-        发布兼职
-      </button>
+<button id="newJobBtn" type="button" onclick="newJob()">
+发布兼职
+</button>
 
-      <div
-        id="jobs"
-      ></div>
+<div id="jobs"></div>
 
-    </div>
+</div>
 
-  </div>
+</div>
 
 </div>
 
@@ -420,14 +203,15 @@ hr{
 
 "use strict";
 
+
 /* =========================
-   全局数据
+   全局变量
 ========================= */
 
 var G = {
-  user: "",
-  repo: "",
-  token: ""
+  user:"",
+  repo:"",
+  token:""
 };
 
 var categories = [];
@@ -447,10 +231,10 @@ function $(id){
 
 
 /* =========================
-   页面消息
+   消息
 ========================= */
 
-function msg(text, type){
+function showMsg(text,type){
 
   var el = $("msg");
 
@@ -458,15 +242,12 @@ function msg(text, type){
     return;
   }
 
-  el.innerText = text || "";
-
-  el.className = "notice " + (
-    type || "muted"
-  );
+  el.innerText = text;
+  el.className = "notice " + (type || "muted");
 }
 
 
-function stat(text, type){
+function showStatus(text,type){
 
   var el = $("status");
 
@@ -474,11 +255,8 @@ function stat(text, type){
     return;
   }
 
-  el.innerText = text || "";
-
-  el.className = "status " + (
-    type || "muted"
-  );
+  el.innerText = text;
+  el.className = type || "muted";
 }
 
 
@@ -502,10 +280,10 @@ function esc(value){
 
 
 /* =========================
-   UTF-8 Base64 编码
+   Base64 UTF-8 编码
 ========================= */
 
-function encodeBase64(text){
+function encode64(text){
 
   return btoa(
     unescape(
@@ -516,19 +294,19 @@ function encodeBase64(text){
 
 
 /* =========================
-   UTF-8 Base64 解码
+   Base64 UTF-8 解码
 ========================= */
 
-function decodeBase64(base64){
+function decode64(text){
+
+  var clean = String(text || "")
+    .replace(/\s/g,"");
+
+  if(!clean){
+    throw new Error("GitHub 返回的文件内容为空。");
+  }
 
   try{
-
-    var clean = String(base64 || "")
-      .replace(/\s/g,"");
-
-    if(!clean){
-      throw new Error("GitHub 返回的文件内容为空。");
-    }
 
     return decodeURIComponent(
       escape(
@@ -539,12 +317,10 @@ function decodeBase64(base64){
   }catch(e){
 
     throw new Error(
-      "文件内容解码失败：" +
-      (e.message || e)
+      "GitHub 文件 Base64 解码失败。"
     );
 
   }
-
 }
 
 
@@ -552,7 +328,7 @@ function decodeBase64(base64){
    GitHub API
 ========================= */
 
-function api(path, method, body){
+function api(path,method,body){
 
   if(!G.user || !G.repo || !G.token){
 
@@ -563,32 +339,22 @@ function api(path, method, body){
   }
 
   var options = {
-
-    method: method || "GET",
-
-    headers: {
-
-      "Authorization":
-        "Bearer " + G.token,
-
-      "Accept":
-        "application/vnd.github+json",
-
-      "X-GitHub-Api-Version":
-        "2022-11-28"
-
+    method:method || "GET",
+    headers:{
+      "Authorization":"Bearer " + G.token,
+      "Accept":"application/vnd.github+json",
+      "X-GitHub-Api-Version":"2022-11-28"
     }
-
   };
 
 
   if(body !== undefined){
 
-    options.headers[
-      "Content-Type"
-    ] = "application/json";
+    options.headers["Content-Type"] =
+      "application/json";
 
-    options.body = JSON.stringify(body);
+    options.body =
+      JSON.stringify(body);
 
   }
 
@@ -601,7 +367,6 @@ function api(path, method, body){
   .then(function(response){
 
     return response.text()
-
       .then(function(text){
 
         var data = null;
@@ -619,7 +384,7 @@ function api(path, method, body){
 
         if(!response.ok){
 
-          var errorMessage =
+          var message =
             data && data.message
               ? data.message
               : "HTTP " + response.status;
@@ -627,48 +392,33 @@ function api(path, method, body){
 
           if(response.status === 401){
 
-            errorMessage =
-              "401：GitHub Token 无效、过期或输入错误。";
+            message =
+              "401：Token 无效、过期或输入错误。";
 
-          }
+          }else if(response.status === 403){
 
-          else if(response.status === 403){
+            message =
+              "403：Token 没有足够权限。\n\n" +
+              "请在 GitHub Fine-grained Token 中确认：\n" +
+              "Repository access → 选择 hnwdhlgk.github.io\n" +
+              "Permissions → Contents → Read and write";
 
-            errorMessage =
-              "403：GitHub 拒绝访问。\n\n" +
-              "请确认 Fine-grained Token 已授权该仓库，并开启：\n" +
-              "Repository permissions → Contents → Read and write";
+          }else if(response.status === 404){
 
-          }
-
-          else if(response.status === 404){
-
-            errorMessage =
-              "404：仓库不存在，或者 Token 没有权限访问该仓库。\n\n" +
+            message =
+              "404：仓库不存在，或 Token 无权访问。\n\n" +
               "当前仓库：\n" +
               G.user + "/" + G.repo;
 
-          }
+          }else if(response.status === 409){
 
-          else if(response.status === 409){
-
-            errorMessage =
-              "409：GitHub 文件版本冲突，请先刷新后台后再保存。";
-
-          }
-
-          else if(response.status === 422){
-
-            errorMessage =
-              "422：GitHub 请求参数错误。\n\n" +
-              (data && data.message
-                ? data.message
-                : "");
+            message =
+              "409：文件版本发生冲突，请先点击刷新。";
 
           }
 
 
-          throw new Error(errorMessage);
+          throw new Error(message);
 
         }
 
@@ -688,10 +438,7 @@ function api(path, method, body){
 
       throw new Error(
         "无法连接 GitHub API。\n\n" +
-        "请检查：\n" +
-        "1. 当前网络是否正常\n" +
-        "2. 浏览器是否拦截 GitHub API\n" +
-        "3. 是否可以打开 api.github.com"
+        "请检查当前网络以及浏览器是否可以访问 api.github.com。"
       );
 
     }
@@ -704,129 +451,90 @@ function api(path, method, body){
 
 
 /* =========================
-   读取 GitHub 文件
+   读取 JSON
 ========================= */
 
 function readFile(path){
 
-  var safeUser =
-    encodeURIComponent(G.user);
-
-  var safeRepo =
-    encodeURIComponent(G.repo);
-
-  var safePath =
-    path
-      .split("/")
-      .map(function(part){
-        return encodeURIComponent(part);
-      })
-      .join("/");
-
-
-  return api(
+  var url =
     "/repos/" +
-    safeUser +
+    encodeURIComponent(G.user) +
     "/" +
-    safeRepo +
+    encodeURIComponent(G.repo) +
     "/contents/" +
-    safePath +
-    "?ref=main"
-  )
-
-  .then(function(result){
-
-    if(!result){
-
-      throw new Error(
-        "GitHub 没有返回文件数据：" +
-        path
-      );
-
-    }
+    path +
+    "?ref=main";
 
 
-    if(!result.content){
+  return api(url)
 
-      throw new Error(
-        "读取文件失败：\n" +
-        path +
-        "\n\nGitHub 没有返回 content。"
-      );
+    .then(function(result){
 
-    }
+      if(!result){
 
+        throw new Error(
+          "GitHub 没有返回数据：" + path
+        );
 
-    var text =
-      decodeBase64(result.content);
+      }
 
 
-    if(!text.trim()){
+      if(!result.content){
 
-      throw new Error(
-        "文件为空：\n" +
-        path
-      );
+        throw new Error(
+          "读取失败：" +
+          path +
+          "\nGitHub 没有返回文件 content。"
+        );
 
-    }
-
-
-    var data;
-
-    try{
-
-      data = JSON.parse(text);
-
-    }catch(e){
-
-      throw new Error(
-        "JSON 文件格式错误：\n" +
-        path +
-        "\n\n" +
-        (e.message || e) +
-        "\n\n文件开头内容：\n" +
-        text.substring(0,300)
-      );
-
-    }
+      }
 
 
-    return {
+      var text =
+        decode64(result.content);
 
-      data: data,
 
-      sha: result.sha
+      try{
 
-    };
+        return {
+          data:JSON.parse(text),
+          sha:result.sha
+        };
 
-  });
+      }catch(e){
+
+        throw new Error(
+          "JSON 格式错误：\n" +
+          path +
+          "\n\n" +
+          e.message
+        );
+
+      }
+
+    });
 
 }
 
 
 /* =========================
-   写入 GitHub 文件
+   保存 JSON
 ========================= */
 
-function writeFile(
-  path,
-  data,
-  sha,
-  message
-){
+function writeFile(path,data,sha,message){
 
   if(!sha){
 
     return Promise.reject(
       new Error(
-        "缺少文件 SHA，请先点击“刷新”。"
+        "文件 SHA 不存在，请先刷新数据。"
       )
     );
 
   }
 
 
-  var text =
+  var content =
     JSON.stringify(
       data,
       null,
@@ -834,74 +542,262 @@ function writeFile(
     ) + "\n";
 
 
-  return api(
+  var body = {
+
+    message:message || "更新网站数据",
+
+    content:encode64(content),
+
+    sha:sha,
+
+    branch:"main"
+
+  };
+
+
+  var url =
     "/repos/" +
     encodeURIComponent(G.user) +
     "/" +
     encodeURIComponent(G.repo) +
     "/contents/" +
-    path,
+    path;
 
+
+  return api(
+    url,
     "PUT",
-
-    {
-
-      message:
-        message || "更新网站数据",
-
-      content:
-        encodeBase64(text),
-
-      sha:
-        sha,
-
-      branch:
-        "main"
-
-    }
-
+    body
   );
 
 }
 
 
 /* =========================
-   保存登录
+   连接 GitHub
 ========================= */
 
-function saveLogin(){
+function doConnect(){
 
-  try{
+  var button =
+    $("connectBtn");
 
-    sessionStorage.setItem(
-      "gh_user",
-      G.user
+
+  var user =
+    $("user").value.trim();
+
+  var repo =
+    $("repo").value.trim();
+
+  var token =
+    $("token").value.trim();
+
+
+  if(!user){
+
+    showMsg(
+      "请输入 GitHub 用户名。",
+      "err"
     );
 
-    sessionStorage.setItem(
-      "gh_repo",
-      G.repo
-    );
-
-    sessionStorage.setItem(
-      "gh_token",
-      G.token
-    );
-
-  }catch(e){
-
-    console.warn(
-      "sessionStorage 不可用",
-      e
-    );
+    return;
 
   }
+
+
+  if(!repo){
+
+    showMsg(
+      "请输入仓库名称。",
+      "err"
+    );
+
+    return;
+
+  }
+
+
+  if(!token){
+
+    showMsg(
+      "请输入 Fine-grained Token。",
+      "err"
+    );
+
+    return;
+
+  }
+
+
+  G.user = user;
+  G.repo = repo;
+  G.token = token;
+
+
+  button.disabled = true;
+  button.innerText = "正在连接…";
+
+
+  showMsg(
+    "① 正在验证 GitHub Token…",
+    "wait"
+  );
+
+
+  api("/user")
+
+  .then(function(){
+
+    showMsg(
+      "② Token 验证成功，正在检查仓库…",
+      "wait"
+    );
+
+
+    return api(
+      "/repos/" +
+      encodeURIComponent(user) +
+      "/" +
+      encodeURIComponent(repo)
+    );
+
+  })
+
+  .then(function(){
+
+    showMsg(
+      "③ 仓库访问成功，正在读取分类…",
+      "wait"
+    );
+
+
+    return readFile(
+      "data/categories.json"
+    );
+
+  })
+
+  .then(function(result){
+
+    categories =
+      Array.isArray(result.data)
+        ? result.data
+        : [];
+
+    catSha =
+      result.sha;
+
+
+    showMsg(
+      "④ 分类读取成功，正在读取兼职数据…",
+      "wait"
+    );
+
+
+    return readFile(
+      "data/jobs.json"
+    );
+
+  })
+
+  .then(function(result){
+
+    jobs =
+      Array.isArray(result.data)
+        ? result.data
+        : [];
+
+    jobSha =
+      result.sha;
+
+
+    try{
+
+      sessionStorage.setItem(
+        "gh_user",
+        user
+      );
+
+      sessionStorage.setItem(
+        "gh_repo",
+        repo
+      );
+
+      sessionStorage.setItem(
+        "gh_token",
+        token
+      );
+
+    }catch(e){}
+
+
+    render();
+
+
+    $("login").style.display =
+      "none";
+
+    $("app").style.display =
+      "block";
+
+
+    showStatus(
+      "连接成功",
+      "ok"
+    );
+
+  })
+
+  .catch(function(error){
+
+    console.error(
+      "GitHub Error:",
+      error
+    );
+
+
+    showMsg(
+      "连接失败：\n\n" +
+      (
+        error && error.message
+          ? error.message
+          : String(error)
+      ),
+      "err"
+    );
+
+  })
+
+  .finally(function(){
+
+    button.disabled = false;
+    button.innerText = "连接";
+
+  });
 
 }
 
 
 /* =========================
-   恢复登录
+   兼容旧代码
+========================= */
+
+window.connect = function(){
+
+  doConnect();
+
+};
+
+
+window.connectGithub = function(){
+
+  doConnect();
+
+};
+
+
+/* =========================
+   自动恢复
 ========================= */
 
 function restoreLogin(){
@@ -928,28 +824,21 @@ function restoreLogin(){
       $("repo").value = repo;
       $("token").value = token;
 
-      msg(
-        "检测到上次登录信息，正在验证 GitHub 连接…",
+      showMsg(
+        "正在验证上次登录信息…",
         "wait"
       );
 
-      connectGithub(true);
+      doConnect();
 
       return;
 
     }
 
-  }catch(e){
-
-    console.warn(
-      "恢复登录失败",
-      e
-    );
-
-  }
+  }catch(e){}
 
 
-  msg(
+  showMsg(
     "后台脚本已加载，请输入 Token 后点击“连接”。",
     "muted"
   );
@@ -961,8 +850,7 @@ function restoreLogin(){
    清除登录
 ========================= */
 
-window.clearSavedLogin =
-function(){
+window.clearLogin = function(){
 
   try{
 
@@ -975,8 +863,8 @@ function(){
 
   $("token").value = "";
 
-  msg(
-    "已清除保存的登录信息。",
+  showMsg(
+    "已清除登录信息。",
     "muted"
   );
 
@@ -984,259 +872,28 @@ function(){
 
 
 /* =========================
-   GitHub 连接
+   刷新
 ========================= */
 
-window.connectGithub =
-function(auto){
-
-  var button =
-    $("connectBtn");
-
-
-  var user =
-    $("user").value.trim();
-
-  var repo =
-    $("repo").value.trim();
-
-  var token =
-    $("token").value.trim();
-
-
-  if(!user){
-
-    msg(
-      "请输入 GitHub 用户名。",
-      "err"
-    );
-
-    return;
-
-  }
-
-
-  if(!repo){
-
-    msg(
-      "请输入仓库名称。",
-      "err"
-    );
-
-    return;
-
-  }
-
-
-  if(!token){
-
-    msg(
-      "请输入 Fine-grained Token。",
-      "err"
-    );
-
-    return;
-
-  }
-
-
-  G = {
-
-    user:user,
-
-    repo:repo,
-
-    token:token
-
-  };
-
-
-  button.disabled = true;
-
-  button.innerText =
-    "正在连接…";
-
-
-  msg(
-    auto
-      ? "正在验证保存的 GitHub 登录信息…"
-      : "正在连接 GitHub，请稍候…",
-    "wait"
-  );
-
-
-  /*
-    第一步：
-    验证 Token
-  */
-
-  api("/user")
-
-  .then(function(){
-
-    msg(
-      "Token 验证成功，正在检查仓库…",
-      "wait"
-    );
-
-
-    /*
-      第二步：
-      检查仓库
-    */
-
-    return api(
-      "/repos/" +
-      encodeURIComponent(user) +
-      "/" +
-      encodeURIComponent(repo)
-    );
-
-  })
-
-  .then(function(){
-
-    msg(
-      "仓库访问成功，正在读取分类数据…",
-      "wait"
-    );
-
-
-    /*
-      第三步：
-      categories.json
-    */
-
-    return readFile(
-      "data/categories.json"
-    );
-
-  })
-
-  .then(function(result){
-
-    categories =
-      Array.isArray(result.data)
-        ? result.data
-        : [];
-
-
-    catSha =
-      result.sha;
-
-
-    msg(
-      "分类数据读取成功，正在读取兼职数据…",
-      "wait"
-    );
-
-
-    /*
-      第四步：
-      jobs.json
-    */
-
-    return readFile(
-      "data/jobs.json"
-    );
-
-  })
-
-  .then(function(result){
-
-    jobs =
-      Array.isArray(result.data)
-        ? result.data
-        : [];
-
-
-    jobSha =
-      result.sha;
-
-
-    saveLogin();
-
-
-    $("login").style.display =
-      "none";
-
-    $("app").style.display =
-      "block";
-
-
-    render();
-
-
-    stat(
-      "GitHub 连接成功",
-      "ok"
-    );
-
-  })
-
-  .catch(function(error){
-
-    console.error(
-      "GitHub 连接失败：",
-      error
-    );
-
-
-    msg(
-      "连接失败：\n\n" +
-      (
-        error && error.message
-          ? error.message
-          : error
-      ),
-      "err"
-    );
-
-  })
-
-  .finally(function(){
-
-    button.disabled =
-      false;
-
-    button.innerText =
-      "连接";
-
-  });
-
-};
-
-
-/* =========================
-   刷新全部数据
-========================= */
-
-window.loadAll =
-function(){
+window.loadAll = function(){
 
   var button =
     $("refreshBtn");
 
-
-  button.disabled =
-    true;
+  button.disabled = true;
 
 
-  stat(
-    "正在同步 GitHub 数据…",
+  showStatus(
+    "正在同步…",
     "wait"
   );
 
 
   Promise.all([
 
-    readFile(
-      "data/categories.json"
-    ),
+    readFile("data/categories.json"),
 
-    readFile(
-      "data/jobs.json"
-    )
+    readFile("data/jobs.json")
 
   ])
 
@@ -1247,7 +904,6 @@ function(){
         ? result[0].data
         : [];
 
-
     catSha =
       result[0].sha;
 
@@ -1257,7 +913,6 @@ function(){
         ? result[1].data
         : [];
 
-
     jobSha =
       result[1].sha;
 
@@ -1265,7 +920,7 @@ function(){
     render();
 
 
-    stat(
+    showStatus(
       "数据已同步",
       "ok"
     );
@@ -1274,18 +929,9 @@ function(){
 
   .catch(function(error){
 
-    console.error(
-      "同步失败：",
-      error
-    );
-
-
-    stat(
+    showStatus(
       "同步失败：" +
-      (
-        error.message ||
-        error
-      ),
+      error.message,
       "err"
     );
 
@@ -1293,8 +939,7 @@ function(){
 
   .finally(function(){
 
-    button.disabled =
-      false;
+    button.disabled = false;
 
   });
 
@@ -1305,22 +950,11 @@ function(){
    退出
 ========================= */
 
-window.logoutGithub =
-function(){
+window.logout = function(){
 
   try{
 
-    sessionStorage.removeItem(
-      "gh_user"
-    );
-
-    sessionStorage.removeItem(
-      "gh_repo"
-    );
-
-    sessionStorage.removeItem(
-      "gh_token"
-    );
+    sessionStorage.clear();
 
   }catch(e){}
 
@@ -1330,7 +964,6 @@ function(){
     repo:"",
     token:""
   };
-
 
   categories = [];
   jobs = [];
@@ -1348,7 +981,7 @@ function(){
     "block";
 
 
-  msg(
+  showMsg(
     "已退出，请重新输入 Token。",
     "muted"
   );
@@ -1360,14 +993,10 @@ function(){
    新增分类
 ========================= */
 
-window.addCategory =
-function(){
+window.addCategory = function(){
 
   var name =
-    prompt(
-      "请输入分类名称"
-    );
-
+    prompt("分类名称");
 
   if(!name){
     return;
@@ -1376,11 +1005,10 @@ function(){
 
   var slug =
     prompt(
-      "请输入 Slug",
+      "Slug",
       "category-" +
       (categories.length + 1)
     );
-
 
   if(!slug){
     return;
@@ -1405,41 +1033,34 @@ function(){
   });
 
 
-  stat(
-    "正在保存新分类…",
+  var button =
+    $("addCatBtn");
+
+  button.disabled = true;
+
+
+  showStatus(
+    "正在保存分类…",
     "wait"
   );
 
 
-  var button =
-    $("addCategoryBtn");
-
-
-  button.disabled =
-    true;
-
-
   writeFile(
-
     "data/categories.json",
-
     categories,
-
     catSha,
-
     "新增分类"
-
   )
 
   .then(function(){
 
-    return loadAll();
+    return refreshData();
 
   })
 
   .catch(function(error){
 
-    stat(
+    showStatus(
       "新增失败：" +
       error.message,
       "err"
@@ -1449,8 +1070,7 @@ function(){
 
   .finally(function(){
 
-    button.disabled =
-      false;
+    button.disabled = false;
 
   });
 
@@ -1461,14 +1081,10 @@ function(){
    发布兼职
 ========================= */
 
-window.newJob =
-function(){
+window.newJob = function(){
 
   var title =
-    prompt(
-      "请输入兼职标题"
-    );
-
+    prompt("标题");
 
   if(!title){
     return;
@@ -1476,72 +1092,53 @@ function(){
 
 
   var description =
-    prompt(
-      "请输入兼职描述",
-      ""
-    ) || "";
+    prompt("描述","") || "";
 
 
-  var job = {
+  jobs.unshift({
 
-    id:
-      String(
-        Date.now()
-      ),
+    id:String(Date.now()),
 
-    title:
-      title,
+    title:title,
 
-    description:
-      description,
+    description:description,
 
-    status:
-      "approved",
+    status:"approved",
 
     created_at:
       new Date().toISOString()
 
-  };
-
-
-  jobs.unshift(job);
-
-
-  stat(
-    "正在发布兼职…",
-    "wait"
-  );
+  });
 
 
   var button =
     $("newJobBtn");
 
+  button.disabled = true;
 
-  button.disabled =
-    true;
+
+  showStatus(
+    "正在发布兼职…",
+    "wait"
+  );
 
 
   writeFile(
-
     "data/jobs.json",
-
     jobs,
-
     jobSha,
-
     "发布兼职"
-
   )
 
   .then(function(){
 
-    return loadAll();
+    return refreshData();
 
   })
 
   .catch(function(error){
 
-    stat(
+    showStatus(
       "发布失败：" +
       error.message,
       "err"
@@ -1551,8 +1148,7 @@ function(){
 
   .finally(function(){
 
-    button.disabled =
-      false;
+    button.disabled = false;
 
   });
 
@@ -1563,46 +1159,37 @@ function(){
    保存分类
 ========================= */
 
-window.saveCat =
-function(i){
+window.saveCat = function(i){
 
-  var c =
+  var item =
     categories[i];
 
-
-  if(!c){
-
-    stat(
-      "分类不存在。",
-      "err"
-    );
-
+  if(!item){
     return;
-
   }
 
 
-  var name =
+  item.name =
     $("n" + i).value.trim();
 
-  var slug =
+  item.slug =
     $("s" + i).value.trim();
 
-  var description =
+  item.description =
     $("d" + i).value;
 
-  var image =
+  item.image =
     $("im" + i).value.trim();
 
-  var sort =
+  item.sort_order =
     Number(
       $("o" + i).value
     ) || i + 1;
 
 
-  if(!name){
+  if(!item.name){
 
-    stat(
+    showStatus(
       "分类名称不能为空。",
       "err"
     );
@@ -1612,9 +1199,9 @@ function(i){
   }
 
 
-  if(!slug){
+  if(!item.slug){
 
-    stat(
+    showStatus(
       "Slug 不能为空。",
       "err"
     );
@@ -1624,81 +1211,32 @@ function(i){
   }
 
 
-  c.name =
-    name;
-
-  c.slug =
-    slug;
-
-  c.description =
-    description;
-
-  c.image =
-    image;
-
-  c.sort_order =
-    sort;
-
-
-  stat(
+  showStatus(
     "正在保存分类…",
     "wait"
   );
 
 
-  var buttons =
-    document.querySelectorAll(
-      "#cats button"
-    );
-
-
-  if(buttons[i]){
-
-    buttons[i].disabled =
-      true;
-
-  }
-
-
   writeFile(
-
     "data/categories.json",
-
     categories,
-
     catSha,
-
     "更新分类"
-
   )
 
   .then(function(){
 
-    return loadAll();
+    return refreshData();
 
   })
 
   .catch(function(error){
 
-    stat(
+    showStatus(
       "保存失败：" +
       error.message,
       "err"
     );
-
-  })
-
-  .finally(function(){
-
-    buttons =
-      document.querySelectorAll(
-        "#cats button"
-      );
-
-    if(buttons[i]){
-      buttons[i].disabled =
-        false;
-    }
 
   });
 
@@ -1709,14 +1247,12 @@ function(i){
    删除分类
 ========================= */
 
-window.deleteCategory =
-function(i){
+window.deleteCategory = function(i){
 
-  var c =
+  var item =
     categories[i];
 
-
-  if(!c){
+  if(!item){
     return;
   }
 
@@ -1724,7 +1260,7 @@ function(i){
   if(
     !confirm(
       "确定删除分类“" +
-      c.name +
+      item.name +
       "”吗？"
     )
   ){
@@ -1734,49 +1270,41 @@ function(i){
   }
 
 
-  categories.splice(
-    i,
-    1
-  );
+  categories.splice(i,1);
 
 
   categories.forEach(
-    function(item,index){
+    function(c,index){
 
-      item.sort_order =
+      c.sort_order =
         index + 1;
 
     }
   );
 
 
-  stat(
+  showStatus(
     "正在删除分类…",
     "wait"
   );
 
 
   writeFile(
-
     "data/categories.json",
-
     categories,
-
     catSha,
-
     "删除分类"
-
   )
 
   .then(function(){
 
-    return loadAll();
+    return refreshData();
 
   })
 
   .catch(function(error){
 
-    stat(
+    showStatus(
       "删除失败：" +
       error.message,
       "err"
@@ -1788,11 +1316,57 @@ function(i){
 
 
 /* =========================
-   渲染页面
+   刷新数据
 ========================= */
 
-window.render =
-function(){
+function refreshData(){
+
+  return Promise.all([
+
+    readFile("data/categories.json"),
+
+    readFile("data/jobs.json")
+
+  ])
+
+  .then(function(result){
+
+    categories =
+      Array.isArray(result[0].data)
+        ? result[0].data
+        : [];
+
+    catSha =
+      result[0].sha;
+
+
+    jobs =
+      Array.isArray(result[1].data)
+        ? result[1].data
+        : [];
+
+    jobSha =
+      result[1].sha;
+
+
+    render();
+
+
+    showStatus(
+      "操作成功，数据已同步",
+      "ok"
+    );
+
+  });
+
+}
+
+
+/* =========================
+   渲染
+========================= */
+
+function render(){
 
   var cats =
     $("cats");
@@ -1808,123 +1382,79 @@ function(){
   }else{
 
     cats.innerHTML =
-      categories.map(
-        function(c,i){
+      categories.map(function(c,i){
 
-          return (
+        return (
 
-            '<div class="item">' +
+          '<div class="item">' +
 
-              '<div class="row">' +
+          '<div class="row">' +
 
-                '<div>' +
+          '<div>' +
 
-                  '<label>名称</label>' +
+          '<label>名称</label>' +
 
-                  '<input ' +
-                    'id="n' + i + '" ' +
-                    'value="' +
-                    esc(c.name) +
-                    '"' +
-                  '>' +
+          '<input id="n' + i +
+          '" value="' +
+          esc(c.name) +
+          '">' +
 
-                  '<label>Slug</label>' +
+          '<label>Slug</label>' +
 
-                  '<input ' +
-                    'id="s' + i + '" ' +
-                    'value="' +
-                    esc(c.slug) +
-                    '"' +
-                  '>' +
+          '<input id="s' + i +
+          '" value="' +
+          esc(c.slug) +
+          '">' +
 
-                  '<label>描述</label>' +
+          '<label>描述</label>' +
 
-                  '<textarea ' +
-                    'id="d' + i + '">' +
-                    esc(
-                      c.description || ""
-                    ) +
-                  '</textarea>' +
+          '<textarea id="d' + i +
+          '">' +
+          esc(c.description || "") +
+          '</textarea>' +
 
-                '</div>' +
+          '</div>' +
 
-                '<div>' +
+          '<div>' +
 
-                  '<label>图片路径</label>' +
+          '<label>图片路径</label>' +
 
-                  '<input ' +
-                    'id="im' + i + '" ' +
-                    'value="' +
-                    esc(
-                      c.image || ""
-                    ) +
-                    '"' +
-                  '>' +
+          '<input id="im' + i +
+          '" value="' +
+          esc(c.image || "") +
+          '">' +
 
-                  '<label>排序</label>' +
+          '<label>排序</label>' +
 
-                  '<input ' +
-                    'id="o' + i + '" ' +
-                    'type="number" ' +
-                    'value="' +
-                    (
-                      c.sort_order ||
-                      i + 1
-                    ) +
-                    '"' +
-                  '>' +
+          '<input id="o' + i +
+          '" type="number" value="' +
+          (c.sort_order || i + 1) +
+          '">' +
 
-                  '<label>状态</label>' +
+          '</div>' +
 
-                  '<div>' +
+          '</div>' +
 
-                    '<span class="badge ' +
-                    (
-                      c.enabled === false
-                        ? ""
-                        : "ok"
-                    ) +
-                    '">' +
+          '<button type="button" ' +
+          'onclick="saveCat(' +
+          i +
+          ')">' +
+          '保存' +
+          '</button>' +
 
-                    (
-                      c.enabled === false
-                        ? "关闭"
-                        : "启用"
-                    ) +
+          '<button type="button" ' +
+          'class="danger" ' +
+          'onclick="deleteCategory(' +
+          i +
+          ')">' +
+          '删除' +
+          '</button>' +
 
-                    '</span>' +
+          '</div>'
 
-                  '</div>' +
+        );
 
-                '</div>' +
-
-              '</div>' +
-
-              '<button ' +
-                'type="button" ' +
-                'onclick="saveCat(' +
-                i +
-                ')"' +
-              '>' +
-                '保存' +
-              '</button>' +
-
-              '<button ' +
-                'type="button" ' +
-                'class="danger" ' +
-                'onclick="deleteCategory(' +
-                i +
-                ')"' +
-              '>' +
-                '删除' +
-              '</button>' +
-
-            '</div>'
-
-          );
-
-        }
-      ).join("");
+      }).join("");
 
   }
 
@@ -1936,130 +1466,43 @@ function(){
   if(!jobs.length){
 
     jobsEl.innerHTML =
-      '<div class="empty">' +
-      '暂无兼职' +
-      '</div>';
+      '<div class="empty">暂无兼职</div>';
 
   }else{
 
     jobsEl.innerHTML =
-      jobs.map(
-        function(j){
+      jobs.map(function(j){
 
-          var status =
-            j.status ||
-            "pending";
+        return (
 
+          '<div class="item">' +
 
-          var badgeClass =
-            status === "approved"
-              ? "ok"
-              : status === "rejected"
-                ? "rejected"
-                : "pending";
+          '<b>' +
+          esc(j.title) +
+          '</b> ' +
 
+          '<span class="badge">' +
+          esc(j.status || "pending") +
+          '</span>' +
 
-          return (
+          '<p>' +
+          esc(j.description || "") +
+          '</p>' +
 
-            '<div class="item">' +
+          '<div class="muted">' +
+          'ID：' +
+          esc(j.id || "") +
+          '</div>' +
 
-              '<b>' +
-                esc(j.title) +
-              '</b>' +
+          '</div>'
 
-              '<span class="badge ' +
-                badgeClass +
-              '">' +
-                esc(status) +
-              '</span>' +
-
-              '<p>' +
-                esc(
-                  j.description || ""
-                ) +
-              '</p>' +
-
-              '<div class="muted small">' +
-                'ID：' +
-                esc(j.id || "") +
-                '<br>' +
-                '发布时间：' +
-                esc(j.created_at || "") +
-              '</div>' +
-
-            '</div>'
-
-          );
-
-        }
-      ).join("");
-
-  }
-
-};
-
-
-/* =========================
-   全局 JS 错误
-========================= */
-
-window.addEventListener(
-  "error",
-  function(event){
-
-    console.error(
-      "页面 JavaScript 错误：",
-      event.error || event.message
-    );
-
-
-    try{
-
-      if($("login").style.display !== "none"){
-
-        msg(
-          "页面脚本错误：\n" +
-          (
-            event.message ||
-            "未知错误"
-          ),
-          "err"
         );
 
-      }else{
-
-        stat(
-          "页面脚本错误：" +
-          (
-            event.message ||
-            "未知错误"
-          ),
-          "err"
-        );
-
-      }
-
-    }catch(e){}
+      }).join("");
 
   }
-);
 
-
-/* =========================
-   Promise 错误
-========================= */
-
-window.addEventListener(
-  "unhandledrejection",
-  function(event){
-
-    console.error(
-      "未处理 Promise 错误：",
-      event.reason
-    );
-
-  }
-);
+}
 
 
 /* =========================
@@ -2071,6 +1514,20 @@ window.addEventListener(
   function(){
 
     restoreLogin();
+
+  }
+);
+
+
+/* =========================
+   JS 错误显示
+========================= */
+
+window.addEventListener(
+  "error",
+  function(e){
+
+    console.error(e.error || e.message);
 
   }
 );
