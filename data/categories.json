@@ -1,9 +1,9 @@
 [
   {
     "slug": "campus",
-    "name": "小鹿",
+    "name": "校园兼职",
     "description": "校园内适合学生的兼职",
-    "image": "https://t.me/HiKojw/7199",
+    "image": "",
     "enabled": true,
     "sort_order": 1
   },
