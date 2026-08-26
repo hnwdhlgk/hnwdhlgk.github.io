@@ -68,6 +68,17 @@ button:disabled{opacity:.55;cursor:not-allowed}
   <div id="cats"></div>
 </div>
 <div class="card">
+  <h2>站点配置</h2>
+  <p class="muted">普通用户发布所需的「发布令牌」。此令牌会随网站公开，请使用<b>仅授权 data/ 和 images/ 路径</b>的低权限 Fine-grained Token（Contents: Read and write），不要授予其他仓库权限。</p>
+  <label>发布令牌（Fine-grained Token）</label>
+  <input id="pubToken" type="password" placeholder="github_pat_..." autocomplete="off">
+  <div class="ops">
+    <button type="button" onclick="saveConfig()">保存令牌</button>
+    <button type="button" class="ghost" onclick="loadConfig()">读取当前配置</button>
+  </div>
+  <div id="cfgMsg" class="muted"></div>
+</div>
+<div class="card">
   <h2>兼职发布 / 审核</h2>
   <p class="muted">审核（通过 / 拒绝 / 下架）为超级管理员专属操作，普通用户后台无此权限。</p>
   <button type="button" onclick="toggleJobForm()">发布兼职</button>
@@ -226,6 +237,23 @@ window.loadAll=function(){
     jobs=f.data;render();stat('数据已同步','ok');
   }).catch(function(e){stat('同步失败：'+e.message,'err')});
 }
+function cfgMsg(t,c){var el=$('cfgMsg');if(el){el.innerText=t;el.className='muted'+(c==='ok'?' ok':c==='err'?' err':'')}}
+window.loadConfig=function(){
+  readFile('data/config.json').then(function(f){
+    var c=f.data||{};
+    $('pubToken').value=c.publish_token||'';
+    cfgMsg('当前配置：'+(c.publish_token?'已设置发布令牌（'+c.publish_token.slice(0,12)+'…）':'发布令牌为空'),c.publish_token?'ok':'wait');
+  }).catch(function(e){cfgMsg('读取失败：'+e.message,'err')});
+};
+window.saveConfig=function(){
+  if(busy){stat('正在保存中，请稍候…','wait');return}
+  var t=$('pubToken').value.trim();
+  busy=true;stat('正在保存站点配置…','wait');
+  writeFile('data/config.json',{publish_token:t},'更新站点发布令牌')
+    .then(function(){cfgMsg('发布令牌已保存'+(t?'（'+t.slice(0,12)+'…）':''),'ok');return loadAll()})
+    .catch(function(e){cfgMsg('保存失败：'+e.message,'err')})
+    .then(function(){busy=false});
+};
 window.logoutGithub=function(){
   try{sessionStorage.removeItem('gh_token')}catch(e){}
   G={user:'',repo:'',token:'',branch:'main'};
