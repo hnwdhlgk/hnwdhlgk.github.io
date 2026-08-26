@@ -8,40 +8,228 @@
 <style>
 :root{--blue:#0d47a1;--text:#183b60;--muted:#71859a;--bg:#f4f7fb;--line:#e0e8f0}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Microsoft YaHei",sans-serif}
-.wrap{width:min(1120px,94%);margin:auto}.hero{padding:40px 0 22px}.hero h1{font-size:clamp(30px,6vw,48px);margin:0}.hero p{color:var(--muted)}
-.title{display:flex;justify-content:space-between;align-items:end}.title h2{font-size:22px}.count{color:var(--muted);font-size:13px}
-.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.filter{padding:0;border:1px solid var(--line);border-radius:16px;background:#fff;overflow:hidden;text-align:left;cursor:pointer;box-shadow:0 5px 18px #143c6410}.filter.active{outline:3px solid #d6e7ff}.filter img{width:100%;height:110px;object-fit:cover}.body{padding:12px}.body h3{margin:0 0 6px}.body p{color:var(--muted);font-size:13px;min-height:35px;line-height:1.45}.bar{height:7px;background:#e9eff5;border-radius:8px}.bar i{display:block;height:100%;background:var(--blue);border-radius:8px}
+.wrap{width:min(1120px,94%);margin:auto}
+header{display:flex;justify-content:space-between;align-items:center;padding:16px 0;gap:12px}
+.logo{font-weight:bold;font-size:20px;color:var(--blue);text-decoration:none;cursor:pointer}
+.auth{white-space:nowrap}.auth button{border:0;background:var(--blue);color:#fff;padding:9px 15px;border-radius:9px;cursor:pointer;font-size:14px;margin-left:6px}
+.auth button.ghost{background:#e6ecf3;color:var(--text)}.auth .who{color:var(--muted);font-size:13px;margin-right:6px}
+.hero{padding:10px 0 22px}.hero h1{font-size:clamp(28px,5vw,42px);margin:0}.hero p{color:var(--muted)}
+.title{display:flex;justify-content:space-between;align-items:end}.title h2{font-size:22px;margin:0}.count{color:var(--muted);font-size:13px}
+.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.filter{padding:0;border:1px solid var(--line);border-radius:16px;background:#fff;overflow:hidden;text-align:left;cursor:pointer;box-shadow:0 5px 18px #143c6410;font:inherit}.filter.active{outline:3px solid #d6e7ff}.filter img{width:100%;height:110px;object-fit:cover}.body{padding:12px}.body h3{margin:0 0 6px}.body p{color:var(--muted);font-size:13px;min-height:35px;line-height:1.45}.bar{height:7px;background:#e9eff5;border-radius:8px}.bar i{display:block;height:100%;background:var(--blue);border-radius:8px}
 .jobs{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.job{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;overflow:hidden}.job-img{width:100%;height:160px;object-fit:cover;border-radius:10px;margin:0 0 12px;display:block;background:#eef2f7}.tag{color:var(--blue);background:#eef5ff;border-radius:20px;padding:4px 9px;font-size:12px}.meta{color:var(--muted);font-size:13px}.empty{grid-column:1/-1;background:#fff;padding:45px;text-align:center;color:var(--muted);border-radius:16px}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.jtag{background:#eef5ff;color:var(--blue);border-radius:20px;padding:3px 10px;font-size:12px}.salary{color:#0d47a1;font-weight:bold;margin:6px 0}
+.modal-mask{position:fixed;inset:0;background:#143c6470;display:none;align-items:center;justify-content:center;z-index:50}.modal{background:#fff;border-radius:16px;padding:22px;width:min(420px,92%);max-height:90vh;overflow:auto}.modal h3{margin-top:0}.modal label{display:block;margin-top:6px;font-size:14px}.modal input{width:100%;padding:11px;border:1px solid #d6e2ed;border-radius:9px;margin:6px 0 12px;font:inherit}.modal button{border:0;background:var(--blue);color:#fff;padding:11px 18px;border-radius:9px;cursor:pointer;margin:3px;font-size:15px}.modal .close{float:right;background:#e6ecf3;color:var(--text)}.modal .err{color:#b3261e;font-size:13px;min-height:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px}.card h2{margin-top:0}
+.card label{display:block;margin-top:8px;font-size:14px}.card input,.card textarea,.card select{width:100%;padding:11px;border:1px solid #d6e2ed;border-radius:9px;margin:6px 0 12px;font:inherit;background:#fff}.card textarea{min-height:80px}.card input[type=file]{padding:8px;border:1px dashed #c9d8e6;background:#fafcfe}
+.card button{border:0;background:var(--blue);color:#fff;padding:10px 16px;border-radius:9px;cursor:pointer;margin:3px;font-size:14px}.card button.danger{background:#b3261e}.card button.ghost{background:#5f6b7a}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.preview-img{max-width:240px;max-height:150px;object-fit:cover;border-radius:9px;display:block;margin:6px 0}
+.mjob{border-top:1px solid #edf2f6;padding:14px 0}.mjob .ops{margin-top:8px}.mjob .ops button{border:0;background:var(--blue);color:#fff;padding:8px 14px;border-radius:8px;cursor:pointer;margin-right:6px;font-size:13px}.mjob .ops button.danger{background:#b3261e}
+.badge{font-size:12px;padding:2px 8px;border-radius:999px;margin-left:6px}.badge.pending{background:#fef7e0;color:#8a5a00}.badge.approved{background:#e6f4ea;color:#137333}.badge.rejected{background:#fce8e6;color:#b3261e}
+.backbtn{border:0;background:#e6ecf3;color:var(--text);padding:10px 16px;border-radius:9px;cursor:pointer;font-size:14px;margin-bottom:12px}
 footer{text-align:center;color:#8a99a9;font-size:12px;padding:30px 0 45px}
-@media(max-width:820px){.filters{grid-template-columns:repeat(2,1fr)}.jobs{grid-template-columns:1fr}}
-@media(max-width:430px){.wrap{width:92%}.filter img{height:90px}}
+@media(max-width:820px){.filters{grid-template-columns:repeat(2,1fr)}.jobs{grid-template-columns:1fr}.row2{grid-template-columns:1fr}}
+@media(max-width:430px){.wrap{width:92%}.filter img{height:90px}.auth button{padding:8px 11px;font-size:13px}}
 </style>
 </head>
 <body>
+<header class="wrap">
+  <a class="logo" onclick="showPublic()">海南大学兼职公开榜</a>
+  <div class="auth" id="authArea"></div>
+</header>
 <main class="wrap">
-<section class="hero"><h1>海南大学兼职公开榜</h1><p>审核通过的兼职信息公开展示</p></section>
-<section><div class="title"><h2>兼职筛选</h2><span id="total" class="count">加载中…</span></div><div id="filters" class="filters"></div></section>
-<section><div class="title"><h2 id="listTitle">全部兼职</h2><span id="resultCount" class="count"></span></div><div id="jobs" class="jobs"></div></section>
-</main><footer>海南大学兼职公开榜</footer>
+  <div id="publicView">
+    <section class="hero"><h1>海南大学兼职公开榜</h1><p>审核通过的兼职信息公开展示</p></section>
+    <section><div class="title"><h2>兼职筛选</h2><span id="total" class="count">加载中…</span></div><div id="filters" class="filters"></div></section>
+    <section><div class="title"><h2 id="listTitle">全部兼职</h2><span id="resultCount" class="count"></span></div><div id="jobs" class="jobs"></div></section>
+  </div>
+  <div id="myView" style="display:none">
+    <button class="backbtn" onclick="showPublic()">← 返回公开列表</button>
+    <div class="card">
+      <h2>我的兼职后台</h2>
+      <p class="muted" style="color:var(--muted);font-size:13px">发布后将进入「待审核」，由网站管理员审核通过后公开展示。</p>
+      <button onclick="togglePublish()">+ 发布兼职</button>
+      <div id="pubForm" style="display:none">
+        <label>标题 *</label><input id="mf_title">
+        <label>分类</label><select id="mf_cat"></select>
+        <label>描述</label><textarea id="mf_desc" placeholder="工作内容、要求等"></textarea>
+        <div class="row2"><div><label>薪资待遇</label><input id="mf_salary" placeholder="如：150元/天"></div><div><label>工作地点</label><input id="mf_loc"></div></div>
+        <label>联系方式</label><input id="mf_contact" placeholder="电话 / 微信 / 邮箱">
+        <label>自定义标签（逗号分隔，如：日结,包吃,急招）</label><input id="mf_tags">
+        <label>封面图片（选一张本地图片）</label><input id="mf_img" type="file" accept="image/*"><img id="mf_imgPrev" class="preview-img" style="display:none">
+        <div><button onclick="submitMine()">提交（等待审核）</button><button class="ghost" onclick="togglePublish(true)">取消</button></div>
+      </div>
+    </div>
+    <div class="card"><h2>我发布的兼职</h2><div id="myJobs"></div></div>
+  </div>
+</main>
+<footer>海南大学兼职公开榜</footer>
+
+<div class="modal-mask" id="modalMask"><div class="modal"><div id="modalBody"></div></div></div>
+
 <script>
+/* ====== 基础 ====== */
 const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
-let categories=[],jobs=[],active="all";
+const pad=n=>n<10?"0"+n:""+n;
+function fmt(iso){const d=new Date(iso);if(isNaN(d))return iso||"";return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+function parseTags(s){return String(s||"").split(/[,，、;；\s]+/).map(x=>x.trim()).filter(Boolean)}
+const FIXED_CATS=[{slug:"personal",name:"个人"},{slug:"business",name:"商家"},{slug:"agency",name:"中介"}];
+let categories=FIXED_CATS,jobs=[],active="all",me=sessionStorage.getItem("gh_me")||null,editingMineId=null;
+
+/* ====== GitHub 读写（普通用户发布，需管理员共享的 gh_token） ====== */
+function getTok(){return sessionStorage.getItem("gh_token")||""}
+async function ghApi(path,method,body){
+  const t=getTok();
+  const opt={method:method||"GET",headers:{"Authorization":"Bearer "+t,"Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"}};
+  if(body){opt.headers["Content-Type"]="application/json";opt.body=JSON.stringify(body)}
+  const r=await fetch("https://api.github.com"+path,opt);
+  const txt=await r.text();let d=null;try{d=txt?JSON.parse(txt):null}catch(e){}
+  if(!r.ok){const err=new Error((d&&d.message)||("HTTP "+r.status));err.http=r.status;throw err}
+  return d;
+}
+const enc=s=>btoa(unescape(encodeURIComponent(s)));
+const dec=s=>decodeURIComponent(escape(atob(s.replace(/\n/g,""))));
+const repoPath=p=>"/repos/hnwdhlgk/hnwdhlgk.github.io/contents/"+p;
+async function readJson(p){const d=await ghApi(repoPath(p)+"?ref=main");return JSON.parse(dec(d.content))}
+async function writeJson(p,data,msg){const d=await ghApi(repoPath(p)+"?ref=main");await ghApi(repoPath(p),"PUT",{message:msg,content:enc(JSON.stringify(data,null,2)+"\n"),sha:d.sha,branch:"main"})}
+async function readUsers(){try{return await readJson("data/users.json")}catch(e){if(e.http===404)return [];throw e}}
+async function sha256(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+async function uploadImg(file){
+  const safe=String(file.name||"img").replace(/[^\w.\-]/g,"_");
+  const name="images/jobs/"+Date.now()+"_"+safe;
+  const b64=await new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const r=fr.result,i=r.indexOf(",");res(i>=0?r.slice(i+1):r)};fr.onerror=rej;fr.readAsDataURL(file)});
+  await ghApi(repoPath(name),"PUT",{message:"上传兼职图片 "+name,content:b64,branch:"main"});
+  return name;
+}
+
+/* ====== 公开视图 ====== */
 async function getJson(f){const r=await fetch("./data/"+f+"?v="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error(r.status);return r.json()}
-async function init(){[categories,jobs]=await Promise.all([getJson("categories.json"),getJson("jobs.json")]);jobs=jobs.filter(j=>j.status==="approved");renderFilters();renderJobs()}
+async function init(){renderAuth();try{[categories,jobs]=await Promise.all([getJson("categories.json"),getJson("jobs.json")])}catch(e){categories=FIXED_CATS;jobs=[]}jobs=jobs.filter(j=>j.status==="approved");renderFilters();renderJobs()}
+function catName(slug){const c=[...FIXED_CATS,...categories].find(x=>x.slug===slug);return c?c.name:""}
 function renderFilters(){
- const total=jobs.length,enabled=categories.filter(c=>c.enabled).sort((a,b)=>(a.sort_order||0)-(b.sort_order||0));
- document.querySelector("#total").textContent=`共 ${total} 条信息`;
- document.querySelector("#filters").innerHTML=`<button class="filter active" data-slug="all"><div class="body"><h3>全部兼职</h3><p>查看所有已审核兼职信息</p><div class="bar"><i style="width:100%"></i></div></div></button>`+
- enabled.map(c=>{const n=jobs.filter(j=>j.category===c.slug).length,p=total?Math.round(n/total*100):0;return `<button class="filter" data-slug="${esc(c.slug)}">${c.image?`<img src="${esc(c.image)}" alt="${esc(c.name)}">`:``}<div class="body"><h3>${esc(c.name)}</h3><p>${esc(c.description||"")}</p><div class="bar"><i style="width:${p}%"></i></div></div></button>`}).join("");
- document.querySelectorAll(".filter").forEach(b=>b.onclick=()=>{active=b.dataset.slug;document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderJobs()})
+  const total=jobs.length,enabled=categories.filter(c=>c.enabled);
+  document.querySelector("#total").textContent=`共 ${total} 条信息`;
+  document.querySelector("#filters").innerHTML=`<button class="filter active" data-slug="all"><div class="body"><h3>全部兼职</h3><p>查看所有已审核兼职信息</p><div class="bar"><i style="width:100%"></i></div></div></button>`+
+  enabled.map(c=>{const n=jobs.filter(j=>j.category===c.slug).length,p=total?Math.round(n/total*100):0;return `<button class="filter" data-slug="${esc(c.slug)}">${c.image?`<img src="${esc(c.image)}" alt="${esc(c.name)}">`:``}<div class="body"><h3>${esc(c.name)}</h3><p>${esc(c.description||"")}</p><div class="bar"><i style="width:${p}%"></i></div></div></button>`}).join("");
+  document.querySelectorAll(".filter").forEach(b=>b.onclick=()=>{active=b.dataset.slug;document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderJobs()})
 }
 function renderJobs(){
- const c=categories.find(x=>x.slug===active),list=active==="all"?jobs:jobs.filter(j=>j.category===active);
- document.querySelector("#listTitle").textContent=active==="all"?"全部兼职":(c?.name||"兼职");
- document.querySelector("#resultCount").textContent=`${list.length} 条`;
- document.querySelector("#jobs").innerHTML=list.length?list.map(j=>`<article class="job">${j.image?`<img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy">`:""}<span class="tag">${esc(j.category_name||j.category||"兼职")}</span><h3>${esc(j.title)}</h3><div class="meta">${esc(j.location||"")}${j.time?" · "+esc(j.time):""}</div>${j.salary?`<div class="salary">${esc(j.salary)}</div>`:""}${j.tags&&j.tags.length?`<div class="tags">${j.tags.map(t=>`<span class="jtag">${esc(t)}</span>`).join("")}</div>`:""}<p>${esc(j.description||"")}</p>${j.contact?`<p><b>联系方式：</b>${esc(j.contact)}</p>`:""}</article>`).join(""):'<div class="empty">暂无已审核信息</div>'
+  const c=categories.find(x=>x.slug===active),list=active==="all"?jobs:jobs.filter(j=>j.category===active);
+  document.querySelector("#listTitle").textContent=active==="all"?"全部兼职":(c?.name||"兼职");
+  document.querySelector("#resultCount").textContent=`${list.length} 条`;
+  document.querySelector("#jobs").innerHTML=list.length?list.map(j=>`<article class="job">${j.image?`<img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy">`:""}<span class="tag">${esc(catName(j.category)||"兼职")}</span><h3>${esc(j.title)}</h3><div class="meta">${esc(j.location||"")}${j.time?" · "+esc(j.time):""}</div>${j.salary?`<div class="salary">${esc(j.salary)}</div>`:""}${j.tags&&j.tags.length?`<div class="tags">${j.tags.map(t=>`<span class="jtag">${esc(t)}</span>`).join("")}</div>`:""}<p>${esc(j.description||"")}</p>${j.contact?`<p><b>联系方式：</b>${esc(j.contact)}</p>`:""}</article>`).join(""):'<div class="empty">暂无已审核信息</div>'
 }
+
+/* ====== 认证（注册/登录） ====== */
+function renderAuth(){
+  const a=document.getElementById("authArea");
+  if(me){a.innerHTML='<span class="who">'+esc(me)+'</span><button class="ghost" onclick="showMyView()">我的后台</button><button onclick="doLogout()">退出</button>'}
+  else{a.innerHTML='<button class="ghost" onclick="openModal(regForm)">注册</button><button onclick="openModal(loginForm)">登录</button>'}
+}
+const regForm=`<h3>注册普通用户</h3><label>用户名</label><input id="ru" placeholder="2-20位（中文/字母/数字）"><label>密码</label><input id="rp" type="password" placeholder="至少6位"><label>确认密码</label><input id="rp2" type="password"><div class="err" id="regErr"></div><button onclick="doRegister()">注册并登录</button>`;
+const loginForm=`<h3>普通用户登录</h3><label>用户名</label><input id="lu"><label>密码</label><input id="lp" type="password"><div class="err" id="loginErr"></div><button onclick="doLogin()">登录</button>`;
+function openModal(html){document.getElementById("modalBody").innerHTML=html;document.getElementById("modalMask").style.display="flex"}
+function closeModal(){document.getElementById("modalMask").style.display="none"}
+window.addEventListener("click",e=>{if(e.target.id==="modalMask")closeModal()});
+async function doRegister(){
+  const u=document.getElementById("ru").value.trim(),p=document.getElementById("rp").value,p2=document.getElementById("rp2").value,e=document.getElementById("regErr");
+  if(!/^[\w\u4e00-\u9fa5-]{2,20}$/.test(u)){e.textContent="用户名需为2-20位中文/字母/数字/下划线/连字符";return}
+  if(p.length<6){e.textContent="密码至少6位";return}
+  if(p!==p2){e.textContent="两次密码不一致";return}
+  if(!getTok()){e.textContent="当前浏览器无注册权限：请先由网站管理员在本浏览器登录后台（admin/ 页面）后，普通用户才能注册发布。";return}
+  try{
+    const users=await readUsers();
+    if(users.some(x=>x.username===u)){e.textContent="该用户名已被注册";return}
+    users.push({username:u,pass:await sha256(p),created_at:new Date().toISOString()});
+    await writeJson("data/users.json",users,"注册用户："+u);
+    me=u;sessionStorage.setItem("gh_me",u);closeModal();renderAuth();showMyView();
+  }catch(err){e.textContent="注册失败："+(err.http===401?"需要管理员在本浏览器登录授权":err.message)}
+}
+async function doLogin(){
+  const u=document.getElementById("lu").value.trim(),p=document.getElementById("lp").value,e=document.getElementById("loginErr");
+  if(!getTok()){e.textContent="当前浏览器无登录权限：请先由网站管理员在本浏览器登录后台（admin/ 页面）。";return}
+  try{
+    const users=await readUsers();
+    const user=users.find(x=>x.username===u);
+    if(!user){e.textContent="用户不存在";return}
+    if(user.pass!==await sha256(p)){e.textContent="密码错误";return}
+    me=u;sessionStorage.setItem("gh_me",u);closeModal();renderAuth();showMyView();
+  }catch(err){e.textContent="登录失败："+err.message}
+}
+function doLogout(){me=null;sessionStorage.removeItem("gh_me");renderAuth();showPublic()}
+
+/* ====== 视图切换 ====== */
+function showPublic(){editingMineId=null;document.getElementById("publicView").style.display="";document.getElementById("myView").style.display="none";init()}
+function showMyView(){document.getElementById("publicView").style.display="none";document.getElementById("myView").style.display="";loadMine()}
+function fillCat(id,val){const s=document.getElementById(id);if(!s)return;s.innerHTML=FIXED_CATS.map(c=>`<option value="${esc(c.slug)}"${c.slug===val?" selected":""}>${esc(c.name)}</option>`).join("")}
+function bindImgPrev(inputId,prevId){const inp=document.getElementById(inputId),prev=document.getElementById(prevId);if(!inp||!prev)return;inp.onchange=()=>{const f=inp.files&&inp.files[0];if(!f){prev.style.display="none";return}const fr=new FileReader();fr.onload=()=>{prev.src=fr.result;prev.style.display="block"};fr.readAsDataURL(f)}}
+
+/* ====== 普通用户后台 ====== */
+function togglePublish(forceHide){const w=document.getElementById("pubForm");if(forceHide||w.style.display!=="none"){w.style.display="none";return}fillCat("mf_cat");bindImgPrev("mf_img","mf_imgPrev");w.style.display="block"}
+async function loadMine(){
+  fillCat("mf_cat");bindImgPrev("mf_img","mf_imgPrev");
+  const el=document.getElementById("myJobs");
+  if(!getTok()){el.innerHTML='<p class="empty">当前浏览器无 GitHub 写权限。<br>请先由网站管理员在本浏览器登录后台（<b>admin/</b> 页面），普通用户功能即可使用。</p>';return}
+  try{
+    jobs=await readJson("data/jobs.json");
+    const mine=jobs.filter(j=>j.author===me);
+    el.innerHTML=mine.map(renderMine).join("")||'<p class="empty">你还没有发布过兼职，点击上方「+ 发布兼职」。</p>';
+  }catch(e){el.innerHTML='<p class="empty">加载失败：'+esc(e.message)+'</p>'}
+}
+function renderMine(j){
+  if(j.id===editingMineId){
+    fillCat("mj_cat",j.category||"");
+    return `<div class="mjob"><b>编辑兼职</b><label>标题</label><input id="mj_title" value="${esc(j.title)}"><label>分类</label><select id="mj_cat"></select><label>描述</label><textarea id="mj_desc">${esc(j.description||"")}</textarea><div class="row2"><div><label>薪资</label><input id="mj_salary" value="${esc(j.salary||"")}"></div><div><label>地点</label><input id="mj_loc" value="${esc(j.location||"")}"></div></div><label>联系方式</label><input id="mj_contact" value="${esc(j.contact||"")}"><label>标签</label><input id="mj_tags" value="${esc((j.tags||[]).join(","))}"><label>封面图片（可选新图替换）</label><input id="mj_img" type="file" accept="image/*"><img id="mj_imgPrev" class="preview-img"${j.image?` src="${esc(j.image)}"`:' style="display:none"'}><div class="ops"><button onclick="saveMineEdit('${j.id}')">保存</button><button class="danger" onclick="removeMineImg()">移除当前图片</button><button class="ghost" onclick="cancelMineEdit()">取消</button></div></div>`;
+  }
+  const b=j.status==="approved"?'<span class="badge approved">已通过·主页可见</span>':(j.status==="rejected"?'<span class="badge rejected">已拒绝</span>':'<span class="badge pending">待审核</span>');
+  return `<div class="mjob"><b>${esc(j.title)}</b>${b}<div class="meta">${esc(catName(j.category)+"　"+fmt(j.created_at))}</div>${j.description?`<p>${esc(j.description)}</p>`:""}<div class="ops"><button onclick="editMine('${j.id}')">编辑</button><button class="danger" onclick="delMine('${j.id}')">删除</button></div></div>`;
+}
+function editMine(id){editingMineId=id;loadMine();setTimeout(()=>bindImgPrev("mj_img","mj_imgPrev"),50)}
+function cancelMineEdit(){editingMineId=null;loadMine()}
+window.removeMineImg=function(){const p=document.getElementById("mj_imgPrev");if(p){p.style.display="none";p.removeAttribute("src")}window._rmMineImg=true}
+async function submitMine(){
+  const title=document.getElementById("mf_title").value.trim();
+  if(!title){alert("请输入标题");return}
+  if(!getTok()){alert("当前浏览器无发布权限，请先由管理员授权后操作");return}
+  const imgFile=document.getElementById("mf_img").files[0];
+  try{
+    let image="";
+    if(imgFile){const btn=[...document.querySelectorAll("#pubForm button")].find(b=>b.textContent.includes("提交"));btn.disabled=true;image=await uploadImg(imgFile);btn.disabled=false}
+    jobs=await readJson("data/jobs.json");
+    jobs.unshift({id:String(Date.now()),title:title,description:document.getElementById("mf_desc").value,category:document.getElementById("mf_cat").value,salary:document.getElementById("mf_salary").value,location:document.getElementById("mf_loc").value,contact:document.getElementById("mf_contact").value,image:image,tags:parseTags(document.getElementById("mf_tags").value),author:me,author_type:"user",status:"pending",created_at:new Date().toISOString()});
+    await writeJson("data/jobs.json",jobs,"普通用户发布兼职（待审核）");
+    ["mf_title","mf_desc","mf_salary","mf_loc","mf_contact","mf_tags"].forEach(i=>document.getElementById(i).value="");
+    const fi=document.getElementById("mf_img");fi.value="";document.getElementById("mf_imgPrev").style.display="none";
+    togglePublish(true);loadMine();alert("已提交，等待管理员审核通过后公开展示");
+  }catch(e){alert("发布失败："+e.message)}
+}
+async function saveMineEdit(id){
+  if(!getTok()){alert("无权限");return}
+  try{
+    const imgFile=document.getElementById("mj_img").files[0];
+    let image=null;
+    if(window._rmMineImg){image=""}
+    else if(imgFile){image=await uploadImg(imgFile)}
+    jobs=await readJson("data/jobs.json");
+    const j=jobs.find(x=>x.id===id);if(!j){alert("兼职不存在");return}
+    j.title=document.getElementById("mj_title").value.trim()||j.title;
+    j.description=document.getElementById("mj_desc").value;
+    j.category=document.getElementById("mj_cat").value;
+    j.salary=document.getElementById("mj_salary").value;
+    j.location=document.getElementById("mj_loc").value;
+    j.contact=document.getElementById("mj_contact").value;
+    j.tags=parseTags(document.getElementById("mj_tags").value);
+    if(image!==null)j.image=image;
+    await writeJson("data/jobs.json",jobs,"普通用户更新兼职");
+    editingMineId=null;window._rmMineImg=false;loadMine();
+  }catch(e){alert("保存失败："+e.message)}
+}
+async function delMine(id){
+  if(!confirm("确定删除这条兼职？"))return;
+  if(!getTok()){alert("无权限");return}
+  try{jobs=await readJson("data/jobs.json");jobs=jobs.filter(j=>j.id!==id);await writeJson("data/jobs.json",jobs,"普通用户删除兼职");loadMine()}catch(e){alert("删除失败："+e.message)}
+}
+
 init().catch(e=>{document.querySelector("#jobs").innerHTML='<div class="empty">数据加载失败，请刷新页面</div>';console.error(e)});
 </script>
 </body></html>
