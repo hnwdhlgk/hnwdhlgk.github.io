@@ -1,0 +1,45 @@
+name: Validate and Telegram
+on:
+  push:
+    branches: [main]
+    paths:
+      - data/*.json
+      - images/**
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Validate JSON
+        run: |
+          python - <<'PY'
+          import json
+          for f in ("data/categories.json","data/jobs.json"):
+              with open(f,encoding="utf-8") as h:
+                  json.load(h)
+          print("JSON OK")
+          PY
+      - name: Telegram notification
+        if: ${{ secrets.TELEGRAM_BOT_TOKEN != '' && secrets.TELEGRAM_CHAT_ID != '' }}
+        env:
+          TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.parse, urllib.request
+          jobs=json.load(open("data/jobs.json",encoding="utf-8"))
+          approved=[j for j in jobs if j.get("status")=="approved"]
+          if not approved:
+              raise SystemExit(0)
+          j=approved[0]
+          text="📢 兼职更新
+
+"+j.get("title","")+"
+"+j.get("description","")
+          url="https://api.telegram.org/bot"+os.environ["TOKEN"]+"/sendMessage"
+          data=urllib.parse.urlencode({"chat_id":os.environ["CHAT"],"text":text}).encode()
+          urllib.request.urlopen(url,data=data,timeout=20).read()
+          PY
