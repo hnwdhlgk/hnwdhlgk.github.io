@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>管理后台</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#183b60;font-family:system-ui,-apple-system,"Microsoft YaHei",sans-serif}.wrap{width:min(1080px,94%);margin:25px auto}.card{background:#fff;border:1px solid #e0e8f0;border-radius:16px;padding:20px;margin-bottom:16px}.muted{color:#71859a;font-size:13px}input,textarea{width:100%;padding:10px;border:1px solid #d6e2ed;border-radius:9px;margin:6px 0 12px;font:inherit}textarea{min-height:90px}button{border:0;background:#0d47a1;color:#fff;padding:10px 15px;border-radius:9px;cursor:pointer;margin:3px}.danger{background:#b3261e}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.item{border-top:1px solid #edf2f6;padding:15px 0}@media(max-width:700px){.row{grid-template-columns:1fr}}
+</style></head><body><div class="wrap">
+<h1>网站管理后台</h1>
+<div id="login" class="card"><h2>GitHub 授权</h2><p class="muted">纯 GitHub 无服务器后台。Fine-grained Token 只保存在本机浏览器。</p><label>GitHub 用户名</label><input id="user" value="hnwdhlgk"><label>仓库</label><input id="repo" value="hnwdhlgk.github.io"><label>Fine-grained Token</label><input id="token" type="password" placeholder="github_pat_..."><button onclick="connect()">连接</button><span id="msg" class="muted"></span></div>
+<div id="app" style="display:none">
+<div class="card"><button onclick="loadAll()">刷新</button><button class="danger" onclick="logout()">退出</button><span id="status" class="muted"></span></div>
+<div class="card"><h2>8项筛选 / 分类管理</h2><div id="cats"></div><button onclick="addCategory()">新增分类</button></div>
+<div class="card"><h2>兼职发布 / 审核</h2><button onclick="newJob()">发布兼职</button><div id="jobs"></div></div>
+</div></div>
+<script>
+let G={},categories=[],jobs=[],catSha="",jobSha="";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const b64=s=>btoa(unescape(encodeURIComponent(s)));
+async function gh(path,opt={}){const r=await fetch("https://api.github.com"+path,{...opt,headers:{Authorization:"Bearer "+G.token,Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28",...(opt.headers||{})}});if(!r.ok)throw Error(await r.text());return r.status===204?null:r.json()}
+async function read(path){const x=await gh(`/repos/${G.user}/${G.repo}/contents/${path}?ref=main`);return{data:JSON.parse(decodeURIComponent(escape(atob(x.content.replace(/\n/g,"")))),sha:x.sha}}
+async function save(path,data,sha,msg){return gh(`/repos/${G.user}/${G.repo}/contents/${path}`,{method:"PUT",body:JSON.stringify({message:msg,content:b64(JSON.stringify(data,null,2)+"\n"),sha,branch:"main"})})}
+function connect(){G={user:$("user").value.trim(),repo:$("repo").value.trim(),token:$("token").value.trim()};if(!G.token)return $("msg").textContent=" 请填写 Token";localStorage.setItem("gh_user",G.user);localStorage.setItem("gh_repo",G.repo);localStorage.setItem("gh_token",G.token);$("login").style.display="none";$("app").style.display="block";loadAll()}
+function logout(){localStorage.removeItem("gh_token");location.reload()}
+async function loadAll(){try{const c=await read("data/categories.json"),j=await read("data/jobs.json");categories=c.data;catSha=c.sha;jobs=j.data;jobSha=j.sha;render();$("status").textContent=" 数据已同步"}catch(e){$("status").textContent=" "+e.message}}
+function render(){
+ $("cats").innerHTML=categories.map((c,i)=>`<div class="item"><div class="row"><div><label>名称</label><input id="n${i}" value="${esc(c.name)}"><label>Slug</label><input id="s${i}" value="${esc(c.slug)}"><label>描述</label><textarea id="d${i}">${esc(c.description||"")}</textarea></div><div><label>图片路径</label><input id="im${i}" value="${esc(c.image||"")}" placeholder="images/campus.jpg"><label>排序</label><input id="o${i}" type="number" value="${c.sort_order||i+1}"><label><input id="e${i}" type="checkbox" ${c.enabled!==false?"checked":""}> 首页显示</label></div></div><button onclick="saveCategory(${i})">保存</button></div>`).join("");
+ $("jobs").innerHTML=jobs.map((j,i)=>`<div class="item"><b>${esc(j.title)}</b> <span class="muted">[${esc(j.status||"pending")}]</span><p>${esc(j.description||"")}</p>${j.status!=="approved"?`<button onclick="approve(${i})">审核通过</button>`:""}${j.status!=="rejected"?`<button class="danger" onclick="reject(${i})">拒绝</button>`:""}</div>`).join("")||'<p class="muted">暂无兼职</p>'
+}
+async function saveCategory(i){const c=categories[i];c.name=$("n"+i).value;c.slug=$("s"+i).value;c.description=$("d"+i).value;c.image=$("im"+i).value;c.sort_order=Number($("o"+i).value)||i+1;c.enabled=$("e"+i).checked;await save("data/categories.json",categories,catSha,"更新分类");await loadAll()}
+async function addCategory(){const name=prompt("分类名称");if(!name)return;const slug=prompt("Slug","category-"+(categories.length+1));if(!slug)return;categories.push({slug,name,description:"",image:"",enabled:true,sort_order:categories.length+1});await save("data/categories.json",categories,catSha,"新增分类");await loadAll()}
+async function approve(i){jobs[i].status="approved";await save("data/jobs.json",jobs,jobSha,"审核通过兼职");await loadAll()}
+async function reject(i){jobs[i].status="rejected";await save("data/jobs.json",jobs,jobSha,"拒绝兼职");await loadAll()}
+async function newJob(){const title=prompt("标题");if(!title)return;const category=prompt("分类 slug","campus"),description=prompt("描述",""),location=prompt("地点",""),time=prompt("时间",""),contact=prompt("联系方式","");jobs.unshift({id:String(Date.now()),title,category,description,location,time,contact,status:"approved",created_at:new Date().toISOString()});await save("data/jobs.json",jobs,jobSha,"发布兼职");await loadAll()}
+(()=>{const u=localStorage.getItem("gh_user"),r=localStorage.getItem("gh_repo"),t=localStorage.getItem("gh_token");if(u&&r&&t){G={user:u,repo:r,token:t};$("user").value=u;$("repo").value=r;$("login").style.display="none";$("app").style.display="block";loadAll()}})();
+</script></body></html>

@@ -1,0 +1,66 @@
+[
+  {
+    "slug": "campus",
+    "name": "校园兼职",
+    "description": "校园内适合学生的兼职",
+    "image": "",
+    "enabled": true,
+    "sort_order": 1
+  },
+  {
+    "slug": "parttime",
+    "name": "兼职招聘",
+    "description": "企业与商家招聘信息",
+    "image": "",
+    "enabled": true,
+    "sort_order": 2
+  },
+  {
+    "slug": "promotion",
+    "name": "推广兼职",
+    "description": "推广、宣传、地推类兼职",
+    "image": "",
+    "enabled": true,
+    "sort_order": 3
+  },
+  {
+    "slug": "design",
+    "name": "设计类",
+    "description": "设计、制图、视频等兼职",
+    "image": "",
+    "enabled": true,
+    "sort_order": 4
+  },
+  {
+    "slug": "online",
+    "name": "线上兼职",
+    "description": "无需到场的线上兼职",
+    "image": "",
+    "enabled": true,
+    "sort_order": 5
+  },
+  {
+    "slug": "offline",
+    "name": "线下兼职",
+    "description": "需要现场参与的兼职",
+    "image": "",
+    "enabled": true,
+    "sort_order": 6
+  },
+  {
+    "slug": "weekend",
+    "name": "周末兼职",
+    "description": "周末及节假日兼职",
+    "image": "",
+    "enabled": true,
+    "sort_order": 7
+  },
+  {
+    "slug": "other",
+    "name": "其他兼职",
+    "description": "其他兼职信息",
+    "image": "",
+    "enabled": true,
+    "sort_order": 8
+  }
+]
