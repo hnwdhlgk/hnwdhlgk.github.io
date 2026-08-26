@@ -74,10 +74,11 @@ const pad=n=>n<10?"0"+n:""+n;
 function fmt(iso){const d=new Date(iso);if(isNaN(d))return iso||"";return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
 function parseTags(s){return String(s||"").split(/[,，、;；\s]+/).map(x=>x.trim()).filter(Boolean)}
 const FIXED_CATS=[{slug:"personal",name:"个人"},{slug:"business",name:"商家"},{slug:"agency",name:"中介"}];
-let categories=FIXED_CATS,jobs=[],active="all",me=sessionStorage.getItem("gh_me")||null,editingMineId=null;
+let categories=FIXED_CATS,jobs=[],active="all",me=sessionStorage.getItem("gh_me")||null,editingMineId=null,PUB_TOKEN="";
 
-/* ====== GitHub 读写（普通用户发布，需管理员共享的 gh_token） ====== */
-function getTok(){return sessionStorage.getItem("gh_token")||""}
+/* ====== GitHub 读写（普通用户发布，使用站点公开的「发布令牌」） ====== */
+async function loadConfig(){try{const c=await getJson("config.json");PUB_TOKEN=(c&&c.publish_token)||""}catch(e){PUB_TOKEN=""}}
+function getTok(){return PUB_TOKEN}
 async function ghApi(path,method,body){
   const t=getTok();
   const opt={method:method||"GET",headers:{"Authorization":"Bearer "+t,"Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"}};
@@ -104,7 +105,7 @@ async function uploadImg(file){
 
 /* ====== 公开视图 ====== */
 async function getJson(f){const r=await fetch("./data/"+f+"?v="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error(r.status);return r.json()}
-async function init(){renderAuth();try{[categories,jobs]=await Promise.all([getJson("categories.json"),getJson("jobs.json")])}catch(e){categories=FIXED_CATS;jobs=[]}jobs=jobs.filter(j=>j.status==="approved");renderFilters();renderJobs()}
+async function init(){renderAuth();loadConfig();try{[categories,jobs]=await Promise.all([getJson("categories.json"),getJson("jobs.json")])}catch(e){categories=FIXED_CATS;jobs=[]}jobs=jobs.filter(j=>j.status==="approved");renderFilters();renderJobs()}
 function catName(slug){const c=[...FIXED_CATS,...categories].find(x=>x.slug===slug);return c?c.name:""}
 function renderFilters(){
   const total=jobs.length,enabled=categories.filter(c=>c.enabled);
@@ -136,7 +137,7 @@ async function doRegister(){
   if(!/^[\w\u4e00-\u9fa5-]{2,20}$/.test(u)){e.textContent="用户名需为2-20位中文/字母/数字/下划线/连字符";return}
   if(p.length<6){e.textContent="密码至少6位";return}
   if(p!==p2){e.textContent="两次密码不一致";return}
-  if(!getTok()){e.textContent="当前浏览器无注册权限：请先由网站管理员在本浏览器登录后台（admin/ 页面）后，普通用户才能注册发布。";return}
+  if(!getTok()){e.textContent="站点暂未开放注册：管理员尚未配置「发布令牌」，请联系管理员。";return}
   try{
     const users=await readUsers();
     if(users.some(x=>x.username===u)){e.textContent="该用户名已被注册";return}
@@ -147,7 +148,7 @@ async function doRegister(){
 }
 async function doLogin(){
   const u=document.getElementById("lu").value.trim(),p=document.getElementById("lp").value,e=document.getElementById("loginErr");
-  if(!getTok()){e.textContent="当前浏览器无登录权限：请先由网站管理员在本浏览器登录后台（admin/ 页面）。";return}
+  if(!getTok()){e.textContent="站点暂未开放登录：管理员尚未配置「发布令牌」，请联系管理员。";return}
   try{
     const users=await readUsers();
     const user=users.find(x=>x.username===u);
@@ -169,7 +170,7 @@ function togglePublish(forceHide){const w=document.getElementById("pubForm");if(
 async function loadMine(){
   fillCat("mf_cat");bindImgPrev("mf_img","mf_imgPrev");
   const el=document.getElementById("myJobs");
-  if(!getTok()){el.innerHTML='<p class="empty">当前浏览器无 GitHub 写权限。<br>请先由网站管理员在本浏览器登录后台（<b>admin/</b> 页面），普通用户功能即可使用。</p>';return}
+  if(!getTok()){el.innerHTML='<p class="empty">站点暂未开放发布：管理员尚未配置「发布令牌」。<br>请联系网站管理员。</p>';return}
   try{
     jobs=await readJson("data/jobs.json");
     const mine=jobs.filter(j=>j.author===me);
@@ -190,7 +191,7 @@ window.removeMineImg=function(){const p=document.getElementById("mj_imgPrev");if
 async function submitMine(){
   const title=document.getElementById("mf_title").value.trim();
   if(!title){alert("请输入标题");return}
-  if(!getTok()){alert("当前浏览器无发布权限，请先由管理员授权后操作");return}
+  if(!getTok()){alert("站点暂未开放发布：管理员尚未配置「发布令牌」，请联系管理员。");return}
   const imgFile=document.getElementById("mf_img").files[0];
   try{
     let image="";
