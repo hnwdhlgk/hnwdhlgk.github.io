@@ -5,7 +5,37 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>网站管理后台</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#183b60;font-family:Arial,"Microsoft YaHei",sans-serif}.wrap{width:min(1080px,94%);margin:25px auto}.card{background:#fff;border:1px solid #dfe7ef;border-radius:16px;padding:20px;margin-bottom:16px}h1{margin-top:0}.muted{color:#71859a;font-size:13px}.ok{color:#137333}.err{color:#b3261e}.wait{color:#8a5a00}.notice{padding:12px;border-radius:9px;background:#f6f8fa;margin-top:10px;white-space:pre-wrap}label{display:block;margin-top:8px}input,textarea{width:100%;padding:11px;border:1px solid #d6e2ed;border-radius:9px;margin:6px 0 12px;font:inherit}textarea{min-height:90px}button{border:0;background:#0d47a1;color:#fff;padding:11px 18px;border-radius:9px;cursor:pointer;margin:3px;font-size:15px}button:hover{filter:brightness(.92)}button:disabled{opacity:.55;cursor:not-allowed}.danger{background:#b3261e}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.item{border-top:1px solid #edf2f6;padding:15px 0}@media(max-width:700px){.row{grid-template-columns:1fr}}
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#183b60;font-family:Arial,"Microsoft YaHei",sans-serif}
+.wrap{width:min(1080px,94%);margin:25px auto}
+.card{background:#fff;border:1px solid #dfe7ef;border-radius:16px;padding:20px;margin-bottom:16px}
+h1{margin-top:0}.muted{color:#71859a;font-size:13px}.ok{color:#137333}.err{color:#b3261e}.wait{color:#8a5a00}
+.notice{padding:12px;border-radius:9px;background:#f6f8fa;margin-top:10px;white-space:pre-wrap}
+label{display:block;margin-top:8px}
+label.inline{display:flex;align-items:center;gap:6px;margin-top:10px}
+input,textarea,select{width:100%;padding:11px;border:1px solid #d6e2ed;border-radius:9px;margin:6px 0 12px;font:inherit;background:#fff}
+input[type=checkbox]{width:auto;margin:0}
+input[type=file]{padding:8px;border:1px dashed #c9d8e6;border-radius:9px;background:#fafcfe}
+textarea{min-height:90px}
+button{border:0;background:#0d47a1;color:#fff;padding:11px 18px;border-radius:9px;cursor:pointer;margin:3px;font-size:15px}
+button:hover{filter:brightness(.92)}
+button:disabled{opacity:.55;cursor:not-allowed}
+.danger{background:#b3261e}.ghost{background:#5f6b7a}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.item{border-top:1px solid #edf2f6;padding:15px 0}
+.ops{margin-top:10px}
+.badge{font-size:12px;padding:2px 8px;border-radius:999px;margin-left:6px;white-space:nowrap}
+.badge.ok{background:#e6f4ea;color:#137333}
+.badge.err{background:#fce8e6;color:#b3261e}
+.badge.wait{background:#fef7e0;color:#8a5a00}
+.filter{margin:10px 0}
+.filter button.active{background:#0d47a1;box-shadow:0 0 0 2px #b3cdf0}
+.meta{color:#71859a;font-size:13px;margin:6px 0}
+.job-title{font-weight:bold}
+.job-img{width:120px;height:80px;object-fit:cover;border-radius:9px;border:1px solid #dfe7ef;margin-right:10px;vertical-align:top}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.tag-pill{background:#eef5ff;color:#0d47a1;border-radius:20px;padding:2px 9px;font-size:12px}
+.preview-img{max-width:240px;max-height:150px;object-fit:cover;border-radius:9px;border:1px solid #dfe7ef;display:block;margin:6px 0}
+@media(max-width:700px){.row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -13,54 +43,406 @@
 <h1>网站管理后台</h1>
 <div id="login" class="card">
 <h2>GitHub 授权</h2>
-<p class="muted">纯 GitHub 无服务器后台。Token 只保存在当前浏览器会话。</p>
+<p class="muted">纯 GitHub 无服务器后台。Token 仅存于当前浏览器（不写入任何服务器）。<br>勾选“记住登录”后存入 sessionStorage，关闭标签页即自动清除；不勾选则仅存内存，刷新页面需重新输入。</p>
 <label>GitHub 用户名</label><input id="user" value="hnwdhlgk" autocomplete="username">
 <label>仓库</label><input id="repo" value="hnwdhlgk.github.io">
 <label>Fine-grained Token</label><input id="token" type="password" placeholder="github_pat_..." autocomplete="off">
+<label class="inline"><input id="remember" type="checkbox" checked> 本会话记住登录信息（关闭标签页即清除）</label>
 <button id="connectBtn" type="button" onclick="connectGithub()">连接</button>
 <div id="msg" class="notice muted">后台脚本正在加载…</div>
 </div>
 <div id="app" style="display:none">
-<div class="card"><button type="button" onclick="loadAll()">刷新</button><button type="button" class="danger" onclick="logoutGithub()">退出</button><span id="status" class="muted"></span></div>
-<div class="card"><h2>8项筛选 / 分类管理</h2><div id="cats"></div><button type="button" onclick="addCategory()">新增分类</button></div>
-<div class="card"><h2>兼职发布 / 审核</h2><button type="button" onclick="newJob()">发布兼职</button><div id="jobs"></div></div>
+<div class="card">
+  <button type="button" onclick="loadAll()">刷新</button>
+  <button type="button" class="danger" onclick="logoutGithub()">退出</button>
+  <span id="status" class="muted"></span>
+</div>
+<div class="card">
+  <h2>筛选 / 分类管理</h2>
+  <div id="cats"></div>
+  <button type="button" onclick="addCategory()">新增分类</button>
+</div>
+<div class="card">
+  <h2>兼职发布 / 审核</h2>
+  <button type="button" onclick="toggleJobForm()">发布兼职</button>
+  <div id="jobFormWrap" style="display:none">
+    <label>标题 *</label><input id="jf_title" placeholder="例如：周末超市促销员">
+    <label>描述</label><textarea id="jf_desc" placeholder="工作内容、要求等"></textarea>
+    <label>分类</label><select id="jf_cat"></select>
+    <div class="row">
+      <div><label>薪资待遇</label><input id="jf_salary" placeholder="例如：150元/天"></div>
+      <div><label>工作地点</label><input id="jf_loc" placeholder="例如：海口市美兰区"></div>
+    </div>
+    <label>联系方式</label><input id="jf_contact" placeholder="电话 / 微信 / 邮箱">
+    <label>自定义标签（用逗号分隔，如：日结,包吃,急招）</label><input id="jf_tags" placeholder="日结,包吃,急招">
+    <label>封面图片（选一张本地图片上传，将显示在主页）</label><input id="jf_img" type="file" accept="image/*">
+    <img id="jf_imgPrev" class="preview-img" style="display:none">
+    <div class="ops">
+      <button type="button" onclick="submitJob()">提交（进入待审核）</button>
+      <button type="button" class="ghost" onclick="toggleJobForm(true)">取消</button>
+    </div>
+  </div>
+  <div class="filter">
+    <button type="button" data-f="all" onclick="setFilter('all')">全部</button>
+    <button type="button" data-f="pending" onclick="setFilter('pending')">待审核</button>
+    <button type="button" data-f="approved" onclick="setFilter('approved')">已通过</button>
+    <button type="button" data-f="rejected" onclick="setFilter('rejected')">已拒绝</button>
+  </div>
+  <div id="jobs"></div>
+</div>
 </div>
 </div>
 <script>
 (function(){
-var G={user:'',repo:'',token:''},categories=[],jobs=[],catSha='',jobSha='';
+var G={user:'',repo:'',token:'',branch:'main'};
+var categories=[],jobs=[],jobFilter='all',editingJobId=null,busy=false,editImg={removed:false};
 function $(id){return document.getElementById(id)}
-function msg(t,c){$('msg').innerText=t;$('msg').className='notice '+(c||'muted')}
-function stat(t,c){$('status').innerText=t;$('status').className=c||'muted'}
+function msg(t,c){var el=$('msg');if(el){el.innerText=t;el.className='notice '+(c||'muted')}}
+function stat(t,c){var el=$('status');if(el){el.innerText=t;el.className=c||'muted'}}
 function esc(s){s=String(s==null?'':s);return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
 function enc(s){return btoa(unescape(encodeURIComponent(s)))}
 function dec(s){return decodeURIComponent(escape(atob(s.replace(/\n/g,''))))}
+function pad(n){return n<10?'0'+n:''+n}
+function fmtDate(iso){var d=new Date(iso);if(isNaN(d))return iso||'';return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())}
+function parseTags(s){return String(s||'').split(/[,，、;；\s]+/).map(function(x){return x.trim()}).filter(Boolean)}
+function fileToBase64(file){
+  return new Promise(function(res,rej){
+    var fr=new FileReader();
+    fr.onload=function(){var r=fr.result,i=r.indexOf(',');res(i>=0?r.slice(i+1):r)};
+    fr.onerror=function(){rej(new Error('读取图片失败'))};
+    fr.readAsDataURL(file);
+  });
+}
+function uploadImage(file){
+  var safe=String(file.name||'img').replace(/[^\w.\-]/g,'_');
+  var name='images/jobs/'+Date.now()+'_'+safe;
+  return fileToBase64(file).then(function(b64){
+    return api(fileURL(name),'PUT',{message:'上传兼职图片 '+name,content:b64,branch:G.branch}).then(function(){return name});
+  });
+}
+function bindImgPreview(inputId,prevId){
+  var inp=$(inputId),prev=$(prevId);
+  if(!inp||!prev)return;
+  inp.onchange=function(){
+    var f=inp.files&&inp.files[0];
+    if(!f){prev.style.display='none';return}
+    var fr=new FileReader();
+    fr.onload=function(){prev.src=fr.result;prev.style.display='block'};
+    fr.readAsDataURL(f);
+  };
+}
 function api(path,method,body){
   var opt={method:method||'GET',headers:{'Authorization':'Bearer '+G.token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}};
   if(body){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(body)}
-  return fetch('https://api.github.com'+path,opt).then(function(r){return r.text().then(function(t){var d=null;try{d=t?JSON.parse(t):null}catch(e){}if(!r.ok){var x=(d&&d.message)||('HTTP '+r.status);if(r.status===401)x='401：Token 无效、过期或输入错误。';if(r.status===403)x='403：Token 没有访问仓库内容的权限，请给 Contents Read and write。';if(r.status===404)x='404：仓库不存在或 Token 无权访问。';throw new Error(x)}return d})}).catch(function(e){if(e&&e.message)return Promise.reject(e);return Promise.reject(new Error('无法连接 GitHub API，请检查网络。'))})
+  return fetch('https://api.github.com'+path,opt).then(function(r){
+    return r.text().then(function(t){
+      var d=null;try{d=t?JSON.parse(t):null}catch(e){}
+      if(!r.ok){
+        var err=new Error(d&&d.message?d.message:('HTTP '+r.status));
+        err.http=r.status;err.data=d;
+        var rem=r.headers.get('x-ratelimit-remaining');
+        if(r.status===403&&rem!==null&&Number(rem)<=0)err.rateLimited=true;
+        throw err;
+      }
+      return d;
+    });
+  });
 }
-function readFile(path){return api('/repos/'+encodeURIComponent(G.user)+'/'+encodeURIComponent(G.repo)+'/contents/'+path+'?ref=main').then(function(x){if(!x||!x.content)throw new Error('读取失败：'+path);return{data:JSON.parse(dec(x.content)),sha:x.sha}})}
-function writeFile(path,data,sha,message){return api('/repos/'+encodeURIComponent(G.user)+'/'+encodeURIComponent(G.repo)+'/contents/'+path,'PUT',{message:message,content:enc(JSON.stringify(data,null,2)+'\n'),sha:sha,branch:'main'})}
+/* ---------- 文件读写（动态分支 + 409 自动重试） ---------- */
+function fileURL(path){return '/repos/'+encodeURIComponent(G.user)+'/'+encodeURIComponent(G.repo)+'/contents/'+path}
+function readFile(path){
+  return api(fileURL(path)+'?ref='+encodeURIComponent(G.branch)).then(function(x){
+    if(!x||!x.content)throw new Error('读取失败：'+path);
+    return {data:JSON.parse(dec(x.content)),sha:x.sha};
+  });
+}
+function putContent(path,data,sha,message){
+  var body={message:message,content:enc(JSON.stringify(data,null,2)+'\n'),branch:G.branch};
+  if(sha)body.sha=sha;
+  return api(fileURL(path),'PUT',body);
+}
+function writeFile(path,data,message){
+  // 每次写前取最新 sha；若仍 409（并发冲突），刷新重试一次
+  return readFile(path).then(function(f){
+    return putContent(path,data,f.sha,message);
+  }).catch(function(e){
+    if(e&&e.http===409){
+      return readFile(path).then(function(f){return putContent(path,data,f.sha,message)});
+    }
+    throw e;
+  });
+}
+/* ---------- 连接 / 初始化 ---------- */
+function ensureDataFiles(){
+  return readFile('data/categories.json').catch(function(e){
+    if(e&&e.http===404)return putContent('data/categories.json',[],null,'初始化 categories.json');
+    throw e;
+  }).then(function(){
+    return readFile('data/jobs.json').catch(function(e){
+      if(e&&e.http===404)return putContent('data/jobs.json',[],null,'初始化 jobs.json');
+      throw e;
+    });
+  }).then(function(){
+    return Promise.all([readFile('data/categories.json'),readFile('data/jobs.json')]);
+  });
+}
 window.connectGithub=function(){
   var b=$('connectBtn'),u=$('user').value.trim(),r=$('repo').value.trim(),t=$('token').value.trim();
   if(!u){msg('请输入 GitHub 用户名。','err');return}
   if(!r){msg('请输入仓库名。','err');return}
   if(!t){msg('请输入 Fine-grained Token。','err');return}
-  G={user:u,repo:r,token:t};b.disabled=true;b.innerText='正在连接…';msg('正在连接 GitHub，请稍候…','wait');
-  api('/user').then(function(){return api('/repos/'+encodeURIComponent(u)+'/'+encodeURIComponent(r))}).then(function(){return readFile('data/categories.json')}).then(function(c){categories=c.data;catSha=c.sha;return readFile('data/jobs.json')}).then(function(j){jobs=j.data;jobSha=j.sha;try{sessionStorage.setItem('gh_user',u);sessionStorage.setItem('gh_repo',r);sessionStorage.setItem('gh_token',t)}catch(e){}$('login').style.display='none';$('app').style.display='block';stat('连接成功','ok');render()}).catch(function(e){msg('连接失败：\n'+(e.message||e),'err')}).then(function(){b.disabled=false;b.innerText='连接'})
+  G={user:u,repo:r,token:t,branch:'main'};
+  b.disabled=true;b.innerText='正在连接…';msg('正在连接 GitHub，请稍候…','wait');
+  api('/user').then(function(){
+    return api('/repos/'+encodeURIComponent(u)+'/'+encodeURIComponent(r));
+  }).then(function(repo){
+    G.branch=repo.default_branch||'main';
+    return ensureDataFiles();
+  }).then(function(files){
+    categories=files[0].data;jobs=files[1].data;
+    try{
+      if($('remember').checked){
+        sessionStorage.setItem('gh_user',u);sessionStorage.setItem('gh_repo',r);sessionStorage.setItem('gh_token',t);
+      }else{
+        sessionStorage.removeItem('gh_user');sessionStorage.removeItem('gh_repo');sessionStorage.removeItem('gh_token');
+      }
+    }catch(e){}
+    $('login').style.display='none';$('app').style.display='block';
+    stat('连接成功（分支：'+G.branch+'）','ok');
+    render();
+  }).catch(function(e){
+    if(e&&e.rateLimited){msg('连接失败：GitHub API 已达速率限制，请稍后再试。','err')}
+    else if(e&&e.http===401){msg('连接失败：Token 无效、过期或输入错误，请检查后重试。','err')}
+    else if(e&&e.http===403){msg('连接失败：Token 没有访问该仓库内容的权限，请给该仓库授权 Contents: Read and write。','err')}
+    else if(e&&e.http===404){msg('连接失败：仓库不存在，或 Token 没有该仓库的 Contents 读写权限。\n请确认仓库名正确，并在 Fine-grained Token 中勾选该仓库的 Contents: Read and write。','err')}
+    else{msg('连接失败：\n'+(e.message||e),'err')}
+  }).then(function(){b.disabled=false;b.innerText='连接'});
 }
-window.loadAll=function(){stat('正在同步…','wait');Promise.all([readFile('data/categories.json'),readFile('data/jobs.json')]).then(function(a){categories=a[0].data;catSha=a[0].sha;jobs=a[1].data;jobSha=a[1].sha;render();stat('数据已同步','ok')}).catch(function(e){stat('同步失败：'+e.message,'err')})}
-window.logoutGithub=function(){try{sessionStorage.clear()}catch(e){}G={user:'',repo:'',token:''};$('token').value='';$('app').style.display='none';$('login').style.display='block';msg('已退出，请重新输入 Token。')}
-window.addCategory=function(){var n=prompt('分类名称');if(!n)return;var s=prompt('Slug','category-'+(categories.length+1));if(!s)return;categories.push({slug:s,name:n,description:'',image:'',enabled:true,sort_order:categories.length+1});writeFile('data/categories.json',categories,catSha,'新增分类').then(loadAll).catch(function(e){stat('新增失败：'+e.message,'err')})}
-window.newJob=function(){var title=prompt('标题');if(!title)return;var description=prompt('描述','')||'';jobs.unshift({id:String(Date.now()),title:title,description:description,status:'approved',created_at:new Date().toISOString()});writeFile('data/jobs.json',jobs,jobSha,'发布兼职').then(loadAll).catch(function(e){stat('发布失败：'+e.message,'err')})}
-window.render=function(){
- $('cats').innerHTML=categories.map(function(c,i){return '<div class="item"><div class="row"><div><label>名称</label><input id="n'+i+'" value="'+esc(c.name)+'"><label>Slug</label><input id="s'+i+'" value="'+esc(c.slug)+'"><label>描述</label><textarea id="d'+i+'">'+esc(c.description||'')+'</textarea></div><div><label>图片路径</label><input id="im'+i+'" value="'+esc(c.image||'')+'"><label>排序</label><input id="o'+i+'" type="number" value="'+(c.sort_order||i+1)+'"></div></div><button type="button" onclick="saveCat('+i+')">保存</button></div>'}).join('');
- $('jobs').innerHTML=jobs.map(function(j){return '<div class="item"><b>'+esc(j.title)+'</b> <span class="muted">['+esc(j.status||'pending')+']</span><p>'+esc(j.description||'')+'</p></div>'}).join('')||'<p class="muted">暂无兼职</p>'
+window.loadAll=function(){
+  stat('正在同步…','wait');
+  return Promise.all([readFile('data/categories.json'),readFile('data/jobs.json')]).then(function(a){
+    categories=a[0].data;jobs=a[1].data;render();stat('数据已同步','ok');
+  }).catch(function(e){stat('同步失败：'+e.message,'err')});
 }
-window.saveCat=function(i){var c=categories[i];c.name=$('n'+i).value;c.slug=$('s'+i).value;c.description=$('d'+i).value;c.image=$('im'+i).value;c.sort_order=Number($('o'+i).value)||i+1;writeFile('data/categories.json',categories,catSha,'更新分类').then(loadAll).catch(function(e){stat('保存失败：'+e.message,'err')})}
-window.addEventListener('error',function(e){try{msg('页面脚本错误：'+e.message,'err')}catch(x){}})
-window.addEventListener('load',function(){msg('后台脚本已加载，请输入 Token 后点击“连接”。','muted')})
+window.logoutGithub=function(){
+  try{sessionStorage.removeItem('gh_token')}catch(e){}
+  G={user:'',repo:'',token:'',branch:'main'};
+  $('token').value='';$('app').style.display='none';$('login').style.display='block';
+  msg('已退出，请重新输入 Token。');
+}
+/* ---------- 分类管理 ---------- */
+function saveCategories(message){
+  if(busy){stat('正在保存中，请稍候…','wait');return}
+  busy=true;stat('正在保存…','wait');
+  writeFile('data/categories.json',categories,message)
+    .then(function(){return loadAll()})
+    .catch(function(e){stat('分类保存失败：'+e.message,'err')})
+    .then(function(){busy=false});
+}
+window.addCategory=function(){
+  if(busy)return;
+  var n=prompt('分类名称');if(!n)return;
+  var s=prompt('Slug（英文标识，用于筛选链接）','category-'+(categories.length+1));if(!s)return;
+  categories.push({slug:s,name:n,description:'',image:'',enabled:true,sort_order:categories.length+1});
+  saveCategories('新增分类');
+};
+window.saveCat=function(i){
+  if(busy)return;
+  var c=categories[i];if(!c)return;
+  c.name=$('n'+i).value.trim();
+  c.slug=$('s'+i).value.trim();
+  c.description=$('d'+i).value;
+  c.image=$('im'+i).value;
+  c.enabled=$('e'+i).checked;
+  c.sort_order=parseInt($('o'+i).value,10)||(categories.length+1);
+  saveCategories('更新分类');
+};
+window.delCat=function(i){
+  if(busy)return;
+  var c=categories[i];if(!c)return;
+  if(!confirm('确定删除分类「'+c.name+'」？\n（不会删除已关联的兼职数据）'))return;
+  categories.splice(i,1);
+  saveCategories('删除分类');
+};
+/* ---------- 兼职发布 / 审核 ---------- */
+function saveJobs(message){
+  if(busy){stat('正在保存中，请稍候…','wait');return}
+  busy=true;stat('正在保存…','wait');
+  writeFile('data/jobs.json',jobs,message)
+    .then(function(){return loadAll()})
+    .catch(function(e){stat('兼职保存失败：'+e.message,'err')})
+    .then(function(){busy=false});
+}
+function fillCatSelect(id,val){
+  var sel=$(id);if(!sel)return;
+  sel.innerHTML='<option value="">（不分类）</option>'+categories.map(function(c){
+    return '<option value="'+esc(c.slug)+'"'+(c.slug===val?' selected':'')+'>'+esc(c.name)+'</option>';
+  }).join('');
+}
+window.toggleJobForm=function(forceHide){
+  var w=$('jobFormWrap');
+  if(forceHide||w.style.display!=='none'){w.style.display='none';return}
+  fillCatSelect('jf_cat','');
+  w.style.display='block';
+  bindImgPreview('jf_img','jf_imgPrev');
+};
+window.submitJob=function(){
+  if(busy)return;
+  var title=$('jf_title').value.trim();
+  if(!title){stat('请输入兼职标题。','err');return}
+  busy=true;stat('正在保存…','wait');
+  var imgFile=$('jf_img').files&&$('jf_img').files[0],image='';
+  var p=imgFile?(stat('正在上传图片…','wait'),uploadImage(imgFile).then(function(x){image=x})):Promise.resolve();
+  p.then(function(){
+    jobs.unshift({
+      id:String(Date.now()),
+      title:title,
+      description:$('jf_desc').value,
+      category:$('jf_cat').value,
+      salary:$('jf_salary').value,
+      location:$('jf_loc').value,
+      contact:$('jf_contact').value,
+      image:image,
+      tags:parseTags($('jf_tags').value),
+      status:'pending',
+      created_at:new Date().toISOString()
+    });
+    ['jf_title','jf_desc','jf_salary','jf_loc','jf_contact','jf_tags'].forEach(function(i){$(i).value=''});
+    $('jf_img').value='';$('jf_imgPrev').style.display='none';
+    $('jobFormWrap').style.display='none';
+    jobFilter='all';
+    return writeFile('data/jobs.json',jobs,'发布兼职（待审核）');
+  }).then(function(){return loadAll()}).catch(function(e){stat('发布失败：'+(e.message||e),'err')}).then(function(){busy=false});
+};
+window.setFilter=function(f){jobFilter=f;render()};
+window.setJobStatus=function(id,status){
+  if(busy)return;
+  var j=jobs.find(function(x){return x.id===id});if(!j)return;
+  if(status==='approved'&&!confirm('通过后该兼职将对网站公开显示，确认通过？'))return;
+  if(status==='rejected'&&!confirm('确认拒绝该兼职？'))return;
+  j.status=status;
+  saveJobs('更新兼职状态');
+};
+window.editJob=function(id){
+  editImg={removed:false};
+  editingJobId=id;render();
+  bindImgPreview('ej_img','ej_imgPrev');
+};
+window.cancelEdit=function(){editingJobId=null;render()};
+window.removeEditImg=function(){editImg.removed=true;var p=$('ej_imgPrev');if(p){p.style.display='none';p.removeAttribute('src')}};
+window.saveJobEdit=function(id){
+  if(busy)return;
+  var j=jobs.find(function(x){return x.id===id});if(!j)return;
+  busy=true;stat('正在保存…','wait');
+  var imgFile=$('ej_img').files&&$('ej_img').files[0];
+  var p=Promise.resolve();
+  if(editImg.removed){j.image=''}
+  else if(imgFile){stat('正在上传图片…','wait');p=uploadImage(imgFile).then(function(x){j.image=x})}
+  p.then(function(){
+    j.title=$('ej_title').value.trim()||j.title;
+    j.description=$('ej_desc').value;
+    j.category=$('ej_cat').value;
+    j.salary=$('ej_salary').value;
+    j.location=$('ej_loc').value;
+    j.contact=$('ej_contact').value;
+    j.tags=parseTags($('ej_tags').value);
+    editingJobId=null;
+    return writeFile('data/jobs.json',jobs,'更新兼职');
+  }).then(function(){return loadAll()}).catch(function(e){stat('保存失败：'+(e.message||e),'err')}).then(function(){busy=false});
+};
+window.delJob=function(id){
+  if(busy)return;
+  var j=jobs.find(function(x){return x.id===id});if(!j)return;
+  if(!confirm('确定删除兼职「'+j.title+'」？'))return;
+  jobs=jobs.filter(function(x){return x.id!==id});
+  saveJobs('删除兼职');
+};
+/* ---------- 渲染 ---------- */
+function statusBadge(s){
+  if(s==='approved')return '<span class="badge ok">已通过</span>';
+  if(s==='rejected')return '<span class="badge err">已拒绝</span>';
+  return '<span class="badge wait">待审核</span>';
+}
+function catName(slug){var c=categories.find(function(x){return x.slug===slug});return c?c.name:''}
+function tagsHTML(tags){return (tags&&tags.length)?'<div class="tags">'+tags.map(function(t){return '<span class="tag-pill">'+esc(t)+'</span>'}).join('')+'</div>':''}
+function jobOps(j){
+  var s=j.status||'pending',h='';
+  if(s==='pending'){h+='<button type="button" onclick="setJobStatus(\''+j.id+'\',\'approved\')">通过</button><button type="button" class="danger" onclick="setJobStatus(\''+j.id+'\',\'rejected\')">拒绝</button>'}
+  else if(s==='approved'){h+='<button type="button" onclick="setJobStatus(\''+j.id+'\',\'pending\')">下架</button>'}
+  else{h+='<button type="button" onclick="setJobStatus(\''+j.id+'\',\'pending\')">重新提交</button>'}
+  h+='<button type="button" onclick="editJob(\''+j.id+'\')">编辑</button><button type="button" class="danger" onclick="delJob(\''+j.id+'\')">删除</button>';
+  return h;
+}
+function renderJob(j){
+  if(j.id===editingJobId){
+    fillCatSelect('ej_cat',j.category||'');
+    return '<div class="item"><b>编辑兼职</b>'+statusBadge(j.status||'pending')+
+      '<label>标题</label><input id="ej_title" value="'+esc(j.title)+'">'+
+      '<label>描述</label><textarea id="ej_desc">'+esc(j.description||'')+'</textarea>'+
+      '<label>分类</label><select id="ej_cat"></select>'+
+      '<div class="row"><div><label>薪资待遇</label><input id="ej_salary" value="'+esc(j.salary||'')+'"></div>'+
+      '<div><label>工作地点</label><input id="ej_loc" value="'+esc(j.location||'')+'"></div></div>'+
+      '<label>联系方式</label><input id="ej_contact" value="'+esc(j.contact||'')+'">'+
+      '<label>自定义标签（用逗号分隔）</label><input id="ej_tags" value="'+esc((j.tags||[]).join(','))+'">'+
+      '<label>封面图片</label><input id="ej_img" type="file" accept="image/*">'+
+      '<img id="ej_imgPrev" class="preview-img"'+(j.image&&!editImg.removed?' src="'+esc(j.image)+'"':' style="display:none"')+'>'+
+      (j.image&&!editImg.removed?'<div class="ops"><button type="button" class="ghost" onclick="removeEditImg()">移除当前图片</button></div>':'')+
+      '<div class="ops"><button type="button" onclick="saveJobEdit(\''+j.id+'\')">保存</button>'+
+      '<button type="button" class="ghost" onclick="cancelEdit()">取消</button></div></div>';
+  }
+  var meta=[];
+  var cn=catName(j.category);
+  if(cn)meta.push(cn);
+  if(j.salary)meta.push('薪资：'+j.salary);
+  if(j.location)meta.push('地点：'+j.location);
+  if(j.contact)meta.push('联系：'+j.contact);
+  meta.push('发布时间：'+fmtDate(j.created_at));
+  return '<div class="item">'+
+    (j.image?'<img class="job-img" src="'+esc(j.image)+'" alt="兼职图片">':'')+
+    '<span class="job-title">'+esc(j.title)+'</span>'+statusBadge(j.status||'pending')+
+    tagsHTML(j.tags)+
+    (j.description?'<p>'+esc(j.description)+'</p>':'')+
+    '<div class="meta">'+esc(meta.join('　|　'))+'</div>'+
+    '<div class="ops">'+jobOps(j)+'</div></div>';
+}
+function render(){
+  // 分类按 sort_order 排序后渲染（保留原始数组下标用于保存）
+  var clist=categories.slice().sort(function(a,b){return (a.sort_order||999)-(b.sort_order||999)});
+  $('cats').innerHTML=clist.map(function(c){
+    var oi=categories.indexOf(c);
+    return '<div class="item"><div class="row"><div>'+
+      '<label>名称</label><input id="n'+oi+'" value="'+esc(c.name)+'">'+
+      '<label>Slug</label><input id="s'+oi+'" value="'+esc(c.slug)+'">'+
+      '<label>描述</label><textarea id="d'+oi+'">'+esc(c.description||'')+'</textarea></div><div>'+
+      '<label>图片路径</label><input id="im'+oi+'" value="'+esc(c.image||'')+'">'+
+      '<label>排序</label><input id="o'+oi+'" type="number" value="'+(c.sort_order||oi+1)+'">'+
+      '<label class="inline"><input id="e'+oi+'" type="checkbox"'+(c.enabled===false?'':' checked')+'> 启用该分类</label>'+
+      '</div></div><div class="ops"><button type="button" onclick="saveCat('+oi+')">保存</button>'+
+      '<button type="button" class="danger" onclick="delCat('+oi+')">删除</button></div></div>';
+  }).join('')||'<p class="muted">暂无分类，点击“新增分类”创建。</p>';
+  // 兼职按状态筛选
+  var jlist=jobs.filter(function(j){
+    if(jobFilter==='all')return true;
+    return (j.status||'pending')===jobFilter;
+  });
+  if(editingJobId&&!jobs.some(function(j){return j.id===editingJobId&&(jobFilter==='all'||(j.status||'pending')===jobFilter)}))editingJobId=null;
+  $('jobs').innerHTML=jlist.map(renderJob).join('')||'<p class="muted">暂无兼职</p>';
+  ['all','pending','approved','rejected'].forEach(function(f){
+    var b=document.querySelector('.filter button[data-f="'+f+'"]');
+    if(b)b.className=(jobFilter===f?'active':'');
+  });
+}
+/* ---------- 启动 ---------- */
+window.addEventListener('error',function(e){try{console.error('页面脚本错误：',e.error||e.message)}catch(x){}});
+window.addEventListener('load',function(){
+  try{
+    var u=sessionStorage.getItem('gh_user'),r=sessionStorage.getItem('gh_repo'),t=sessionStorage.getItem('gh_token');
+    if(u&&r&&t){$('user').value=u;$('repo').value=r;$('token').value=t;connectGithub();return}
+    if(u)$('user').value=u;
+    if(r)$('repo').value=r;
+  }catch(e){}
+  msg('后台脚本已加载，请输入 Token 后点击“连接”。','muted');
+});
 })();
 </script>
 </body>
