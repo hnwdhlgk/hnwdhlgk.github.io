@@ -5,1535 +5,405 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>网站管理后台</title>
 <style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  background:#f4f7fb;
-  color:#183b60;
-  font-family:Arial,"Microsoft YaHei",sans-serif
-}
-.wrap{
-  width:min(1080px,94%);
-  margin:25px auto
-}
-.card{
-  background:#fff;
-  border:1px solid #dfe7ef;
-  border-radius:16px;
-  padding:20px;
-  margin-bottom:16px
-}
-h1{margin-top:0}
-.muted{color:#71859a;font-size:13px}
-.ok{color:#137333}
-.err{color:#b3261e}
-.wait{color:#8a5a00}
-.notice{
-  padding:12px;
-  border-radius:9px;
-  background:#f6f8fa;
-  margin-top:10px;
-  white-space:pre-wrap;
-  line-height:1.6
-}
-label{
-  display:block;
-  margin-top:8px
-}
-input,textarea{
-  width:100%;
-  padding:11px;
-  border:1px solid #d6e2ed;
-  border-radius:9px;
-  margin:6px 0 12px;
-  font:inherit
-}
-textarea{
-  min-height:90px;
-  resize:vertical
-}
-button{
-  border:0;
-  background:#0d47a1;
-  color:#fff;
-  padding:11px 18px;
-  border-radius:9px;
-  cursor:pointer;
-  margin:3px;
-  font-size:15px
-}
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#183b60;font-family:Arial,"Microsoft YaHei",sans-serif}
+.wrap{width:min(1080px,94%);margin:25px auto}
+.card{background:#fff;border:1px solid #dfe7ef;border-radius:16px;padding:20px;margin-bottom:16px}
+h1{margin-top:0}.muted{color:#71859a;font-size:13px}.ok{color:#137333}.err{color:#b3261e}.wait{color:#8a5a00}
+.notice{padding:12px;border-radius:9px;background:#f6f8fa;margin-top:10px;white-space:pre-wrap}
+label{display:block;margin-top:8px}
+label.inline{display:flex;align-items:center;gap:6px;margin-top:10px}
+input,textarea,select{width:100%;padding:11px;border:1px solid #d6e2ed;border-radius:9px;margin:6px 0 12px;font:inherit;background:#fff}
+input[type=checkbox]{width:auto;margin:0}
+textarea{min-height:90px}
+button{border:0;background:#0d47a1;color:#fff;padding:11px 18px;border-radius:9px;cursor:pointer;margin:3px;font-size:15px}
 button:hover{filter:brightness(.92)}
-button:disabled{
-  opacity:.55;
-  cursor:not-allowed
-}
-.danger{background:#b3261e}
-.gray{background:#607d8b}
-.row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px
-}
-.item{
-  border-top:1px solid #edf2f6;
-  padding:15px 0
-}
-.toolbar{
-  display:flex;
-  align-items:center;
-  flex-wrap:wrap
-}
-.badge{
-  display:inline-block;
-  padding:3px 8px;
-  border-radius:20px;
-  background:#edf2f7;
-  font-size:12px
-}
-.empty{
-  padding:18px;
-  text-align:center;
-  color:#71859a;
-  background:#f8fafc;
-  border-radius:9px
-}
-@media(max-width:700px){
-  .wrap{width:94%;margin:15px auto}
-  .card{padding:15px}
-  .row{grid-template-columns:1fr}
-  h1{font-size:24px}
-  button{padding:10px 14px}
-}
+button:disabled{opacity:.55;cursor:not-allowed}
+.danger{background:#b3261e}.ghost{background:#5f6b7a}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.item{border-top:1px solid #edf2f6;padding:15px 0}
+.ops{margin-top:10px}
+.badge{font-size:12px;padding:2px 8px;border-radius:999px;margin-left:6px;white-space:nowrap}
+.badge.ok{background:#e6f4ea;color:#137333}
+.badge.err{background:#fce8e6;color:#b3261e}
+.badge.wait{background:#fef7e0;color:#8a5a00}
+.filter{margin:10px 0}
+.filter button.active{background:#0d47a1;box-shadow:0 0 0 2px #b3cdf0}
+.meta{color:#71859a;font-size:13px;margin:6px 0}
+.job-title{font-weight:bold}
+@media(max-width:700px){.row{grid-template-columns:1fr}}
 </style>
 </head>
-
 <body>
-
 <div class="wrap">
-
 <h1>网站管理后台</h1>
 
 <div id="login" class="card">
-
 <h2>GitHub 授权</h2>
-
-<p class="muted">
-纯 GitHub 无服务器后台。Token 只保存在当前浏览器会话。
-</p>
-
-<label>GitHub 用户名</label>
-<input id="user" value="hnwdhlgk" autocomplete="username">
-
-<label>仓库</label>
-<input id="repo" value="hnwdhlgk.github.io">
-
-<label>Fine-grained Token</label>
-<input id="token" type="password" placeholder="github_pat_..." autocomplete="off">
-
-<button id="connectBtn" type="button" onclick="connect()">
-连接
-</button>
-
-<button type="button" class="gray" onclick="clearLogin()">
-清除登录信息
-</button>
-
-<div id="msg" class="notice muted">
-后台脚本正在加载…
+<p class="muted">纯 GitHub 无服务器后台。Token 仅存于当前浏览器（不写入任何服务器）。<br>勾选“记住登录”后存入 sessionStorage，关闭标签页即自动清除；不勾选则仅存内存，刷新页面需重新输入。</p>
+<label>GitHub 用户名</label><input id="user" value="hnwdhlgk" autocomplete="username">
+<label>仓库</label><input id="repo" value="hnwdhlgk.github.io">
+<label>Fine-grained Token</label><input id="token" type="password" placeholder="github_pat_..." autocomplete="off">
+<label class="inline"><input id="remember" type="checkbox" checked> 本会话记住登录信息（关闭标签页即清除）</label>
+<button id="connectBtn" type="button" onclick="connectGithub()">连接</button>
+<div id="msg" class="notice muted">后台脚本正在加载…</div>
 </div>
-
-</div>
-
 
 <div id="app" style="display:none">
+<div class="card">
+  <button type="button" onclick="loadAll()">刷新</button>
+  <button type="button" class="danger" onclick="logoutGithub()">退出</button>
+  <span id="status" class="muted"></span>
+</div>
 
 <div class="card">
-
-<div class="toolbar">
-
-<button id="refreshBtn" type="button" onclick="loadAll()">
-刷新
-</button>
-
-<button type="button" class="danger" onclick="logout()">
-退出
-</button>
-
-<span id="status" class="muted">
-等待操作
-</span>
-
+  <h2>筛选 / 分类管理</h2>
+  <div id="cats"></div>
+  <button type="button" onclick="addCategory()">新增分类</button>
 </div>
-
-</div>
-
 
 <div class="card">
-
-<h2>8项筛选 / 分类管理</h2>
-
-<div id="cats"></div>
-
-<button id="addCatBtn" type="button" onclick="addCategory()">
-新增分类
-</button>
-
+  <h2>兼职发布 / 审核</h2>
+  <button type="button" onclick="toggleJobForm()">发布兼职</button>
+  <div id="jobFormWrap" style="display:none">
+    <label>标题 *</label><input id="jf_title" placeholder="例如：周末超市促销员">
+    <label>描述</label><textarea id="jf_desc" placeholder="工作内容、要求等"></textarea>
+    <label>分类</label><select id="jf_cat"></select>
+    <div class="row">
+      <div><label>薪资待遇</label><input id="jf_salary" placeholder="例如：150元/天"></div>
+      <div><label>工作地点</label><input id="jf_loc" placeholder="例如：濮阳市华龙区"></div>
+    </div>
+    <label>联系方式</label><input id="jf_contact" placeholder="电话 / 微信 / 邮箱">
+    <div class="ops">
+      <button type="button" onclick="submitJob()">提交（进入待审核）</button>
+      <button type="button" class="ghost" onclick="toggleJobForm(true)">取消</button>
+    </div>
+  </div>
+  <div class="filter">
+    <button type="button" data-f="all" onclick="setFilter('all')">全部</button>
+    <button type="button" data-f="pending" onclick="setFilter('pending')">待审核</button>
+    <button type="button" data-f="approved" onclick="setFilter('approved')">已通过</button>
+    <button type="button" data-f="rejected" onclick="setFilter('rejected')">已拒绝</button>
+  </div>
+  <div id="jobs"></div>
 </div>
-
-
-<div class="card">
-
-<h2>兼职发布 / 审核</h2>
-
-<button id="newJobBtn" type="button" onclick="newJob()">
-发布兼职
-</button>
-
-<div id="jobs"></div>
-
 </div>
-
 </div>
-
-</div>
-
 
 <script>
 (function(){
+var G={user:'',repo:'',token:'',branch:'main'};
+var categories=[],jobs=[],jobFilter='all',editingJobId=null,busy=false;
 
-"use strict";
-
-
-/* =========================
-   全局变量
-========================= */
-
-var G = {
-  user:"",
-  repo:"",
-  token:""
-};
-
-var categories = [];
-var jobs = [];
-
-var catSha = "";
-var jobSha = "";
-
-
-/* =========================
-   DOM
-========================= */
-
-function $(id){
-  return document.getElementById(id);
-}
-
-
-/* =========================
-   消息
-========================= */
-
-function showMsg(text,type){
-
-  var el = $("msg");
-
-  if(!el){
-    return;
-  }
-
-  el.innerText = text;
-  el.className = "notice " + (type || "muted");
-}
-
-
-function showStatus(text,type){
-
-  var el = $("status");
-
-  if(!el){
-    return;
-  }
-
-  el.innerText = text;
-  el.className = type || "muted";
-}
-
-
-/* =========================
-   HTML 转义
-========================= */
-
-function esc(value){
-
-  var s = String(
-    value == null ? "" : value
-  );
-
-  return s
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#39;");
-}
-
-
-/* =========================
-   Base64 UTF-8 编码
-========================= */
-
-function encode64(text){
-
-  return btoa(
-    unescape(
-      encodeURIComponent(text)
-    )
-  );
-}
-
-
-/* =========================
-   Base64 UTF-8 解码
-========================= */
-
-function decode64(text){
-
-  var clean = String(text || "")
-    .replace(/\s/g,"");
-
-  if(!clean){
-    throw new Error("GitHub 返回的文件内容为空。");
-  }
-
-  try{
-
-    return decodeURIComponent(
-      escape(
-        atob(clean)
-      )
-    );
-
-  }catch(e){
-
-    throw new Error(
-      "GitHub 文件 Base64 解码失败。"
-    );
-
-  }
-}
-
-
-/* =========================
-   GitHub API
-========================= */
+function $(id){return document.getElementById(id)}
+function msg(t,c){var el=$('msg');if(el){el.innerText=t;el.className='notice '+(c||'muted')}}
+function stat(t,c){var el=$('status');if(el){el.innerText=t;el.className=c||'muted'}}
+function esc(s){s=String(s==null?'':s);return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+function enc(s){return btoa(unescape(encodeURIComponent(s)))}
+function dec(s){return decodeURIComponent(escape(atob(s.replace(/\n/g,''))))}
+function pad(n){return n<10?'0'+n:''+n}
+function fmtDate(iso){var d=new Date(iso);if(isNaN(d))return iso||'';return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())}
 
 function api(path,method,body){
-
-  if(!G.user || !G.repo || !G.token){
-
-    return Promise.reject(
-      new Error("GitHub 尚未连接。")
-    );
-
-  }
-
-  var options = {
-    method:method || "GET",
-    headers:{
-      "Authorization":"Bearer " + G.token,
-      "Accept":"application/vnd.github+json",
-      "X-GitHub-Api-Version":"2022-11-28"
-    }
-  };
-
-
-  if(body !== undefined){
-
-    options.headers["Content-Type"] =
-      "application/json";
-
-    options.body =
-      JSON.stringify(body);
-
-  }
-
-
-  return fetch(
-    "https://api.github.com" + path,
-    options
-  )
-
-  .then(function(response){
-
-    return response.text()
-      .then(function(text){
-
-        var data = null;
-
-        if(text){
-
-          try{
-            data = JSON.parse(text);
-          }catch(e){
-            data = null;
-          }
-
-        }
-
-
-        if(!response.ok){
-
-          var message =
-            data && data.message
-              ? data.message
-              : "HTTP " + response.status;
-
-
-          if(response.status === 401){
-
-            message =
-              "401：Token 无效、过期或输入错误。";
-
-          }else if(response.status === 403){
-
-            message =
-              "403：Token 没有足够权限。\n\n" +
-              "请在 GitHub Fine-grained Token 中确认：\n" +
-              "Repository access → 选择 hnwdhlgk.github.io\n" +
-              "Permissions → Contents → Read and write";
-
-          }else if(response.status === 404){
-
-            message =
-              "404：仓库不存在，或 Token 无权访问。\n\n" +
-              "当前仓库：\n" +
-              G.user + "/" + G.repo;
-
-          }else if(response.status === 409){
-
-            message =
-              "409：文件版本发生冲突，请先点击刷新。";
-
-          }
-
-
-          throw new Error(message);
-
-        }
-
-
-        return data;
-
-      });
-
-  })
-
-  .catch(function(error){
-
-    if(
-      error &&
-      error.name === "TypeError"
-    ){
-
-      throw new Error(
-        "无法连接 GitHub API。\n\n" +
-        "请检查当前网络以及浏览器是否可以访问 api.github.com。"
-      );
-
-    }
-
-    throw error;
-
-  });
-
-}
-
-
-/* =========================
-   读取 JSON
-========================= */
-
-function readFile(path){
-
-  var url =
-    "/repos/" +
-    encodeURIComponent(G.user) +
-    "/" +
-    encodeURIComponent(G.repo) +
-    "/contents/" +
-    path +
-    "?ref=main";
-
-
-  return api(url)
-
-    .then(function(result){
-
-      if(!result){
-
-        throw new Error(
-          "GitHub 没有返回数据：" + path
-        );
-
+  var opt={method:method||'GET',headers:{'Authorization':'Bearer '+G.token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}};
+  if(body){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(body)}
+  return fetch('https://api.github.com'+path,opt).then(function(r){
+    return r.text().then(function(t){
+      var d=null;try{d=t?JSON.parse(t):null}catch(e){}
+      if(!r.ok){
+        var err=new Error(d&&d.message?d.message:('HTTP '+r.status));
+        err.http=r.status;err.data=d;
+        var rem=r.headers.get('x-ratelimit-remaining');
+        if(r.status===403&&rem!==null&&Number(rem)<=0)err.rateLimited=true;
+        throw err;
       }
-
-
-      if(!result.content){
-
-        throw new Error(
-          "读取失败：" +
-          path +
-          "\nGitHub 没有返回文件 content。"
-        );
-
-      }
-
-
-      var text =
-        decode64(result.content);
-
-
-      try{
-
-        return {
-          data:JSON.parse(text),
-          sha:result.sha
-        };
-
-      }catch(e){
-
-        throw new Error(
-          "JSON 格式错误：\n" +
-          path +
-          "\n\n" +
-          e.message
-        );
-
-      }
-
+      return d;
     });
-
+  });
 }
 
-
-/* =========================
-   保存 JSON
-========================= */
-
-function writeFile(path,data,sha,message){
-
-  if(!sha){
-
-    return Promise.reject(
-      new Error(
-        "文件 SHA 不存在，请先刷新数据。"
-      )
-    );
-
-  }
-
-
-  var content =
-    JSON.stringify(
-      data,
-      null,
-      2
-    ) + "\n";
-
-
-  var body = {
-
-    message:message || "更新网站数据",
-
-    content:encode64(content),
-
-    sha:sha,
-
-    branch:"main"
-
-  };
-
-
-  var url =
-    "/repos/" +
-    encodeURIComponent(G.user) +
-    "/" +
-    encodeURIComponent(G.repo) +
-    "/contents/" +
-    path;
-
-
-  return api(
-    url,
-    "PUT",
-    body
-  );
-
+/* ---------- 文件读写（动态分支 + 409 自动重试） ---------- */
+function fileURL(path){return '/repos/'+encodeURIComponent(G.user)+'/'+encodeURIComponent(G.repo)+'/contents/'+path}
+function readFile(path){
+  return api(fileURL(path)+'?ref='+encodeURIComponent(G.branch)).then(function(x){
+    if(!x||!x.content)throw new Error('读取失败：'+path);
+    return {data:JSON.parse(dec(x.content)),sha:x.sha};
+  });
+}
+function putContent(path,data,sha,message){
+  var body={message:message,content:enc(JSON.stringify(data,null,2)+'\n'),branch:G.branch};
+  if(sha)body.sha=sha;
+  return api(fileURL(path),'PUT',body);
+}
+function writeFile(path,data,message){
+  // 每次写前取最新 sha；若仍 409（并发冲突），刷新重试一次
+  return readFile(path).then(function(f){
+    return putContent(path,data,f.sha,message);
+  }).catch(function(e){
+    if(e&&e.http===409){
+      return readFile(path).then(function(f){return putContent(path,data,f.sha,message)});
+    }
+    throw e;
+  });
 }
 
+/* ---------- 连接 / 初始化 ---------- */
+function ensureDataFiles(){
+  // data/categories.json 与 data/jobs.json 不存在则自动创建，避免首次连接失败
+  return readFile('data/categories.json').catch(function(e){
+    if(e&&e.http===404)return putContent('data/categories.json',[],null,'初始化 categories.json');
+    throw e;
+  }).then(function(){
+    return readFile('data/jobs.json').catch(function(e){
+      if(e&&e.http===404)return putContent('data/jobs.json',[],null,'初始化 jobs.json');
+      throw e;
+    });
+  }).then(function(){
+    return Promise.all([readFile('data/categories.json'),readFile('data/jobs.json')]);
+  });
+}
 
-/* =========================
-   连接 GitHub
-========================= */
-
-function doConnect(){
-
-  var button =
-    $("connectBtn");
-
-
-  var user =
-    $("user").value.trim();
-
-  var repo =
-    $("repo").value.trim();
-
-  var token =
-    $("token").value.trim();
-
-
-  if(!user){
-
-    showMsg(
-      "请输入 GitHub 用户名。",
-      "err"
-    );
-
-    return;
-
-  }
-
-
-  if(!repo){
-
-    showMsg(
-      "请输入仓库名称。",
-      "err"
-    );
-
-    return;
-
-  }
-
-
-  if(!token){
-
-    showMsg(
-      "请输入 Fine-grained Token。",
-      "err"
-    );
-
-    return;
-
-  }
-
-
-  G.user = user;
-  G.repo = repo;
-  G.token = token;
-
-
-  button.disabled = true;
-  button.innerText = "正在连接…";
-
-
-  showMsg(
-    "① 正在验证 GitHub Token…",
-    "wait"
-  );
-
-
-  api("/user")
-
-  .then(function(){
-
-    showMsg(
-      "② Token 验证成功，正在检查仓库…",
-      "wait"
-    );
-
-
-    return api(
-      "/repos/" +
-      encodeURIComponent(user) +
-      "/" +
-      encodeURIComponent(repo)
-    );
-
-  })
-
-  .then(function(){
-
-    showMsg(
-      "③ 仓库访问成功，正在读取分类…",
-      "wait"
-    );
-
-
-    return readFile(
-      "data/categories.json"
-    );
-
-  })
-
-  .then(function(result){
-
-    categories =
-      Array.isArray(result.data)
-        ? result.data
-        : [];
-
-    catSha =
-      result.sha;
-
-
-    showMsg(
-      "④ 分类读取成功，正在读取兼职数据…",
-      "wait"
-    );
-
-
-    return readFile(
-      "data/jobs.json"
-    );
-
-  })
-
-  .then(function(result){
-
-    jobs =
-      Array.isArray(result.data)
-        ? result.data
-        : [];
-
-    jobSha =
-      result.sha;
-
-
+window.connectGithub=function(){
+  var b=$('connectBtn'),u=$('user').value.trim(),r=$('repo').value.trim(),t=$('token').value.trim();
+  if(!u){msg('请输入 GitHub 用户名。','err');return}
+  if(!r){msg('请输入仓库名。','err');return}
+  if(!t){msg('请输入 Fine-grained Token。','err');return}
+  G={user:u,repo:r,token:t,branch:'main'};
+  b.disabled=true;b.innerText='正在连接…';msg('正在连接 GitHub，请稍候…','wait');
+  api('/user').then(function(){
+    return api('/repos/'+encodeURIComponent(u)+'/'+encodeURIComponent(r));
+  }).then(function(repo){
+    G.branch=repo.default_branch||'main';       // 动态使用仓库默认分支
+    return ensureDataFiles();
+  }).then(function(files){
+    categories=files[0].data;jobs=files[1].data;
     try{
-
-      sessionStorage.setItem(
-        "gh_user",
-        user
-      );
-
-      sessionStorage.setItem(
-        "gh_repo",
-        repo
-      );
-
-      sessionStorage.setItem(
-        "gh_token",
-        token
-      );
-
+      if($('remember').checked){
+        sessionStorage.setItem('gh_user',u);sessionStorage.setItem('gh_repo',r);sessionStorage.setItem('gh_token',t);
+      }else{
+        sessionStorage.removeItem('gh_user');sessionStorage.removeItem('gh_repo');sessionStorage.removeItem('gh_token');
+      }
     }catch(e){}
-
-
+    $('login').style.display='none';$('app').style.display='block';
+    stat('连接成功（分支：'+G.branch+'）','ok');
     render();
-
-
-    $("login").style.display =
-      "none";
-
-    $("app").style.display =
-      "block";
-
-
-    showStatus(
-      "连接成功",
-      "ok"
-    );
-
-  })
-
-  .catch(function(error){
-
-    console.error(
-      "GitHub Error:",
-      error
-    );
-
-
-    showMsg(
-      "连接失败：\n\n" +
-      (
-        error && error.message
-          ? error.message
-          : String(error)
-      ),
-      "err"
-    );
-
-  })
-
-  .finally(function(){
-
-    button.disabled = false;
-    button.innerText = "连接";
-
-  });
-
+  }).catch(function(e){
+    if(e&&e.rateLimited){msg('连接失败：GitHub API 已达速率限制，请稍后再试。','err')}
+    else if(e&&e.http===401){msg('连接失败：Token 无效、过期或输入错误，请检查后重试。','err')}
+    else if(e&&e.http===403){msg('连接失败：Token 没有访问该仓库内容的权限，请给该仓库授权 Contents: Read and write。','err')}
+    else if(e&&e.http===404){msg('连接失败：仓库不存在，或 Token 没有该仓库的 Contents 读写权限。\n请确认仓库名正确，并在 Fine-grained Token 中勾选该仓库的 Contents: Read and write。','err')}
+    else{msg('连接失败：\n'+(e.message||e),'err')}
+  }).then(function(){b.disabled=false;b.innerText='连接'});
 }
 
-
-/* =========================
-   兼容旧代码
-========================= */
-
-window.connect = function(){
-
-  doConnect();
-
-};
-
-
-window.connectGithub = function(){
-
-  doConnect();
-
-};
-
-
-/* =========================
-   自动恢复
-========================= */
-
-function restoreLogin(){
-
-  try{
-
-    var user =
-      sessionStorage.getItem("gh_user");
-
-    var repo =
-      sessionStorage.getItem("gh_repo");
-
-    var token =
-      sessionStorage.getItem("gh_token");
-
-
-    if(
-      user &&
-      repo &&
-      token
-    ){
-
-      $("user").value = user;
-      $("repo").value = repo;
-      $("token").value = token;
-
-      showMsg(
-        "正在验证上次登录信息…",
-        "wait"
-      );
-
-      doConnect();
-
-      return;
-
-    }
-
-  }catch(e){}
-
-
-  showMsg(
-    "后台脚本已加载，请输入 Token 后点击“连接”。",
-    "muted"
-  );
-
+window.loadAll=function(){
+  stat('正在同步…','wait');
+  return Promise.all([readFile('data/categories.json'),readFile('data/jobs.json')]).then(function(a){
+    categories=a[0].data;jobs=a[1].data;render();stat('数据已同步','ok');
+  }).catch(function(e){stat('同步失败：'+e.message,'err')});
 }
 
+window.logoutGithub=function(){
+  try{sessionStorage.removeItem('gh_token')}catch(e){}
+  G={user:'',repo:'',token:'',branch:'main'};
+  $('token').value='';$('app').style.display='none';$('login').style.display='block';
+  msg('已退出，请重新输入 Token。');
+}
 
-/* =========================
-   清除登录
-========================= */
-
-window.clearLogin = function(){
-
-  try{
-
-    sessionStorage.removeItem("gh_user");
-    sessionStorage.removeItem("gh_repo");
-    sessionStorage.removeItem("gh_token");
-
-  }catch(e){}
-
-
-  $("token").value = "";
-
-  showMsg(
-    "已清除登录信息。",
-    "muted"
-  );
-
+/* ---------- 分类管理 ---------- */
+function saveCategories(message){
+  if(busy){stat('正在保存中，请稍候…','wait');return}
+  busy=true;stat('正在保存…','wait');
+  writeFile('data/categories.json',categories,message)
+    .then(function(){return loadAll()})
+    .catch(function(e){stat('分类保存失败：'+e.message,'err')})
+    .then(function(){busy=false});
+}
+window.addCategory=function(){
+  if(busy)return;
+  var n=prompt('分类名称');if(!n)return;
+  var s=prompt('Slug（英文标识，用于筛选链接）','category-'+(categories.length+1));if(!s)return;
+  categories.push({slug:s,name:n,description:'',image:'',enabled:true,sort_order:categories.length+1});
+  saveCategories('新增分类');
 };
-
-
-/* =========================
-   刷新
-========================= */
-
-window.loadAll = function(){
-
-  var button =
-    $("refreshBtn");
-
-  button.disabled = true;
-
-
-  showStatus(
-    "正在同步…",
-    "wait"
-  );
-
-
-  Promise.all([
-
-    readFile("data/categories.json"),
-
-    readFile("data/jobs.json")
-
-  ])
-
-  .then(function(result){
-
-    categories =
-      Array.isArray(result[0].data)
-        ? result[0].data
-        : [];
-
-    catSha =
-      result[0].sha;
-
-
-    jobs =
-      Array.isArray(result[1].data)
-        ? result[1].data
-        : [];
-
-    jobSha =
-      result[1].sha;
-
-
-    render();
-
-
-    showStatus(
-      "数据已同步",
-      "ok"
-    );
-
-  })
-
-  .catch(function(error){
-
-    showStatus(
-      "同步失败：" +
-      error.message,
-      "err"
-    );
-
-  })
-
-  .finally(function(){
-
-    button.disabled = false;
-
-  });
-
+window.saveCat=function(i){
+  if(busy)return;
+  var c=categories[i];if(!c)return;
+  c.name=$('n'+i).value.trim();
+  c.slug=$('s'+i).value.trim();
+  c.description=$('d'+i).value;
+  c.image=$('im'+i).value;
+  c.enabled=$('e'+i).checked;
+  c.sort_order=parseInt($('o'+i).value,10)||(categories.length+1);
+  saveCategories('更新分类');
 };
-
-
-/* =========================
-   退出
-========================= */
-
-window.logout = function(){
-
-  try{
-
-    sessionStorage.clear();
-
-  }catch(e){}
-
-
-  G = {
-    user:"",
-    repo:"",
-    token:""
-  };
-
-  categories = [];
-  jobs = [];
-
-  catSha = "";
-  jobSha = "";
-
-
-  $("token").value = "";
-
-  $("app").style.display =
-    "none";
-
-  $("login").style.display =
-    "block";
-
-
-  showMsg(
-    "已退出，请重新输入 Token。",
-    "muted"
-  );
-
-};
-
-
-/* =========================
-   新增分类
-========================= */
-
-window.addCategory = function(){
-
-  var name =
-    prompt("分类名称");
-
-  if(!name){
-    return;
-  }
-
-
-  var slug =
-    prompt(
-      "Slug",
-      "category-" +
-      (categories.length + 1)
-    );
-
-  if(!slug){
-    return;
-  }
-
-
-  categories.push({
-
-    slug:slug,
-
-    name:name,
-
-    description:"",
-
-    image:"",
-
-    enabled:true,
-
-    sort_order:
-      categories.length + 1
-
-  });
-
-
-  var button =
-    $("addCatBtn");
-
-  button.disabled = true;
-
-
-  showStatus(
-    "正在保存分类…",
-    "wait"
-  );
-
-
-  writeFile(
-    "data/categories.json",
-    categories,
-    catSha,
-    "新增分类"
-  )
-
-  .then(function(){
-
-    return refreshData();
-
-  })
-
-  .catch(function(error){
-
-    showStatus(
-      "新增失败：" +
-      error.message,
-      "err"
-    );
-
-  })
-
-  .finally(function(){
-
-    button.disabled = false;
-
-  });
-
-};
-
-
-/* =========================
-   发布兼职
-========================= */
-
-window.newJob = function(){
-
-  var title =
-    prompt("标题");
-
-  if(!title){
-    return;
-  }
-
-
-  var description =
-    prompt("描述","") || "";
-
-
-  jobs.unshift({
-
-    id:String(Date.now()),
-
-    title:title,
-
-    description:description,
-
-    status:"approved",
-
-    created_at:
-      new Date().toISOString()
-
-  });
-
-
-  var button =
-    $("newJobBtn");
-
-  button.disabled = true;
-
-
-  showStatus(
-    "正在发布兼职…",
-    "wait"
-  );
-
-
-  writeFile(
-    "data/jobs.json",
-    jobs,
-    jobSha,
-    "发布兼职"
-  )
-
-  .then(function(){
-
-    return refreshData();
-
-  })
-
-  .catch(function(error){
-
-    showStatus(
-      "发布失败：" +
-      error.message,
-      "err"
-    );
-
-  })
-
-  .finally(function(){
-
-    button.disabled = false;
-
-  });
-
-};
-
-
-/* =========================
-   保存分类
-========================= */
-
-window.saveCat = function(i){
-
-  var item =
-    categories[i];
-
-  if(!item){
-    return;
-  }
-
-
-  item.name =
-    $("n" + i).value.trim();
-
-  item.slug =
-    $("s" + i).value.trim();
-
-  item.description =
-    $("d" + i).value;
-
-  item.image =
-    $("im" + i).value.trim();
-
-  item.sort_order =
-    Number(
-      $("o" + i).value
-    ) || i + 1;
-
-
-  if(!item.name){
-
-    showStatus(
-      "分类名称不能为空。",
-      "err"
-    );
-
-    return;
-
-  }
-
-
-  if(!item.slug){
-
-    showStatus(
-      "Slug 不能为空。",
-      "err"
-    );
-
-    return;
-
-  }
-
-
-  showStatus(
-    "正在保存分类…",
-    "wait"
-  );
-
-
-  writeFile(
-    "data/categories.json",
-    categories,
-    catSha,
-    "更新分类"
-  )
-
-  .then(function(){
-
-    return refreshData();
-
-  })
-
-  .catch(function(error){
-
-    showStatus(
-      "保存失败：" +
-      error.message,
-      "err"
-    );
-
-  });
-
-};
-
-
-/* =========================
-   删除分类
-========================= */
-
-window.deleteCategory = function(i){
-
-  var item =
-    categories[i];
-
-  if(!item){
-    return;
-  }
-
-
-  if(
-    !confirm(
-      "确定删除分类“" +
-      item.name +
-      "”吗？"
-    )
-  ){
-
-    return;
-
-  }
-
-
+window.delCat=function(i){
+  if(busy)return;
+  var c=categories[i];if(!c)return;
+  if(!confirm('确定删除分类「'+c.name+'」？\n（不会删除已关联的兼职数据）'))return;
   categories.splice(i,1);
-
-
-  categories.forEach(
-    function(c,index){
-
-      c.sort_order =
-        index + 1;
-
-    }
-  );
-
-
-  showStatus(
-    "正在删除分类…",
-    "wait"
-  );
-
-
-  writeFile(
-    "data/categories.json",
-    categories,
-    catSha,
-    "删除分类"
-  )
-
-  .then(function(){
-
-    return refreshData();
-
-  })
-
-  .catch(function(error){
-
-    showStatus(
-      "删除失败：" +
-      error.message,
-      "err"
-    );
-
-  });
-
+  saveCategories('删除分类');
 };
 
-
-/* =========================
-   刷新数据
-========================= */
-
-function refreshData(){
-
-  return Promise.all([
-
-    readFile("data/categories.json"),
-
-    readFile("data/jobs.json")
-
-  ])
-
-  .then(function(result){
-
-    categories =
-      Array.isArray(result[0].data)
-        ? result[0].data
-        : [];
-
-    catSha =
-      result[0].sha;
-
-
-    jobs =
-      Array.isArray(result[1].data)
-        ? result[1].data
-        : [];
-
-    jobSha =
-      result[1].sha;
-
-
-    render();
-
-
-    showStatus(
-      "操作成功，数据已同步",
-      "ok"
-    );
-
+/* ---------- 兼职发布 / 审核 ---------- */
+function saveJobs(message){
+  if(busy){stat('正在保存中，请稍候…','wait');return}
+  busy=true;stat('正在保存…','wait');
+  writeFile('data/jobs.json',jobs,message)
+    .then(function(){return loadAll()})
+    .catch(function(e){stat('兼职保存失败：'+e.message,'err')})
+    .then(function(){busy=false});
+}
+function fillCatSelect(id,val){
+  var sel=$(id);if(!sel)return;
+  sel.innerHTML='<option value="">（不分类）</option>'+categories.map(function(c){
+    return '<option value="'+esc(c.slug)+'"'+(c.slug===val?' selected':'')+'>'+esc(c.name)+'</option>';
+  }).join('');
+}
+window.toggleJobForm=function(forceHide){
+  var w=$('jobFormWrap');
+  if(forceHide||w.style.display!=='none'){w.style.display='none';return}
+  fillCatSelect('jf_cat','');
+  w.style.display='block';
+};
+window.submitJob=function(){
+  if(busy)return;
+  var title=$('jf_title').value.trim();
+  if(!title){stat('请输入兼职标题。','err');return}
+  jobs.unshift({
+    id:String(Date.now()),
+    title:title,
+    description:$('jf_desc').value,
+    category:$('jf_cat').value,
+    salary:$('jf_salary').value,
+    location:$('jf_loc').value,
+    contact:$('jf_contact').value,
+    status:'pending',
+    created_at:new Date().toISOString()
   });
+  ['jf_title','jf_desc','jf_salary','jf_loc','jf_contact'].forEach(function(i){$(i).value=''});
+  $('jobFormWrap').style.display='none';
+  jobFilter='all';
+  saveJobs('发布兼职（待审核）');
+};
+window.setFilter=function(f){jobFilter=f;render()};
+window.setJobStatus=function(id,status){
+  if(busy)return;
+  var j=jobs.find(function(x){return x.id===id});if(!j)return;
+  if(status==='approved'&&!confirm('通过后该兼职将对网站公开显示，确认通过？'))return;
+  if(status==='rejected'&&!confirm('确认拒绝该兼职？'))return;
+  j.status=status;
+  saveJobs('更新兼职状态');
+};
+window.editJob=function(id){editingJobId=id;render()};
+window.cancelEdit=function(){editingJobId=null;render()};
+window.saveJobEdit=function(id){
+  if(busy)return;
+  var j=jobs.find(function(x){return x.id===id});if(!j)return;
+  j.title=$('ej_title').value.trim()||j.title;
+  j.description=$('ej_desc').value;
+  j.category=$('ej_cat').value;
+  j.salary=$('ej_salary').value;
+  j.location=$('ej_loc').value;
+  j.contact=$('ej_contact').value;
+  editingJobId=null;
+  saveJobs('更新兼职');
+};
+window.delJob=function(id){
+  if(busy)return;
+  var j=jobs.find(function(x){return x.id===id});if(!j)return;
+  if(!confirm('确定删除兼职「'+j.title+'」？'))return;
+  jobs=jobs.filter(function(x){return x.id!==id});
+  saveJobs('删除兼职');
+};
 
+/* ---------- 渲染 ---------- */
+function statusBadge(s){
+  if(s==='approved')return '<span class="badge ok">已通过</span>';
+  if(s==='rejected')return '<span class="badge err">已拒绝</span>';
+  return '<span class="badge wait">待审核</span>';
 }
-
-
-/* =========================
-   渲染
-========================= */
-
+function catName(slug){var c=categories.find(function(x){return x.slug===slug});return c?c.name:''}
+function jobOps(j){
+  var s=j.status||'pending',h='';
+  if(s==='pending'){h+='<button type="button" onclick="setJobStatus(\''+j.id+'\',\'approved\')">通过</button><button type="button" class="danger" onclick="setJobStatus(\''+j.id+'\',\'rejected\')">拒绝</button>'}
+  else if(s==='approved'){h+='<button type="button" onclick="setJobStatus(\''+j.id+'\',\'pending\')">下架</button>'}
+  else{h+='<button type="button" onclick="setJobStatus(\''+j.id+'\',\'pending\')">重新提交</button>'}
+  h+='<button type="button" onclick="editJob(\''+j.id+'\')">编辑</button><button type="button" class="danger" onclick="delJob(\''+j.id+'\')">删除</button>';
+  return h;
+}
+function renderJob(j){
+  if(j.id===editingJobId){
+    fillCatSelect('ej_cat',j.category||'');
+    var meta=[];
+    if(j.salary)meta.push('薪资：'+j.salary);
+    if(j.location)meta.push('地点：'+j.location);
+    if(j.contact)meta.push('联系：'+j.contact);
+    return '<div class="item"><b>编辑兼职</b>'+statusBadge(j.status)+
+      '<label>标题</label><input id="ej_title" value="'+esc(j.title)+'">'+
+      '<label>描述</label><textarea id="ej_desc">'+esc(j.description||'')+'</textarea>'+
+      '<label>分类</label><select id="ej_cat"></select>'+
+      '<div class="row"><div><label>薪资待遇</label><input id="ej_salary" value="'+esc(j.salary||'')+'"></div>'+
+      '<div><label>工作地点</label><input id="ej_loc" value="'+esc(j.location||'')+'"></div></div>'+
+      '<label>联系方式</label><input id="ej_contact" value="'+esc(j.contact||'')+'">'+
+      '<div class="ops"><button type="button" onclick="saveJobEdit(\''+j.id+'\')">保存</button>'+
+      '<button type="button" class="ghost" onclick="cancelEdit()">取消</button></div></div>';
+  }
+  var meta=[];
+  var cn=catName(j.category);
+  if(cn)meta.push(cn);
+  if(j.salary)meta.push('薪资：'+j.salary);
+  if(j.location)meta.push('地点：'+j.location);
+  if(j.contact)meta.push('联系：'+j.contact);
+  meta.push('发布时间：'+fmtDate(j.created_at));
+  return '<div class="item"><span class="job-title">'+esc(j.title)+'</span>'+statusBadge(j.status||'pending')+
+    (j.description?'<p>'+esc(j.description)+'</p>':'')+
+    '<div class="meta">'+esc(meta.join('　|　'))+'</div>'+
+    '<div class="ops">'+jobOps(j)+'</div></div>';
+}
 function render(){
+  // 分类按 sort_order 排序后渲染（保留原始数组下标用于保存）
+  var clist=categories.slice().sort(function(a,b){return (a.sort_order||999)-(b.sort_order||999)});
+  $('cats').innerHTML=clist.map(function(c){
+    var oi=categories.indexOf(c);
+    return '<div class="item"><div class="row"><div>'+
+      '<label>名称</label><input id="n'+oi+'" value="'+esc(c.name)+'">'+
+      '<label>Slug</label><input id="s'+oi+'" value="'+esc(c.slug)+'">'+
+      '<label>描述</label><textarea id="d'+oi+'">'+esc(c.description||'')+'</textarea></div><div>'+
+      '<label>图片路径</label><input id="im'+oi+'" value="'+esc(c.image||'')+'">'+
+      '<label>排序</label><input id="o'+oi+'" type="number" value="'+(c.sort_order||oi+1)+'">'+
+      '<label class="inline"><input id="e'+oi+'" type="checkbox"'+(c.enabled===false?'':' checked')+'> 启用该分类</label>'+
+      '</div></div><div class="ops"><button type="button" onclick="saveCat('+oi+')">保存</button>'+
+      '<button type="button" class="danger" onclick="delCat('+oi+')">删除</button></div></div>';
+  }).join('')||'<p class="muted">暂无分类，点击“新增分类”创建。</p>';
 
-  var cats =
-    $("cats");
+  // 兼职按状态筛选
+  var jlist=jobs.filter(function(j){
+    if(jobFilter==='all')return true;
+    return (j.status||'pending')===jobFilter;
+  });
+  // 若正在编辑的记录不在当前筛选内，退出编辑态
+  if(editingJobId&&!jobs.some(function(j){return j.id===editingJobId&&(jobFilter==='all'||(j.status||'pending')===jobFilter)}))editingJobId=null;
+  $('jobs').innerHTML=jlist.map(renderJob).join('')||'<p class="muted">暂无兼职</p>';
 
-
-  if(!categories.length){
-
-    cats.innerHTML =
-      '<div class="empty">' +
-      '暂无分类，请点击“新增分类”。' +
-      '</div>';
-
-  }else{
-
-    cats.innerHTML =
-      categories.map(function(c,i){
-
-        return (
-
-          '<div class="item">' +
-
-          '<div class="row">' +
-
-          '<div>' +
-
-          '<label>名称</label>' +
-
-          '<input id="n' + i +
-          '" value="' +
-          esc(c.name) +
-          '">' +
-
-          '<label>Slug</label>' +
-
-          '<input id="s' + i +
-          '" value="' +
-          esc(c.slug) +
-          '">' +
-
-          '<label>描述</label>' +
-
-          '<textarea id="d' + i +
-          '">' +
-          esc(c.description || "") +
-          '</textarea>' +
-
-          '</div>' +
-
-          '<div>' +
-
-          '<label>图片路径</label>' +
-
-          '<input id="im' + i +
-          '" value="' +
-          esc(c.image || "") +
-          '">' +
-
-          '<label>排序</label>' +
-
-          '<input id="o' + i +
-          '" type="number" value="' +
-          (c.sort_order || i + 1) +
-          '">' +
-
-          '</div>' +
-
-          '</div>' +
-
-          '<button type="button" ' +
-          'onclick="saveCat(' +
-          i +
-          ')">' +
-          '保存' +
-          '</button>' +
-
-          '<button type="button" ' +
-          'class="danger" ' +
-          'onclick="deleteCategory(' +
-          i +
-          ')">' +
-          '删除' +
-          '</button>' +
-
-          '</div>'
-
-        );
-
-      }).join("");
-
-  }
-
-
-  var jobsEl =
-    $("jobs");
-
-
-  if(!jobs.length){
-
-    jobsEl.innerHTML =
-      '<div class="empty">暂无兼职</div>';
-
-  }else{
-
-    jobsEl.innerHTML =
-      jobs.map(function(j){
-
-        return (
-
-          '<div class="item">' +
-
-          '<b>' +
-          esc(j.title) +
-          '</b> ' +
-
-          '<span class="badge">' +
-          esc(j.status || "pending") +
-          '</span>' +
-
-          '<p>' +
-          esc(j.description || "") +
-          '</p>' +
-
-          '<div class="muted">' +
-          'ID：' +
-          esc(j.id || "") +
-          '</div>' +
-
-          '</div>'
-
-        );
-
-      }).join("");
-
-  }
-
+  // 高亮当前筛选
+  ['all','pending','approved','rejected'].forEach(function(f){
+    var b=document.querySelector('.filter button[data-f="'+f+'"]');
+    if(b)b.className=(jobFilter===f?'active':'');
+  });
 }
 
-
-/* =========================
-   页面加载
-========================= */
-
-window.addEventListener(
-  "load",
-  function(){
-
-    restoreLogin();
-
-  }
-);
-
-
-/* =========================
-   JS 错误显示
-========================= */
-
-window.addEventListener(
-  "error",
-  function(e){
-
-    console.error(e.error || e.message);
-
-  }
-);
-
+/* ---------- 启动 ---------- */
+window.addEventListener('error',function(e){try{console.error('页面脚本错误：',e.error||e.message)}catch(x){}});
+window.addEventListener('load',function(){
+  try{
+    var u=sessionStorage.getItem('gh_user'),r=sessionStorage.getItem('gh_repo'),t=sessionStorage.getItem('gh_token');
+    if(u&&r&&t){$('user').value=u;$('repo').value=r;$('token').value=t;connectGithub();return}
+    if(u)$('user').value=u;
+    if(r)$('repo').value=r;
+  }catch(e){}
+  msg('后台脚本已加载，请输入 Token 后点击“连接”。','muted');
+});
 })();
 </script>
-
 </body>
 </html>
