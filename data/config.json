@@ -1,3 +1,20 @@
 {
-  "worker_url": "https://ndx.8851366.workers.dev"
+  "worker_url": "https://ndx.8851366.workers.dev",
+  "site_title": "",
+  "site_subtitle": "",
+  "hero_title": "",
+  "hero_description": "",
+  "about_title": "",
+  "about_text": "",
+  "background_image": "",
+  "telegram": "",
+  "youtube": "",
+  "instagram": "",
+  "tiktok": "",
+  "safety_notice": "",
+  "labels": {
+    "name": "老师名称",
+    "link": "老师榜单链接",
+    "sort": "标签[服务项目用,号分割]"
+  }
 }
