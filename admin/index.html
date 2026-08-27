@@ -166,6 +166,11 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
         <button data-f="rejected" onclick="setJobFilter('rejected')">已拒绝</button>
         <button data-f="all" onclick="setJobFilter('all')">全部</button>
       </div>
+      <div class="row3" style="margin:10px 0">
+        <div><label>一级分类</label><select id="jobFilterCat" onchange="onJobCatChange()"><option value="">全部</option></select></div>
+        <div><label>二级分类</label><select id="jobFilterSub" onchange="renderJobs()"><option value="">全部</option></select></div>
+        <div><label>三级分类</label><select id="jobFilterSub2" onchange="renderJobs()"><option value="">全部</option></select></div>
+      </div>
       <button onclick="newJob()">+ 发布兼职</button>
       <div id="jobs" style="margin-top:14px"></div>
     </div>
@@ -317,6 +322,7 @@ function showView(name,param){
   if(name==='cat1')renderCat1();
   if(name==='cat2'){fillCat2Parent();renderCat2()}
   if(name==='cat3'){fillCat3Parent1();renderCat3()}
+  if(name==='jobs'){initJobFilterCats();renderJobs()}
   if(name==='labels')renderConfig();
   if(name==='formlabels')renderConfig();
   if(name==='jobs'){if(param)currentFilter=param;renderJobs()}
@@ -325,6 +331,21 @@ function showView(name,param){
   closeSidebar();
 }
 function setJobFilter(f){currentFilter=f;document.querySelectorAll('#jobFilters button').forEach(function(b){b.classList.toggle('active',b.dataset.f===f)});renderJobs()}
+function initJobFilterCats(){
+  var cat=$('jobFilterCat');if(!cat)return;
+  var cv=cat.value;
+  cat.innerHTML='<option value="">全部</option>'+CATEGORIES.filter(function(c){return c.enabled!==false}).map(function(c){return '<option value="'+esc(c.slug)+'">'+esc(c.name)+'</option>'}).join('');
+  if(cv)cat.value=cv;
+  onJobCatChange();
+}
+function onJobCatChange(){
+  var cat=$('jobFilterCat'),sub=$('jobFilterSub'),sub2=$('jobFilterSub2');if(!cat||!sub)return;
+  var c=catObj(cat.value);
+  sub.innerHTML='<option value="">全部</option>'+((c&&c.subcategories)||[]).map(function(s){return '<option value="'+esc(s.slug)+'">'+esc(s.name)+'</option>'}).join('');
+  if(sub2)sub2.innerHTML='<option value="">全部</option>';
+  renderJobs();
+}
+function catObj(slug){return CATEGORIES.find(function(x){return x.slug===slug})||{subcategories:[]}}
 function toggleSidebar(){$('sidebar').classList.toggle('open');$('mask').classList.toggle('show')}
 function closeSidebar(){$('sidebar').classList.remove('open');$('mask').classList.remove('show')}
 
@@ -509,7 +530,12 @@ function renderJobs(){
   document.querySelectorAll('#jobFilters button').forEach(function(b){b.classList.toggle('active',b.dataset.f===currentFilter)});
   var titles={pending:'待审核兼职',approved:'已通过兼职',rejected:'已拒绝兼职',all:'全部兼职'};
   $('jobsTitle').textContent=titles[currentFilter]||'兼职管理';
+  var cat=$('jobFilterCat'),sub=$('jobFilterSub'),sub2=$('jobFilterSub2');
+  var cv=cat?cat.value:'',sv=sub?sub.value:'',s2v=sub2?sub2.value:'';
   var list=currentFilter==='all'?JOBS:JOBS.filter(function(j){return j.status===currentFilter});
+  if(cv)list=list.filter(function(j){return j.category===cv});
+  if(sv)list=list.filter(function(j){return j.subcategory===sv});
+  if(s2v)list=list.filter(function(j){return j.subcategory2===s2v});
   $('jobs').innerHTML=list.length?list.map(function(j){
     if(j.editing)return renderJobEdit(j);
     var b='<span class="badge '+esc(j.status)+'">'+(j.status==='approved'?'已通过':j.status==='rejected'?'已拒绝':'待审核')+'</span>';
