@@ -187,7 +187,7 @@ function filteredJobs(){
 function renderCat1Chips(){
   const total=jobs.length;
   let html=`<button class="chip ${activeCat==="all"?"active":""}" onclick="setCat1('all')">全部 <span class="cnt">${total}</span></button>`;
-  html+=categories.filter(c=>c.enabled!==false).map(c=>{const n=jobs.filter(j=>j.category===c.slug).length;return `<button class="chip ${activeCat===c.slug?"active":""}" onclick="setCat1('${esc(c.slug)}')">${esc(c.name)} <span class="cnt">${n}</span></button>`}).join("");
+  html+=categories.filter(c=>c.enabled!==false).map(c=>{const n=jobs.filter(j=>j.category===c.slug).length;return n>0?`<button class="chip ${activeCat===c.slug?"active":""}" onclick="setCat1('${esc(c.slug)}')">${esc(c.name)} <span class="cnt">${n}</span></button>`:""}).join("");
   document.getElementById("cat1Chips").innerHTML=html;
   document.getElementById("totalCnt").textContent=`共 ${total} 条`;
 }
@@ -196,11 +196,12 @@ function renderCat2Chips(){
   const wrap=document.getElementById("cat2Wrap");
   if(activeCat==="all"){wrap.style.display="none";return}
   const c=catObj(activeCat),subs=c.subcategories||[];
-  if(!subs.length){wrap.style.display="none";return}
-  wrap.style.display="";document.getElementById("cat2Label").textContent=catName(activeCat)+" · 城市";
   const catJobs=jobs.filter(j=>j.category===activeCat);
+  const hasSubs=subs.some(s=>catJobs.filter(j=>j.subcategory===s.slug).length>0);
+  if(!hasSubs){wrap.style.display="none";return}
+  wrap.style.display="";document.getElementById("cat2Label").textContent=catName(activeCat)+" · 城市";
   let html=`<button class="chip ${activeSub==="all"?"active":""}" onclick="setCat2('all')">全部 <span class="cnt">${catJobs.length}</span></button>`;
-  html+=subs.map(s=>{const n=catJobs.filter(j=>j.subcategory===s.slug).length;return `<button class="chip ${activeSub===s.slug?"active":""}" onclick="setCat2('${esc(s.slug)}')">${esc(s.name)} <span class="cnt">${n}</span></button>`}).join("");
+  html+=subs.map(s=>{const n=catJobs.filter(j=>j.subcategory===s.slug).length;return n>0?`<button class="chip ${activeSub===s.slug?"active":""}" onclick="setCat2('${esc(s.slug)}')">${esc(s.name)} <span class="cnt">${n}</span></button>`:""}).join("");
   document.getElementById("cat2Chips").innerHTML=html;
 }
 function setCat2(slug){activeSub=slug;activeSub2="all";activeTags=[];renderAll()}
@@ -208,11 +209,12 @@ function renderCat3Chips(){
   const wrap=document.getElementById("cat3Wrap");
   if(activeCat==="all"||activeSub==="all"){wrap.style.display="none";return}
   const s=(catObj(activeCat).subcategories||[]).find(x=>x.slug===activeSub),subs=(s&&s.subcategories)||[];
-  if(!subs.length){wrap.style.display="none";return}
-  wrap.style.display="";document.getElementById("cat3Label").textContent=subName(activeCat,activeSub)+" · 区县";
   const subJobs=jobs.filter(j=>j.category===activeCat&&j.subcategory===activeSub);
+  const hasSubs=subs.some(t=>subJobs.filter(j=>j.subcategory2===t.slug).length>0);
+  if(!hasSubs){wrap.style.display="none";return}
+  wrap.style.display="";document.getElementById("cat3Label").textContent=subName(activeCat,activeSub)+" · 区县";
   let html=`<button class="chip ${activeSub2==="all"?"active":""}" onclick="setCat3('all')">全部 <span class="cnt">${subJobs.length}</span></button>`;
-  html+=subs.map(t=>{const n=subJobs.filter(j=>j.subcategory2===t.slug).length;return `<button class="chip ${activeSub2===t.slug?"active":""}" onclick="setCat3('${esc(t.slug)}')">${esc(t.name)} <span class="cnt">${n}</span></button>`}).join("");
+  html+=subs.map(t=>{const n=subJobs.filter(j=>j.subcategory2===t.slug).length;return n>0?`<button class="chip ${activeSub2===t.slug?"active":""}" onclick="setCat3('${esc(t.slug)}')">${esc(t.name)} <span class="cnt">${n}</span></button>`:""}).join("");
   document.getElementById("cat3Chips").innerHTML=html;
 }
 function setCat3(slug){activeSub2=slug;activeTags=[];renderAll()}
