@@ -274,7 +274,16 @@ function api(path,method,body){
   return fetch('https://api.github.com'+path,opt).then(function(r){return r.text().then(function(t){var d=null;try{d=t?JSON.parse(t):null}catch(e){}if(!r.ok){var x=(d&&d.message)||('HTTP '+r.status);if(r.status===401)x='401：Token 无效或过期';if(r.status===403)x='403：Token 无仓库读写权限';if(r.status===404)x='404：仓库不存在或无权访问';throw new Error(x)}return d})}).catch(function(e){if(e&&e.message)return Promise.reject(e);return Promise.reject(new Error('无法连接 GitHub API'))})
 }
 function readFile(path){return api('/repos/'+encodeURIComponent(G.user)+'/'+encodeURIComponent(G.repo)+'/contents/'+path+'?ref=main').then(function(x){if(!x||!x.content)throw new Error('读取失败：'+path);return{data:JSON.parse(dec(x.content)),sha:x.sha}})}
-function writeFile(path,data,sha,message){return api('/repos/'+encodeURIComponent(G.user)+'/'+encodeURIComponent(G.repo)+'/contents/'+path,'PUT',{message:message,content:enc(JSON.stringify(data,null,2)+'\n'),sha:sha,branch:'main'})}
+function writeFile(path,data,sha,message){
+  var body={message:message,content:enc(JSON.stringify(data,null,2)+'\n'),sha:sha,branch:'main'};
+  var url='/repos/'+encodeURIComponent(G.user)+'/'+encodeURIComponent(G.repo)+'/contents/'+path;
+  return api(url,'PUT',body).catch(function(e){
+    if(e&&e.message&&(e.message.indexOf('does not match')>=0||e.message.indexOf('409')>=0)){
+      return readFile(path).then(function(d){body.sha=d.sha;return api(url,'PUT',body)})
+    }
+    throw e
+  })
+}
 async function uploadImage(file,dir){
   var b64=await fileToBase64(file);
   var ext=(file.name.split('.').pop()||'jpg').toLowerCase();
