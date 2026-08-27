@@ -196,68 +196,180 @@
     "sort_order": 2,
     "subcategories": [
       {
-        "slug": "retail",
-        "name": "零售促销",
+        "slug": "city-1787865891748-somj",
+        "name": "海口市",
         "image": "",
         "image_link": "",
         "subcategories": [
           {
-            "slug": "retail-guide",
-            "name": "商场导购"
+            "slug": "dist-1787865891748-uue7",
+            "name": "秀英区"
           },
           {
-            "slug": "retail-expo",
-            "name": "展会协助"
+            "slug": "dist-1787865891748-du4k",
+            "name": "龙华区"
+          },
+          {
+            "slug": "dist-1787865891748-jt7n",
+            "name": "琼山区"
+          },
+          {
+            "slug": "dist-1787865891748-hfo5",
+            "name": "美兰区"
           }
         ]
       },
       {
-        "slug": "catering",
-        "name": "餐饮服务",
+        "slug": "city-1787865891748-dzf2",
+        "name": "三亚市",
         "image": "",
         "image_link": "",
         "subcategories": [
           {
-            "slug": "catering-waiter",
-            "name": "服务员"
+            "slug": "dist-1787865891748-bzbf",
+            "name": "海棠区"
           },
           {
-            "slug": "catering-kitchen",
-            "name": "后厨帮工"
+            "slug": "dist-1787865891748-fawt",
+            "name": "吉阳区"
+          },
+          {
+            "slug": "dist-1787865891748-pk7q",
+            "name": "天涯区"
+          },
+          {
+            "slug": "dist-1787865891748-j5kk",
+            "name": "崖州区"
           }
         ]
       },
       {
-        "slug": "service",
-        "name": "客服文员",
+        "slug": "city-1787865891748-undh",
+        "name": "三沙市",
         "image": "",
         "image_link": "",
         "subcategories": [
           {
-            "slug": "service-phone",
-            "name": "电话客服"
+            "slug": "dist-1787865891748-npa9",
+            "name": "西沙区"
           },
           {
-            "slug": "service-data",
-            "name": "数据录入"
+            "slug": "dist-1787865891748-4n79",
+            "name": "南沙区"
           }
         ]
       },
       {
-        "slug": "logistics",
-        "name": "物流仓储",
+        "slug": "city-1787865891748-26d3",
+        "name": "儋州市",
         "image": "",
         "image_link": "",
-        "subcategories": [
-          {
-            "slug": "logistics-sort",
-            "name": "仓库分拣"
-          },
-          {
-            "slug": "logistics-load",
-            "name": "快递装卸"
-          }
-        ]
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865891748-yhsp",
+        "name": "五指山市",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865891748-qinu",
+        "name": "琼海市",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865891748-2fjq",
+        "name": "文昌市",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865891748-780u",
+        "name": "万宁市",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865891748-h7tv",
+        "name": "东方市",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865891748-ut05",
+        "name": "定安县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865891748-rt9w",
+        "name": "屯昌县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865891748-6m4m",
+        "name": "澄迈县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865891748-0uyn",
+        "name": "临高县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865891748-9p56",
+        "name": "白沙黎族自治县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865891748-tjiq",
+        "name": "昌江黎族自治县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865891748-lmx6",
+        "name": "乐东黎族自治县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865891748-gkvv",
+        "name": "陵水黎族自治县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865891748-a8re",
+        "name": "保亭黎族苗族自治县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865891748-dru3",
+        "name": "琼中黎族苗族自治县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
       }
     ]
   },
