@@ -230,8 +230,12 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <div><label>薪资 - 提示文字</label><input id="fp_salary" placeholder="默认：如：150元/天"></div></div>
       <div class="row"><div><label>地点 - 标签</label><input id="fl_loc" placeholder="默认：地点"></div>
       <div><label>地点 - 提示文字</label><input id="fp_loc" placeholder="默认：如：海口市美兰区"></div></div>
-      <div class="row"><div><label>联系方式 - 标签</label><input id="fl_contact" placeholder="默认：联系方式"></div>
-      <div><label>联系方式 - 提示</label><input id="fp_contact" placeholder="默认：电话/微信/邮箱，自动变超链接"></div></div>
+      <div class="row"><div><label>个人联系方式 - 标签</label><input id="fl_contact" placeholder="默认：个人联系方式"></div>
+      <div><label>个人联系方式 - 提示</label><input id="fp_contact" placeholder="默认：电话/微信/邮箱"></div></div>
+      <div class="row"><div><label>双向联系 - 标签</label><input id="fl_contact2" placeholder="默认：双向联系"></div>
+      <div><label>双向联系 - 提示</label><input id="fp_contact2" placeholder="默认：如：QQ群/微信群"></div></div>
+      <div class="row"><div><label>个人频道 - 标签</label><input id="fl_contact3" placeholder="默认：个人频道"></div>
+      <div><label>个人频道 - 提示</label><input id="fp_contact3" placeholder="默认：如：Telegram频道"></div></div>
       <div class="row"><div><label>自定义标签 - 标签</label><input id="fl_tags" placeholder="默认：自定义标签"></div>
       <div><label>自定义标签 - 提示</label><input id="fp_tags" placeholder="默认：逗号分隔，如：日结,周末"></div></div>
       <div class="row"><div><label>封面图片 - 标签</label><input id="fl_img" placeholder="默认：封面图片"></div>
@@ -582,8 +586,8 @@ function renderConfig(){
   fields.forEach(function(f){var el=$('cfg_'+f);if(el)el.value=CONFIG[f]||''});
   var lb=CONFIG.labels||{};['name','slug','image','link','enabled','sort'].forEach(function(k){var el=$('lbl_'+k);if(el)el.value=lb[k]||''});
   var fl=CONFIG.form_labels||{},fp=CONFIG.form_placeholders||{};
-  ['title','cat','sub','sub2','desc','salary','loc','contact','tags','img','submit'].forEach(function(k){var el=$('fl_'+k);if(el)el.value=fl[k]||''});
-  ['title','desc','salary','loc','contact','tags'].forEach(function(k){var el=$('fp_'+k);if(el)el.value=fp[k]||''});
+  ['title','cat','sub','sub2','desc','salary','loc','contact','contact2','contact3','tags','img','submit'].forEach(function(k){var el=$('fl_'+k);if(el)el.value=fl[k]||''});
+  ['title','desc','salary','loc','contact','contact2','contact3','tags'].forEach(function(k){var el=$('fp_'+k);if(el)el.value=fp[k]||''});
   var bg=$('cfg_background_image');if(bg&&bg.value){var p=$('bgPreview');p.src=bg.value;p.style.display='block'}
   renderSocialList();
 }
@@ -619,8 +623,8 @@ window.saveConfig=function(){
   var lb={};['name','slug','image','link','enabled','sort'].forEach(function(k){var el=$('lbl_'+k);if(el&&el.value.trim())lb[k]=el.value.trim()});
   CONFIG.labels=lb;
   var fl={},fp={};
-  ['title','cat','sub','sub2','desc','salary','loc','contact','tags','img','submit'].forEach(function(k){var el=$('fl_'+k);if(el&&el.value.trim())fl[k]=el.value.trim()});
-  ['title','desc','salary','loc','contact','tags'].forEach(function(k){var el=$('fp_'+k);if(el&&el.value.trim())fp[k]=el.value.trim()});
+  ['title','cat','sub','sub2','desc','salary','loc','contact','contact2','contact3','tags','img','submit'].forEach(function(k){var el=$('fl_'+k);if(el&&el.value.trim())fl[k]=el.value.trim()});
+  ['title','desc','salary','loc','contact','contact2','contact3','tags'].forEach(function(k){var el=$('fp_'+k);if(el&&el.value.trim())fp[k]=el.value.trim()});
   CONFIG.form_labels=fl;CONFIG.form_placeholders=fp;
   var list=CONFIG.social_links||[];
   list.forEach(function(s,i){s.name=$('sl_name_'+i).value.trim()||s.name;s.url=$('sl_url_'+i).value.trim();s.icon=$('sl_icon_'+i).value.trim();s.color=$('sl_color_'+i).value});
