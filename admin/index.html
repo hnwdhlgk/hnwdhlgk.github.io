@@ -82,10 +82,10 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
         <div class="menu-item" data-view="config" data-section="appearance" onclick="showView('config','appearance')">外观与背景</div>
         <div class="menu-item" data-view="config" data-section="social" onclick="showView('config','social')">官方渠道</div>
         <div class="menu-item" data-view="config" data-section="safety" onclick="showView('config','safety')">安全提醒</div>
-        <div class="menu-item" data-view="config" data-section="labels" onclick="showView('config','labels')">字段标签</div>
-        <div class="menu-item" data-view="config" data-section="formlabels" onclick="showView('config','formlabels')">兼职表单</div>
       </div>
     </div>
+    <div class="menu-item" data-view="labels" onclick="showView('labels')"><span class="mi-ic">🏷️</span>字段标签</div>
+    <div class="menu-item" data-view="formlabels" onclick="showView('formlabels')"><span class="mi-ic">📝</span>表单设置</div>
     <div class="menu-item" data-view="users" onclick="showView('users')"><span class="mi-ic">👥</span>用户管理</div>
   </nav>
   <div class="sidebar-footer"><div class="who" id="whoami">—</div><button onclick="logoutGithub()">退出登录</button></div>
@@ -185,10 +185,19 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <p class="muted">留空则使用默认浅色背景。建议 1920×1080 以上。上传的图片保存到仓库 assets/ 目录。</p>
     </div>
     <div class="card" id="sec-social"><h3>官方渠道</h3>
-      <div class="row"><div><label>Telegram 链接</label><input id="cfg_telegram"></div><div><label>YouTube 链接</label><input id="cfg_youtube"></div></div>
-      <div class="row"><div><label>Instagram 链接</label><input id="cfg_instagram"></div><div><label>TikTok 链接</label><input id="cfg_tiktok"></div></div>
+      <p class="muted">可自定义渠道名称、上传图标图片。点击「新增渠道」可添加更多。</p>
+      <div id="socialList"></div>
+      <button type="button" class="small ghost" onclick="addSocial()">+ 新增渠道</button>
     </div>
-    <div class="card" id="sec-labels"><h3>字段标签自定义</h3>
+    <div class="card" id="sec-safety"><h3>安全提醒</h3>
+      <label>安全提醒文案</label><textarea id="cfg_safety_notice"></textarea>
+      <div class="ops"><button onclick="saveConfig()">保存站点配置</button></div>
+    </div>
+  </div>
+
+  <!-- 字段标签 -->
+  <div id="view-labels" class="view">
+    <div class="card"><h3>字段标签自定义</h3>
       <p class="muted">自定义分类管理页面的字段名称，留空则使用默认文字。</p>
       <div class="row"><div><label>「名称」标签</label><input id="lbl_name" placeholder="默认：名称"></div>
       <div><label>「Slug」标签</label><input id="lbl_slug" placeholder="默认：Slug"></div></div>
@@ -196,8 +205,13 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <div><label>「图片超链接」标签</label><input id="lbl_link" placeholder="默认：图片超链接（点击跳转）"></div></div>
       <div class="row"><div><label>「启用」标签</label><input id="lbl_enabled" placeholder="默认：启用该分类"></div>
       <div><label>「排序」标签</label><input id="lbl_sort" placeholder="默认：排序"></div></div>
+      <div class="ops"><button onclick="saveConfig()">保存</button></div>
     </div>
-    <div class="card" id="sec-formlabels"><h3>兼职发布表单标签与提示</h3>
+  </div>
+
+  <!-- 表单设置 -->
+  <div id="view-formlabels" class="view">
+    <div class="card"><h3>兼职发布表单标签与提示</h3>
       <p class="muted">自定义普通用户发布兼职页面的字段名称和输入框提示文字。留空使用默认。</p>
       <div class="row"><div><label>标题 - 标签文字</label><input id="fl_title" placeholder="默认：标题"></div>
       <div><label>标题 - 提示文字</label><input id="fp_title" placeholder="默认：请输入兼职标题"></div></div>
@@ -216,10 +230,7 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <div><label>自定义标签 - 提示</label><input id="fp_tags" placeholder="默认：逗号分隔，如：日结,周末"></div></div>
       <div class="row"><div><label>封面图片 - 标签</label><input id="fl_img" placeholder="默认：封面图片"></div>
       <div><label>提交按钮文字</label><input id="fl_submit" placeholder="默认：提交（等待审核）"></div></div>
-    </div>
-    <div class="card" id="sec-safety"><h3>安全提醒</h3>
-      <label>安全提醒文案</label><textarea id="cfg_safety_notice"></textarea>
-      <div class="ops"><button onclick="saveConfig()">保存站点配置</button></div>
+      <div class="ops"><button onclick="saveConfig()">保存</button></div>
     </div>
   </div>
 
@@ -274,11 +285,13 @@ function showView(name,param){
   var v=$('view-'+name);if(v)v.classList.add('active');
   document.querySelectorAll('.menu-item[data-view]').forEach(function(m){m.classList.remove('active')});
   document.querySelectorAll('.menu-item[data-view="'+name+'"]').forEach(function(m){if(!param||m.dataset.filter===param||m.dataset.section===param)m.classList.add('active')});
-  var titles={dashboard:'概览',cat1:'一级分类',cat2:'二级分类',cat3:'三级分类',jobs:'兼职管理',config:'站点配置',users:'用户管理'};
+  var titles={dashboard:'概览',cat1:'一级分类',cat2:'二级分类',cat3:'三级分类',jobs:'兼职管理',config:'站点配置',labels:'字段标签',formlabels:'表单设置',users:'用户管理'};
   $('pageTitle').textContent=titles[name]||name;
   if(name==='cat1')renderCat1();
   if(name==='cat2'){fillCat2Parent();renderCat2()}
   if(name==='cat3'){fillCat3Parent1();renderCat3()}
+  if(name==='labels')renderConfig();
+  if(name==='formlabels')renderConfig();
   if(name==='jobs'){if(param)currentFilter=param;renderJobs()}
   if(name==='config'&&param){var sec=$('sec-'+param);if(sec)setTimeout(function(){sec.scrollIntoView({behavior:'smooth',block:'start'})},100)}
   if(name==='dashboard')renderDashboard();
@@ -464,22 +477,53 @@ window.rejectJob=function(id){var j=JOBS.find(function(x){return x.id===id});if(
 
 /* ====== 站点配置 ====== */
 function renderConfig(){
-  var fields=['site_title','site_subtitle','hero_title','hero_description','about_title','about_text','worker_url','background_image','telegram','youtube','instagram','tiktok','safety_notice'];
+  var fields=['site_title','site_subtitle','hero_title','hero_description','about_title','about_text','worker_url','background_image','safety_notice'];
   fields.forEach(function(f){var el=$('cfg_'+f);if(el)el.value=CONFIG[f]||''});
   var lb=CONFIG.labels||{};['name','slug','image','link','enabled','sort'].forEach(function(k){var el=$('lbl_'+k);if(el)el.value=lb[k]||''});
   var fl=CONFIG.form_labels||{},fp=CONFIG.form_placeholders||{};
   ['title','cat','sub','sub2','desc','salary','loc','contact','tags','img','submit'].forEach(function(k){var el=$('fl_'+k);if(el)el.value=fl[k]||''});
   ['title','desc','salary','loc','contact','tags'].forEach(function(k){var el=$('fp_'+k);if(el)el.value=fp[k]||''});
   var bg=$('cfg_background_image');if(bg&&bg.value){var p=$('bgPreview');p.src=bg.value;p.style.display='block'}
+  renderSocialList();
+}
+function renderSocialList(){
+  var list=CONFIG.social_links;
+  if(!list){
+    list=[];
+    var old=[{k:'telegram',n:'Telegram',c:'#0088cc'},{k:'youtube',n:'YouTube',c:'#ff0000'},{k:'instagram',n:'Instagram',c:'#e1306c'},{k:'tiktok',n:'TikTok',c:'#000000'}];
+    old.forEach(function(o){if(CONFIG[o.k])list.push({name:o.n,url:CONFIG[o.k],icon:'',color:o.c})});
+    if(!list.length)list=[{name:'Telegram',url:'',icon:'',color:'#0088cc'},{name:'YouTube',url:'',icon:'',color:'#ff0000'},{name:'Instagram',url:'',icon:'',color:'#e1306c'},{name:'TikTok',url:'',icon:'',color:'#000000'}];
+    CONFIG.social_links=list;
+  }
+  $('socialList').innerHTML=list.map(function(s,i){
+    return '<div class="cat-item"><div class="row"><div><label>渠道名称</label><input id="sl_name_'+i+'" value="'+esc(s.name)+'"></div>'+
+    '<div><label>图标颜色</label><input id="sl_color_'+i+'" type="color" value="'+esc(s.color||'#0d47a1')+'" style="height:42px;padding:4px"></div></div>'+
+    '<label>链接地址</label><input id="sl_url_'+i+'" value="'+esc(s.url||'')+'">'+
+    '<div class="upload-row"><input id="sl_icon_'+i+'" value="'+esc(s.icon||'')+'" placeholder="图标图片 URL，或点击上传">'+
+    '<button type="button" class="small" onclick="uploadSocialIcon('+i+')">上传图标</button>'+
+    '<button type="button" class="small danger" onclick="delSocial('+i+')">删除</button></div>'+
+    (s.icon?'<img src="'+esc(s.icon)+'" class="preview-img" style="max-width:48px;max-height:48px;margin-top:6px">':'')+'</div>';
+  }).join('');
+}
+window.addSocial=function(){CONFIG.social_links=CONFIG.social_links||[];CONFIG.social_links.push({name:'新渠道',url:'',icon:'',color:'#0d47a1'});renderSocialList()}
+window.delSocial=function(i){if(!confirm('确定删除该渠道？'))return;CONFIG.social_links.splice(i,1);renderSocialList()}
+window.uploadSocialIcon=function(i){
+  var inp=document.createElement('input');inp.type='file';inp.accept='image/*';
+  inp.onchange=function(){var f=inp.files[0];if(!f)return;stat('正在上传图标…','wait');
+    uploadImage(f,'assets').then(function(url){$('sl_icon_'+i).value=url;renderSocialList();stat('图标已上传','ok')}).catch(function(e){stat('上传失败：'+e.message,'err')})};
+  inp.click();
 }
 window.saveConfig=function(){
-  ['site_title','site_subtitle','hero_title','hero_description','about_title','about_text','worker_url','background_image','telegram','youtube','instagram','tiktok','safety_notice'].forEach(function(f){var el=$('cfg_'+f);if(el)CONFIG[f]=el.value.trim()});
+  ['site_title','site_subtitle','hero_title','hero_description','about_title','about_text','worker_url','background_image','safety_notice'].forEach(function(f){var el=$('cfg_'+f);if(el)CONFIG[f]=el.value.trim()});
   var lb={};['name','slug','image','link','enabled','sort'].forEach(function(k){var el=$('lbl_'+k);if(el&&el.value.trim())lb[k]=el.value.trim()});
   CONFIG.labels=lb;
   var fl={},fp={};
   ['title','cat','sub','sub2','desc','salary','loc','contact','tags','img','submit'].forEach(function(k){var el=$('fl_'+k);if(el&&el.value.trim())fl[k]=el.value.trim()});
   ['title','desc','salary','loc','contact','tags'].forEach(function(k){var el=$('fp_'+k);if(el&&el.value.trim())fp[k]=el.value.trim()});
   CONFIG.form_labels=fl;CONFIG.form_placeholders=fp;
+  var list=CONFIG.social_links||[];
+  list.forEach(function(s,i){s.name=$('sl_name_'+i).value.trim()||s.name;s.url=$('sl_url_'+i).value.trim();s.icon=$('sl_icon_'+i).value.trim();s.color=$('sl_color_'+i).value});
+  CONFIG.social_links=list;
   stat('正在保存…','wait');writeFile('data/config.json',CONFIG,cfgSha,'更新站点配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderAll();stat('配置已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
 }
 
