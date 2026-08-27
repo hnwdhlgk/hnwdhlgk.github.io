@@ -31,7 +31,7 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
 .cat-selector{background:#eef5ff;border:1px solid #c5dcf5;border-radius:10px;padding:14px;margin-bottom:16px}
 .job-item{border-top:1px solid #edf2f6;padding:14px 0}.job-item:first-child{border-top:0}.job-item h4{margin:0 0 4px;font-size:15px}.job-item .meta{color:#71859a;font-size:12px;margin-bottom:6px}.job-item .desc{color:#4a6080;font-size:13px;line-height:1.6}.job-item .ops button{padding:7px 12px;font-size:13px;margin-right:5px}
 .badge{font-size:11px;padding:2px 8px;border-radius:999px;margin-left:6px}.badge.pending{background:#fef7e0;color:#8a5a00}.badge.approved{background:#e6f4ea;color:#137333}.badge.rejected{background:#fce8e6;color:#b3261e}
-.filter-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}.filter-tabs button{background:#fff;border:1px solid #d6e2ed;color:#4a6080;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px;margin:0}.filter-tabs button.active{background:#0d47a1;color:#fff;border-color:#0d47a1}
+.filter-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}.filter-tabs button{background:#fff;border:1px solid #d6e2ed;color:#4a6080;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px;margin:0}.filter-tabs button.active{background:#0d47a1;color:#fff;border-color:#0d47a1}.filter-label{font-size:13px;color:#71859a;margin-top:10px;margin-bottom:4px}
 .preview-img{max-width:200px;max-height:130px;object-fit:cover;border-radius:8px;display:block;margin:5px 0}
 .upload-row{display:flex;gap:8px;align-items:center}.upload-row input{flex:1;margin:0}.upload-row button{white-space:nowrap;margin:0}
 .user-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #edf2f6}.user-row:first-child{border-top:0}.user-row .uname{flex:1;font-weight:500}.user-row .role{font-size:12px;color:#71859a}
@@ -166,10 +166,13 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
         <button data-f="rejected" onclick="setJobFilter('rejected')">已拒绝</button>
         <button data-f="all" onclick="setJobFilter('all')">全部</button>
       </div>
-      <div class="row3" style="margin:10px 0">
-        <div><label>一级分类</label><select id="jobFilterCat" onchange="onJobCatChange()"><option value="">全部</option></select></div>
-        <div><label>二级分类</label><select id="jobFilterSub" onchange="renderJobs()"><option value="">全部</option></select></div>
-        <div><label>三级分类</label><select id="jobFilterSub2" onchange="renderJobs()"><option value="">全部</option></select></div>
+      <div style="margin:10px 0">
+        <div class="filter-label">一级分类</div>
+        <div class="filter-tabs" id="jobCatBtns"></div>
+        <div class="filter-label">二级分类</div>
+        <div class="filter-tabs" id="jobSubBtns"></div>
+        <div class="filter-label">三级分类</div>
+        <div class="filter-tabs" id="jobSub2Btns"></div>
       </div>
       <button onclick="newJob()">+ 发布兼职</button>
       <div id="jobs" style="margin-top:14px"></div>
@@ -331,21 +334,31 @@ function showView(name,param){
   closeSidebar();
 }
 function setJobFilter(f){currentFilter=f;document.querySelectorAll('#jobFilters button').forEach(function(b){b.classList.toggle('active',b.dataset.f===f)});renderJobs()}
+var jobFilterCat='',jobFilterSub='',jobFilterSub2='';
 function initJobFilterCats(){
-  var cat=$('jobFilterCat');if(!cat)return;
-  var cv=cat.value;
-  cat.innerHTML='<option value="">全部</option>'+CATEGORIES.filter(function(c){return c.enabled!==false}).map(function(c){return '<option value="'+esc(c.slug)+'">'+esc(c.name)+'</option>'}).join('');
-  if(cv)cat.value=cv;
-  onJobCatChange();
+  jobFilterCat='';jobFilterSub='';jobFilterSub2='';
+  renderJobCatBtns();renderJobSubBtns();renderJobSub2Btns();
 }
-function onJobCatChange(){
-  var cat=$('jobFilterCat'),sub=$('jobFilterSub'),sub2=$('jobFilterSub2');if(!cat||!sub)return;
-  var c=catObj(cat.value);
-  sub.innerHTML='<option value="">全部</option>'+((c&&c.subcategories)||[]).map(function(s){return '<option value="'+esc(s.slug)+'">'+esc(s.name)+'</option>'}).join('');
-  if(sub2)sub2.innerHTML='<option value="">全部</option>';
-  renderJobs();
+function renderJobCatBtns(){
+  var el=$('jobCatBtns');if(!el)return;
+  el.innerHTML='<button class="'+(jobFilterCat===''?'active':'')+'" onclick="setJobCat(\'\')">全部</button>'+
+    CATEGORIES.filter(function(c){return c.enabled!==false}).map(function(c){return '<button class="'+(jobFilterCat===c.slug?'active':'')+'" onclick="setJobCat(\''+esc(c.slug)+'\')">'+esc(c.name)+'</button>'}).join('');
 }
-function catObj(slug){return CATEGORIES.find(function(x){return x.slug===slug})||{subcategories:[]}}
+function renderJobSubBtns(){
+  var el=$('jobSubBtns');if(!el)return;
+  var c=catObj(jobFilterCat);
+  el.innerHTML='<button class="'+(jobFilterSub===''?'active':'')+'" onclick="setJobSub(\'\')">全部</button>'+
+    ((c&&c.subcategories)||[]).map(function(s){return '<button class="'+(jobFilterSub===s.slug?'active':'')+'" onclick="setJobSub(\''+esc(s.slug)+'\')">'+esc(s.name)+'</button>'}).join('');
+}
+function renderJobSub2Btns(){
+  var el=$('jobSub2Btns');if(!el)return;
+  var c=catObj(jobFilterCat),s=(c&&c.subcategories||[]).find(function(x){return x.slug===jobFilterSub});
+  el.innerHTML='<button class="'+(jobFilterSub2===''?'active':'')+'" onclick="setJobSub2(\'\')">全部</button>'+
+    ((s&&s.subcategories)||[]).map(function(t){return '<button class="'+(jobFilterSub2===t.slug?'active':'')+'" onclick="setJobSub2(\''+esc(t.slug)+'\')">'+esc(t.name)+'</button>'}).join('');
+}
+function setJobCat(slug){jobFilterCat=slug;jobFilterSub='';jobFilterSub2='';renderJobCatBtns();renderJobSubBtns();renderJobSub2Btns();renderJobs()}
+function setJobSub(slug){jobFilterSub=slug;jobFilterSub2='';renderJobSubBtns();renderJobSub2Btns();renderJobs()}
+function setJobSub2(slug){jobFilterSub2=slug;renderJobSub2Btns();renderJobs()}
 function toggleSidebar(){$('sidebar').classList.toggle('open');$('mask').classList.toggle('show')}
 function closeSidebar(){$('sidebar').classList.remove('open');$('mask').classList.remove('show')}
 
@@ -530,12 +543,10 @@ function renderJobs(){
   document.querySelectorAll('#jobFilters button').forEach(function(b){b.classList.toggle('active',b.dataset.f===currentFilter)});
   var titles={pending:'待审核兼职',approved:'已通过兼职',rejected:'已拒绝兼职',all:'全部兼职'};
   $('jobsTitle').textContent=titles[currentFilter]||'兼职管理';
-  var cat=$('jobFilterCat'),sub=$('jobFilterSub'),sub2=$('jobFilterSub2');
-  var cv=cat?cat.value:'',sv=sub?sub.value:'',s2v=sub2?sub2.value:'';
   var list=currentFilter==='all'?JOBS:JOBS.filter(function(j){return j.status===currentFilter});
-  if(cv)list=list.filter(function(j){return j.category===cv});
-  if(sv)list=list.filter(function(j){return j.subcategory===sv});
-  if(s2v)list=list.filter(function(j){return j.subcategory2===s2v});
+  if(jobFilterCat)list=list.filter(function(j){return j.category===jobFilterCat});
+  if(jobFilterSub)list=list.filter(function(j){return j.subcategory===jobFilterSub});
+  if(jobFilterSub2)list=list.filter(function(j){return j.subcategory2===jobFilterSub2});
   $('jobs').innerHTML=list.length?list.map(function(j){
     if(j.editing)return renderJobEdit(j);
     var b='<span class="badge '+esc(j.status)+'">'+(j.status==='approved'?'已通过':j.status==='rejected'?'已拒绝':'待审核')+'</span>';
