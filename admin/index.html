@@ -525,6 +525,7 @@ function renderJobEdit(j){
     '<input type="file" id="ej_imgfile" accept="image/*" onchange="uploadJobImg(this)" style="margin:6px 0">'+
     '<input type="hidden" id="ej_image" value="'+esc(j.image||'')+'">'+
     (j.image?'<div class="img-preview-wrap"><img src="'+esc(j.image)+'" class="preview-img"></div>':'')+
+    '<label>图片超链接（点击跳转）</label><input id="ej_imagelink" value="'+esc(j.image_link||'')+'">'+
     '<div class="ops"><button onclick="saveJob(\''+j.id+'\')">保存</button><button class="ghost" onclick="cancelEdit(\''+j.id+'\')">取消</button>'+(j.image?'<button class="danger" onclick="removeJobImg(\''+j.id+'\')">移除图片</button>':'')+'</div></div>';
 }
 function fillCat(id,val){var s=$(id);if(!s)return;s.innerHTML=CATEGORIES.map(function(c){return '<option value="'+esc(c.slug)+'"'+(c.slug===val?' selected':'')+'>'+esc(c.name)+'</option>'}).join('')}
@@ -562,7 +563,7 @@ window.uploadJobImg=function(input){
 }
 window.saveJob=function(id){
   var j=JOBS.find(function(x){return x.id===id});if(!j)return;
-  j.title=$('ej_title').value.trim()||j.title;j.description=$('ej_desc').value;j.category=$('ej_cat').value;j.subcategory=$('ej_sub').value;j.subcategory2=$('ej_sub2').value;j.salary=$('ej_salary').value;j.location=$('ej_loc').value;j.contact=$('ej_contact').value;j.tags=parseTags($('ej_tags').value);j.image=$('ej_image').value.trim();
+  j.title=$('ej_title').value.trim()||j.title;j.description=$('ej_desc').value;j.category=$('ej_cat').value;j.subcategory=$('ej_sub').value;j.subcategory2=$('ej_sub2').value;j.salary=$('ej_salary').value;j.location=$('ej_loc').value;j.contact=$('ej_contact').value;j.tags=parseTags($('ej_tags').value);j.image=$('ej_image').value.trim();j.image_link=$('ej_imagelink').value.trim();
   delete j.editing;delete j.isNew;
   stat('正在保存…','wait');writeFile('data/jobs.json',JOBS,jobSha,'更新兼职').then(function(){return readFile('data/jobs.json')}).then(function(d){JOBS=d.data;jobSha=d.sha;renderJobs();renderDashboard();stat('兼职已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
 }
