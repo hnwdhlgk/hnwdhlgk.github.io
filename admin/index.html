@@ -167,12 +167,9 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
         <button data-f="all" onclick="setJobFilter('all')">全部</button>
       </div>
       <div style="margin:10px 0">
-        <div class="filter-label">一级分类</div>
-        <div class="filter-tabs" id="jobCatBtns"></div>
-        <div class="filter-label">二级分类</div>
-        <div class="filter-tabs" id="jobSubBtns"></div>
-        <div class="filter-label">三级分类</div>
-        <div class="filter-tabs" id="jobSub2Btns"></div>
+        <div><div class="filter-label">一级分类</div><div class="filter-tabs" id="jobCatBtns"></div></div>
+        <div id="jobSubWrap"><div class="filter-label">二级分类</div><div class="filter-tabs" id="jobSubBtns"></div></div>
+        <div id="jobSub2Wrap"><div class="filter-label">三级分类</div><div class="filter-tabs" id="jobSub2Btns"></div></div>
       </div>
       <button onclick="newJob()">+ 发布兼职</button>
       <div id="jobs" style="margin-top:14px"></div>
@@ -345,16 +342,24 @@ function renderJobCatBtns(){
     CATEGORIES.filter(function(c){return c.enabled!==false}).map(function(c){return '<button class="'+(jobFilterCat===c.slug?'active':'')+'" onclick="setJobCat(\''+esc(c.slug)+'\')">'+esc(c.name)+'</button>'}).join('');
 }
 function renderJobSubBtns(){
-  var el=$('jobSubBtns');if(!el)return;
+  var wrap=$('jobSubWrap');if(!wrap)return;
   var c=catObj(jobFilterCat);
+  var subs=(c&&c.subcategories)||[];
+  if(!subs.length){wrap.style.display='none';return}
+  wrap.style.display='';
+  var el=$('jobSubBtns');
   el.innerHTML='<button class="'+(jobFilterSub===''?'active':'')+'" onclick="setJobSub(\'\')">全部</button>'+
-    ((c&&c.subcategories)||[]).map(function(s){return '<button class="'+(jobFilterSub===s.slug?'active':'')+'" onclick="setJobSub(\''+esc(s.slug)+'\')">'+esc(s.name)+'</button>'}).join('');
+    subs.map(function(s){return '<button class="'+(jobFilterSub===s.slug?'active':'')+'" onclick="setJobSub(\''+esc(s.slug)+'\')">'+esc(s.name)+'</button>'}).join('');
 }
 function renderJobSub2Btns(){
-  var el=$('jobSub2Btns');if(!el)return;
+  var wrap=$('jobSub2Wrap');if(!wrap)return;
   var c=catObj(jobFilterCat),s=(c&&c.subcategories||[]).find(function(x){return x.slug===jobFilterSub});
+  var subs=(s&&s.subcategories)||[];
+  if(!subs.length){wrap.style.display='none';return}
+  wrap.style.display='';
+  var el=$('jobSub2Btns');
   el.innerHTML='<button class="'+(jobFilterSub2===''?'active':'')+'" onclick="setJobSub2(\'\')">全部</button>'+
-    ((s&&s.subcategories)||[]).map(function(t){return '<button class="'+(jobFilterSub2===t.slug?'active':'')+'" onclick="setJobSub2(\''+esc(t.slug)+'\')">'+esc(t.name)+'</button>'}).join('');
+    subs.map(function(t){return '<button class="'+(jobFilterSub2===t.slug?'active':'')+'" onclick="setJobSub2(\''+esc(t.slug)+'\')">'+esc(t.name)+'</button>'}).join('');
 }
 function setJobCat(slug){jobFilterCat=slug;jobFilterSub='';jobFilterSub2='';renderJobCatBtns();renderJobSubBtns();renderJobSub2Btns();renderJobs()}
 function setJobSub(slug){jobFilterSub=slug;jobFilterSub2='';renderJobSubBtns();renderJobSub2Btns();renderJobs()}
