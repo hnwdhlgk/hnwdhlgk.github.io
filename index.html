@@ -142,8 +142,14 @@ function applyFormLabels(){
   setP('mf_loc',fp.loc);setP('mf_contact',fp.contact);setP('mf_tags',fp.tags);
 }
 function renderSocial(){
-  const items=[{k:"telegram",n:"Telegram",c:"#0088cc",i:"TG"},{k:"youtube",n:"YouTube",c:"#ff0000",i:"YT"},{k:"instagram",n:"Instagram",c:"#e1306c",i:"IG"},{k:"tiktok",n:"TikTok",c:"#000",i:"TT"}];
-  document.getElementById("socialGrid").innerHTML=items.map(it=>{const url=cfg[it.k];return url?`<a href="${esc(url)}" target="_blank" rel="noopener"><div class="ic" style="background:${it.c}">${it.i}</div>${esc(it.n)}</a>`:`<a style="opacity:.4;cursor:default"><div class="ic" style="background:#ccc">${it.i}</div>${esc(it.n)}（未配置）</a>`}).join("");
+  const links=cfg.social_links||[];
+  const grid=document.getElementById("socialGrid");
+  if(!grid)return;
+  if(!links.length){grid.innerHTML='<p class="muted">暂无官方渠道</p>';return}
+  grid.innerHTML=links.map((s,i)=>{
+    const ic=s.icon?`<img src="${esc(s.icon)}" style="width:28px;height:28px;border-radius:8px;object-fit:cover">`:`<div class="ic" style="background:${esc(s.color||'#0d47a1')}">${esc((s.name||'?').slice(0,2))}</div>`;
+    return s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener">${ic}${esc(s.name||'渠道')}</a>`:`<a style="opacity:.4;cursor:default">${ic}${esc(s.name||'渠道')}（未配置链接）</a>`;
+  }).join("");
 }
 async function wApi(path,body){if(!WORKER_URL)throw new Error("站点暂未开放普通用户功能（管理员尚未配置后端）");const r=await fetch(WORKER_URL.replace(/\/+$/,"")+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});let d={};try{d=await r.json()}catch(e){}if(!r.ok||d.error)throw new Error(d.error||("HTTP "+r.status));return d}
 
