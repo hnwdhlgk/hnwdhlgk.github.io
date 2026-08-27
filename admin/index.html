@@ -364,6 +364,7 @@ function renderJobSub2Btns(){
 function setJobCat(slug){jobFilterCat=slug;jobFilterSub='';jobFilterSub2='';renderJobCatBtns();renderJobSubBtns();renderJobSub2Btns();renderJobs()}
 function setJobSub(slug){jobFilterSub=slug;jobFilterSub2='';renderJobSubBtns();renderJobSub2Btns();renderJobs()}
 function setJobSub2(slug){jobFilterSub2=slug;renderJobSub2Btns();renderJobs()}
+function catObj(slug){return CATEGORIES.find(function(x){return x.slug===slug})||{subcategories:[]}}
 function toggleSidebar(){$('sidebar').classList.toggle('open');$('mask').classList.toggle('show')}
 function closeSidebar(){$('sidebar').classList.remove('open');$('mask').classList.remove('show')}
 
