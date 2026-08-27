@@ -330,7 +330,7 @@ function showView(name,param){
   if(name==='dashboard')renderDashboard();
   closeSidebar();
 }
-function setJobFilter(f){currentFilter=f;document.querySelectorAll('#jobFilters button').forEach(function(b){b.classList.toggle('active',b.dataset.f===f)});renderJobs()}
+function setJobFilter(f){currentFilter=f;document.querySelectorAll('#jobFilters button').forEach(function(b){b.classList.toggle('active',b.dataset.f===f)});initJobFilterCats();renderJobs()}
 var jobFilterCat='',jobFilterSub='',jobFilterSub2='';
 function initJobFilterCats(){
   jobFilterCat='';jobFilterSub='';jobFilterSub2='';
@@ -338,28 +338,36 @@ function initJobFilterCats(){
 }
 function renderJobCatBtns(){
   var el=$('jobCatBtns');if(!el)return;
+  var list=currentFilter==='all'?JOBS:JOBS.filter(function(j){return j.status===currentFilter});
   el.innerHTML='<button class="'+(jobFilterCat===''?'active':'')+'" onclick="setJobCat(\'\')">全部</button>'+
-    CATEGORIES.filter(function(c){return c.enabled!==false}).map(function(c){return '<button class="'+(jobFilterCat===c.slug?'active':'')+'" onclick="setJobCat(\''+esc(c.slug)+'\')">'+esc(c.name)+'</button>'}).join('');
+    CATEGORIES.filter(function(c){return c.enabled!==false&&list.some(function(j){return j.category===c.slug})}).map(function(c){return '<button class="'+(jobFilterCat===c.slug?'active':'')+'" onclick="setJobCat(\''+esc(c.slug)+'\')">'+esc(c.name)+'</button>'}).join('');
 }
 function renderJobSubBtns(){
   var wrap=$('jobSubWrap');if(!wrap)return;
   var c=catObj(jobFilterCat);
   var subs=(c&&c.subcategories)||[];
-  if(!subs.length){wrap.style.display='none';return}
+  var list=currentFilter==='all'?JOBS:JOBS.filter(function(j){return j.status===currentFilter});
+  if(jobFilterCat)list=list.filter(function(j){return j.category===jobFilterCat});
+  var hasSubs=subs.some(function(s){return list.some(function(j){return j.subcategory===s.slug})});
+  if(!hasSubs){wrap.style.display='none';return}
   wrap.style.display='';
   var el=$('jobSubBtns');
   el.innerHTML='<button class="'+(jobFilterSub===''?'active':'')+'" onclick="setJobSub(\'\')">全部</button>'+
-    subs.map(function(s){return '<button class="'+(jobFilterSub===s.slug?'active':'')+'" onclick="setJobSub(\''+esc(s.slug)+'\')">'+esc(s.name)+'</button>'}).join('');
+    subs.filter(function(s){return list.some(function(j){return j.subcategory===s.slug})}).map(function(s){return '<button class="'+(jobFilterSub===s.slug?'active':'')+'" onclick="setJobSub(\''+esc(s.slug)+'\')">'+esc(s.name)+'</button>'}).join('');
 }
 function renderJobSub2Btns(){
   var wrap=$('jobSub2Wrap');if(!wrap)return;
   var c=catObj(jobFilterCat),s=(c&&c.subcategories||[]).find(function(x){return x.slug===jobFilterSub});
   var subs=(s&&s.subcategories)||[];
-  if(!subs.length){wrap.style.display='none';return}
+  var list=currentFilter==='all'?JOBS:JOBS.filter(function(j){return j.status===currentFilter});
+  if(jobFilterCat)list=list.filter(function(j){return j.category===jobFilterCat});
+  if(jobFilterSub)list=list.filter(function(j){return j.subcategory===jobFilterSub});
+  var hasSubs=subs.some(function(t){return list.some(function(j){return j.subcategory2===t.slug})});
+  if(!hasSubs){wrap.style.display='none';return}
   wrap.style.display='';
   var el=$('jobSub2Btns');
   el.innerHTML='<button class="'+(jobFilterSub2===''?'active':'')+'" onclick="setJobSub2(\'\')">全部</button>'+
-    subs.map(function(t){return '<button class="'+(jobFilterSub2===t.slug?'active':'')+'" onclick="setJobSub2(\''+esc(t.slug)+'\')">'+esc(t.name)+'</button>'}).join('');
+    subs.filter(function(t){return list.some(function(j){return j.subcategory2===t.slug})}).map(function(t){return '<button class="'+(jobFilterSub2===t.slug?'active':'')+'" onclick="setJobSub2(\''+esc(t.slug)+'\')">'+esc(t.name)+'</button>'}).join('');
 }
 function setJobCat(slug){jobFilterCat=slug;jobFilterSub='';jobFilterSub2='';renderJobCatBtns();renderJobSubBtns();renderJobSub2Btns();renderJobs()}
 function setJobSub(slug){jobFilterSub=slug;jobFilterSub2='';renderJobSubBtns();renderJobSub2Btns();renderJobs()}
