@@ -33,5 +33,31 @@
     "salary": "如:800p",
     "contact": "如:@hainanguanlibot",
     "tags": "如:嫩妹,胸推,69,口爆"
-  }
+  },
+  "social_links": [
+    {
+      "name": "兼职公开榜",
+      "url": "https://t.me/hnwdhlgk",
+      "icon": "",
+      "color": "#0088cc"
+    },
+    {
+      "name": "聊天群组",
+      "url": "https://t.me/hainanxueyuan",
+      "icon": "",
+      "color": "#ff0000"
+    },
+    {
+      "name": "Instagram",
+      "url": "",
+      "icon": "",
+      "color": "#e1306c"
+    },
+    {
+      "name": "TikTok",
+      "url": "",
+      "icon": "",
+      "color": "#000000"
+    }
+  ]
 }
