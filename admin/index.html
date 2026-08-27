@@ -83,6 +83,7 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
         <div class="menu-item" data-view="config" data-section="social" onclick="showView('config','social')">官方渠道</div>
         <div class="menu-item" data-view="config" data-section="safety" onclick="showView('config','safety')">安全提醒</div>
         <div class="menu-item" data-view="config" data-section="labels" onclick="showView('config','labels')">字段标签</div>
+        <div class="menu-item" data-view="config" data-section="formlabels" onclick="showView('config','formlabels')">兼职表单</div>
       </div>
     </div>
     <div class="menu-item" data-view="users" onclick="showView('users')"><span class="mi-ic">👥</span>用户管理</div>
@@ -195,6 +196,26 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <div><label>「图片超链接」标签</label><input id="lbl_link" placeholder="默认：图片超链接（点击跳转）"></div></div>
       <div class="row"><div><label>「启用」标签</label><input id="lbl_enabled" placeholder="默认：启用该分类"></div>
       <div><label>「排序」标签</label><input id="lbl_sort" placeholder="默认：排序"></div></div>
+    </div>
+    <div class="card" id="sec-formlabels"><h3>兼职发布表单标签与提示</h3>
+      <p class="muted">自定义普通用户发布兼职页面的字段名称和输入框提示文字。留空使用默认。</p>
+      <div class="row"><div><label>标题 - 标签文字</label><input id="fl_title" placeholder="默认：标题"></div>
+      <div><label>标题 - 提示文字</label><input id="fp_title" placeholder="默认：请输入兼职标题"></div></div>
+      <div class="row3"><div><label>一级分类 - 标签</label><input id="fl_cat" placeholder="默认：一级分类"></div>
+      <div><label>二级分类 - 标签</label><input id="fl_sub" placeholder="默认：二级分类"></div>
+      <div><label>三级分类 - 标签</label><input id="fl_sub2" placeholder="默认：三级分类"></div></div>
+      <div class="row"><div><label>描述 - 标签</label><input id="fl_desc" placeholder="默认：描述"></div>
+      <div><label>描述 - 提示文字</label><input id="fp_desc" placeholder="默认：工作内容、要求等"></div></div>
+      <div class="row"><div><label>薪资 - 标签</label><input id="fl_salary" placeholder="默认：薪资"></div>
+      <div><label>薪资 - 提示文字</label><input id="fp_salary" placeholder="默认：如：150元/天"></div></div>
+      <div class="row"><div><label>地点 - 标签</label><input id="fl_loc" placeholder="默认：地点"></div>
+      <div><label>地点 - 提示文字</label><input id="fp_loc" placeholder="默认：如：海口市美兰区"></div></div>
+      <div class="row"><div><label>联系方式 - 标签</label><input id="fl_contact" placeholder="默认：联系方式"></div>
+      <div><label>联系方式 - 提示</label><input id="fp_contact" placeholder="默认：电话/微信/邮箱，自动变超链接"></div></div>
+      <div class="row"><div><label>自定义标签 - 标签</label><input id="fl_tags" placeholder="默认：自定义标签"></div>
+      <div><label>自定义标签 - 提示</label><input id="fp_tags" placeholder="默认：逗号分隔，如：日结,周末"></div></div>
+      <div class="row"><div><label>封面图片 - 标签</label><input id="fl_img" placeholder="默认：封面图片"></div>
+      <div><label>提交按钮文字</label><input id="fl_submit" placeholder="默认：提交（等待审核）"></div></div>
     </div>
     <div class="card" id="sec-safety"><h3>安全提醒</h3>
       <label>安全提醒文案</label><textarea id="cfg_safety_notice"></textarea>
@@ -446,12 +467,19 @@ function renderConfig(){
   var fields=['site_title','site_subtitle','hero_title','hero_description','about_title','about_text','worker_url','background_image','telegram','youtube','instagram','tiktok','safety_notice'];
   fields.forEach(function(f){var el=$('cfg_'+f);if(el)el.value=CONFIG[f]||''});
   var lb=CONFIG.labels||{};['name','slug','image','link','enabled','sort'].forEach(function(k){var el=$('lbl_'+k);if(el)el.value=lb[k]||''});
+  var fl=CONFIG.form_labels||{},fp=CONFIG.form_placeholders||{};
+  ['title','cat','sub','sub2','desc','salary','loc','contact','tags','img','submit'].forEach(function(k){var el=$('fl_'+k);if(el)el.value=fl[k]||''});
+  ['title','desc','salary','loc','contact','tags'].forEach(function(k){var el=$('fp_'+k);if(el)el.value=fp[k]||''});
   var bg=$('cfg_background_image');if(bg&&bg.value){var p=$('bgPreview');p.src=bg.value;p.style.display='block'}
 }
 window.saveConfig=function(){
   ['site_title','site_subtitle','hero_title','hero_description','about_title','about_text','worker_url','background_image','telegram','youtube','instagram','tiktok','safety_notice'].forEach(function(f){var el=$('cfg_'+f);if(el)CONFIG[f]=el.value.trim()});
   var lb={};['name','slug','image','link','enabled','sort'].forEach(function(k){var el=$('lbl_'+k);if(el&&el.value.trim())lb[k]=el.value.trim()});
   CONFIG.labels=lb;
+  var fl={},fp={};
+  ['title','cat','sub','sub2','desc','salary','loc','contact','tags','img','submit'].forEach(function(k){var el=$('fl_'+k);if(el&&el.value.trim())fl[k]=el.value.trim()});
+  ['title','desc','salary','loc','contact','tags'].forEach(function(k){var el=$('fp_'+k);if(el&&el.value.trim())fp[k]=el.value.trim()});
+  CONFIG.form_labels=fl;CONFIG.form_placeholders=fp;
   stat('正在保存…','wait');writeFile('data/config.json',CONFIG,cfgSha,'更新站点配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderAll();stat('配置已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
 }
 
