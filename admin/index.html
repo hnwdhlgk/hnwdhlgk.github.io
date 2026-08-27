@@ -6,47 +6,44 @@
 <title>网站管理后台</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#183b60;font-family:Arial,"Microsoft YaHei",sans-serif}
-.wrap{width:min(1080px,94%);margin:25px auto}
+.wrap{width:min(1100px,94%);margin:25px auto}
 .card{background:#fff;border:1px solid #dfe7ef;border-radius:16px;padding:20px;margin-bottom:16px}
-h1{margin-top:0}.muted{color:#71859a;font-size:13px}.ok{color:#137333}.err{color:#b3261e}.wait{color:#8a5a00}
+h1{margin-top:0}h2{margin-top:0}.muted{color:#71859a;font-size:13px}.ok{color:#137333}.err{color:#b3261e}.wait{color:#8a5a00}
 .notice{padding:12px;border-radius:9px;background:#f6f8fa;margin-top:10px;white-space:pre-wrap}
-label{display:block;margin-top:8px}
+label{display:block;margin-top:8px;font-size:14px}
 label.inline{display:flex;align-items:center;gap:6px;margin-top:10px}
-input,textarea,select{width:100%;padding:11px;border:1px solid #d6e2ed;border-radius:9px;margin:6px 0 12px;font:inherit;background:#fff}
+input,textarea,select{width:100%;padding:10px;border:1px solid #d6e2ed;border-radius:9px;margin:5px 0 10px;font:inherit;background:#fff}
 input[type=checkbox]{width:auto;margin:0}
-input[type=file]{padding:8px;border:1px dashed #c9d8e6;border-radius:9px;background:#fafcfe}
-textarea{min-height:90px}
-button{border:0;background:#0d47a1;color:#fff;padding:11px 18px;border-radius:9px;cursor:pointer;margin:3px;font-size:15px}
-button:hover{filter:brightness(.92)}
-button:disabled{opacity:.55;cursor:not-allowed}
-.danger{background:#b3261e}.ghost{background:#5f6b7a}.small{padding:7px 12px;font-size:13px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.item{border-top:1px solid #edf2f6;padding:15px 0}
-.ops{margin-top:10px}
+input[type=file]{padding:7px;border:1px dashed #c9d8e6;border-radius:9px;background:#fafcfe}
+textarea{min-height:70px}
+button{border:0;background:#0d47a1;color:#fff;padding:10px 16px;border-radius:9px;cursor:pointer;margin:3px;font-size:14px}
+button:hover{filter:brightness(.92)}button:disabled{opacity:.55;cursor:not-allowed}
+.danger{background:#b3261e}.ghost{background:#5f6b7a}.small{padding:6px 11px;font-size:12px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.item{border-top:1px solid #edf2f6;padding:14px 0}
+.ops{margin-top:8px}
 .badge{font-size:12px;padding:2px 8px;border-radius:999px;margin-left:6px;white-space:nowrap}
-.badge.ok{background:#e6f4ea;color:#137333}
-.badge.err{background:#fce8e6;color:#b3261e}
-.badge.wait{background:#fef7e0;color:#8a5a00}
-.filter{margin:10px 0}
-.filter button.active{background:#0d47a1;box-shadow:0 0 0 2px #b3cdf0}
-.meta{color:#71859a;font-size:13px;margin:6px 0}
+.badge.ok{background:#e6f4ea;color:#137333}.badge.err{background:#fce8e6;color:#b3261e}.badge.wait{background:#fef7e0;color:#8a5a00}
+.filter{margin:10px 0}.filter button.active{background:#0d47a1;box-shadow:0 0 0 2px #b3cdf0}
+.meta{color:#71859a;font-size:13px;margin:5px 0}
 .job-title{font-weight:bold}
-.job-img{width:120px;height:80px;object-fit:cover;border-radius:9px;border:1px solid #dfe7ef;margin-right:10px;vertical-align:top}
-.tags{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
-.tag-pill{background:#eef5ff;color:#0d47a1;border-radius:20px;padding:2px 9px;font-size:12px}
-.preview-img{max-width:240px;max-height:150px;object-fit:cover;border-radius:9px;border:1px solid #dfe7ef;display:block;margin:6px 0}
+.job-img{width:110px;height:75px;object-fit:cover;border-radius:9px;border:1px solid #dfe7ef;margin-right:10px;vertical-align:top}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin:5px 0}
+.tag-pill{background:#eef5ff;color:#0d47a1;border-radius:20px;padding:2px 8px;font-size:12px}
+.preview-img{max-width:220px;max-height:140px;object-fit:cover;border-radius:9px;border:1px solid #dfe7ef;display:block;margin:5px 0}
 .auth-pill{font-size:12px;padding:2px 8px;border-radius:999px;margin-left:6px}
-.auth-pill.admin{background:#eef0f4;color:#37474f}
-.auth-pill.user{background:#e8f0fe;color:#0d47a1}
-.cat-group{border-top:1px solid #edf2f6;padding:14px 0}
-.cat-group h3{margin:0 0 10px;color:#0d47a1;font-size:16px}
-.sub-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-.sub-row input{margin:0;flex:1}
-.sub-row button{margin:0;flex-shrink:0}
-.cat-select-row{display:flex;gap:8px;align-items:flex-start}
-.cat-select-row>div{flex:1}
-.cat-select-row button{margin-top:6px;flex-shrink:0}
-@media(max-width:700px){.row{grid-template-columns:1fr}.cat-select-row{flex-direction:column}.cat-select-row button{margin-top:0}}
+.auth-pill.admin{background:#eef0f4;color:#37474f}.auth-pill.user{background:#e8f0fe;color:#0d47a1}
+/* 三级分类管理 */
+.cat1{border:1px solid #e0e8f0;border-radius:12px;padding:14px;margin-bottom:14px;background:#fafcff}
+.cat1>h3{margin:0 0 8px;color:#0d47a1;font-size:16px}
+.cat2{border-left:3px solid #c5daf5;padding:6px 0 6px 12px;margin:8px 0}
+.cat2-name{font-weight:bold;color:#183b60;margin-bottom:4px}
+.cat3{display:inline-block;background:#eef5ff;color:#0d47a1;border-radius:20px;padding:3px 10px;font-size:12px;margin:3px 4px 3px 0}
+.cat3 input{width:auto;display:inline;padding:4px 8px;margin:0;font-size:12px}
+.cat-select-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.cat-select-row>div{flex:1;min-width:140px}
+.cat-select-row button{margin-bottom:10px;flex-shrink:0}
+@media(max-width:700px){.row,.row3{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -54,7 +51,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 <h1>网站管理后台</h1>
 <div id="login" class="card">
 <h2>超级管理员授权</h2>
-<p class="muted">纯 GitHub 无服务器后台。Token 仅存于当前浏览器（不写入任何服务器）。<br>勾选"记住登录"后存入 sessionStorage（同站点共享），关闭标签页自动清除；不勾选则仅存内存。<br><b>审核操作仅超级管理员可用。</b></p>
+<p class="muted">纯 GitHub 无服务器后台。Token 仅存于当前浏览器。<br><b>审核操作仅超级管理员可用。</b></p>
 <label>GitHub 用户名</label><input id="user" value="hnwdhlgk" autocomplete="username">
 <label>仓库</label><input id="repo" value="hnwdhlgk.github.io">
 <label>Fine-grained Token</label><input id="token" type="password" placeholder="github_pat_..." autocomplete="off">
@@ -68,47 +65,52 @@ button:disabled{opacity:.55;cursor:not-allowed}
   <button type="button" class="danger" onclick="logoutGithub()">退出</button>
   <span id="status" class="muted"></span>
 </div>
-<div class="card">
-  <h2>分类管理（两级分类）</h2>
-  <p class="muted">一级分类固定为 个人 / 商家 / 中介；可在每个一级分类下自定义二级分类名称。</p>
-  <div id="cats"></div>
-  <div class="ops"><button type="button" onclick="saveCategories()">保存分类设置</button></div>
-</div>
+
 <div class="card">
   <h2>站点配置</h2>
-  <p class="muted">普通用户注册/发布通过 Cloudflare Worker 代理写入。在此填入 Worker URL。</p>
-  <label>后端 Worker URL</label>
-  <input id="cfgWorker" type="text" placeholder="https://your-worker.xxx.workers.dev" autocomplete="off">
-  <div class="ops">
-    <button type="button" onclick="saveConfig()">保存 Worker URL</button>
-    <button type="button" class="ghost" onclick="loadConfig()">读取当前配置</button>
-  </div>
+  <p class="muted">编辑前端网页标题、背景图、Hero 区域、社交链接、安全提醒等。</p>
+  <div class="row"><div><label>网页标题（浏览器标签）</label><input id="cfg_title"></div>
+  <div><label>网页副标题</label><input id="cfg_subtitle"></div></div>
+  <label>背景图 URL（留空用默认）</label><input id="cfg_bg">
+  <label>Hero 大标题</label><input id="cfg_hero">
+  <label>Hero 描述文字</label><textarea id="cfg_herodesc"></textarea>
+  <div class="row"><div><label>About 标题</label><input id="cfg_abouttitle"></div>
+  <div><label>About 正文</label><textarea id="cfg_abouttext"></textarea></div></div>
+  <div class="row3"><div><label>Telegram 链接</label><input id="cfg_tg"></div>
+  <div><label>YouTube 链接</label><input id="cfg_yt"></div>
+  <div><label>Instagram 链接</label><input id="cfg_ig"></div></div>
+  <div class="row"><div><label>TikTok 链接</label><input id="cfg_tt"></div>
+  <div><label>Worker URL（普通用户后端）</label><input id="cfg_worker"></div></div>
+  <label>安全提醒内容</label><textarea id="cfg_safety"></textarea>
+  <div class="ops"><button type="button" onclick="saveConfig()">保存站点配置</button><button type="button" class="ghost" onclick="loadConfig()">读取当前配置</button></div>
   <div id="cfgMsg" class="muted"></div>
 </div>
+
+<div class="card">
+  <h2>分类管理（三级分类，全部可自定义）</h2>
+  <p class="muted">一级 / 二级 / 三级分类均可增删改名称；一级和二级可设置分类图片及图片超链接（点击分类图片跳转）。</p>
+  <div id="cats"></div>
+  <div class="ops"><button type="button" onclick="addCat1()">+ 新增一级分类</button> <button type="button" onclick="saveCategories()">保存分类设置</button></div>
+</div>
+
 <div class="card">
   <h2>兼职发布 / 审核</h2>
-  <p class="muted">审核（通过 / 拒绝 / 下架）为超级管理员专属操作，普通用户后台无此权限。</p>
+  <p class="muted">审核（通过 / 拒绝 / 下架）为超级管理员专属。联系方式填电话/邮箱/网址会自动变为可点击超链接。</p>
   <button type="button" onclick="toggleJobForm()">发布兼职</button>
   <div id="jobFormWrap" style="display:none">
     <label>标题 *</label><input id="jf_title" placeholder="例如：周末超市促销员">
     <div class="cat-select-row">
-      <div><label>一级分类</label><select id="jf_cat" onchange="fillSubSelect('jf_cat','jf_subcat')"></select></div>
-      <div><label>二级分类</label><select id="jf_subcat"></select></div>
-      <button type="button" class="small ghost" onclick="addSubcatFromForm('jf_cat','jf_subcat')" title="为当前一级分类新增二级分类">新增二级</button>
+      <div><label>一级分类</label><select id="jf_cat" onchange="fillSub2('jf_cat','jf_sub','jf_sub2')"></select></div>
+      <div><label>二级分类</label><select id="jf_sub" onchange="fillSub3('jf_cat','jf_sub','jf_sub2')"></select></div>
+      <div><label>三级分类</label><select id="jf_sub2"></select></div>
     </div>
     <label>描述</label><textarea id="jf_desc" placeholder="工作内容、要求等"></textarea>
-    <div class="row">
-      <div><label>薪资待遇</label><input id="jf_salary" placeholder="例如：150元/天"></div>
-      <div><label>工作地点</label><input id="jf_loc" placeholder="例如：海口市美兰区"></div>
-    </div>
-    <label>联系方式</label><input id="jf_contact" placeholder="电话 / 微信 / 邮箱">
-    <label>自定义标签（用逗号分隔，如：日结,包吃,急招）</label><input id="jf_tags" placeholder="日结,包吃,急招">
-    <label>封面图片（选一张本地图片上传，将显示在主页）</label><input id="jf_img" type="file" accept="image/*">
-    <img id="jf_imgPrev" class="preview-img" style="display:none">
-    <div class="ops">
-      <button type="button" onclick="submitJob()">提交（进入待审核）</button>
-      <button type="button" class="ghost" onclick="toggleJobForm(true)">取消</button>
-    </div>
+    <div class="row"><div><label>薪资待遇</label><input id="jf_salary" placeholder="例如：150元/天"></div>
+    <div><label>工作地点</label><input id="jf_loc" placeholder="例如：海口市美兰区"></div></div>
+    <label>联系方式（电话/邮箱/网址，自动变超链接）</label><input id="jf_contact" placeholder="138xxxx / xxx@qq.com / https://...">
+    <label>自定义标签（逗号分隔，如：日结,包吃,急招）</label><input id="jf_tags" placeholder="日结,包吃,急招">
+    <label>封面图片</label><input id="jf_img" type="file" accept="image/*"><img id="jf_imgPrev" class="preview-img" style="display:none">
+    <div class="ops"><button type="button" onclick="submitJob()">提交（待审核）</button><button type="button" class="ghost" onclick="toggleJobForm(true)">取消</button></div>
   </div>
   <div class="filter">
     <button type="button" data-f="all" onclick="setFilter('all')">全部</button>
@@ -123,13 +125,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 <script>
 (function(){
 var G={user:'',repo:'',token:'',branch:'main'};
-// 一级分类固定；二级分类从 categories.json 读取
-var CATEGORIES=[
-  {slug:'personal',name:'个人',description:'个人发布',subcategories:[]},
-  {slug:'business',name:'商家',description:'商家发布',subcategories:[]},
-  {slug:'agency',name:'中介',description:'中介发布',subcategories:[]}
-];
-var jobs=[],jobFilter='all',editingJobId=null,busy=false,editImg={removed:false};
+var CATEGORIES=[],jobs=[],jobFilter='all',editingJobId=null,busy=false,editImg={removed:false};
 function $(id){return document.getElementById(id)}
 function msg(t,c){var el=$('msg');if(el){el.innerText=t;el.className='notice '+(c||'muted')}}
 function stat(t,c){var el=$('status');if(el){el.innerText=t;el.className=c||'muted'}}
@@ -139,32 +135,21 @@ function dec(s){return decodeURIComponent(escape(atob(s.replace(/\n/g,''))))}
 function pad(n){return n<10?'0'+n:''+n}
 function fmtDate(iso){var d=new Date(iso);if(isNaN(d))return iso||'';return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())}
 function parseTags(s){return String(s||'').split(/[,，、;；\s]+/).map(function(x){return x.trim()}).filter(Boolean)}
+function slugify(name,prefix){return prefix+'-'+String(name).toLowerCase().replace(/\s+/g,'-').replace(/[^\w\u4e00-\u9fa5-]/g,'').slice(0,24)+'-'+(Date.now()%100000)}
 function catName(slug){var c=CATEGORIES.find(function(x){return x.slug===slug});return c?c.name:''}
-function subName(catSlug,subSlug){var c=CATEGORIES.find(function(x){return x.slug===catSlug});if(!c)return '';var s=c.subcategories.find(function(x){return x.slug===subSlug});return s?s.name:''}
-function slugify(name,catSlug){return catSlug+'-'+String(name).toLowerCase().replace(/\s+/g,'-').replace(/[^\w\u4e00-\u9fa5-]/g,'').slice(0,30)}
-function fileToBase64(file){
-  return new Promise(function(res,rej){var fr=new FileReader();fr.onload=function(){var r=fr.result,i=r.indexOf(',');res(i>=0?r.slice(i+1):r)};fr.onerror=function(){rej(new Error('读取图片失败'))};fr.readAsDataURL(file)});
-}
-function uploadImage(file){
-  var safe=String(file.name||'img').replace(/[^\w.\-]/g,'_');
-  var name='images/jobs/'+Date.now()+'_'+safe;
-  return fileToBase64(file).then(function(b64){return api(fileURL(name),'PUT',{message:'上传兼职图片 '+name,content:b64,branch:G.branch}).then(function(){return name})});
-}
-function bindImgPreview(inputId,prevId){
-  var inp=$(inputId),prev=$(prevId);if(!inp||!prev)return;
-  inp.onchange=function(){var f=inp.files&&inp.files[0];if(!f){prev.style.display='none';return}var fr=new FileReader();fr.onload=function(){prev.src=fr.result;prev.style.display='block'};fr.readAsDataURL(f)};
-}
-function api(path,method,body){
-  var opt={method:method||'GET',headers:{'Authorization':'Bearer '+G.token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}};
-  if(body){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(body)}
-  return fetch('https://api.github.com'+path,opt).then(function(r){return r.text().then(function(t){var d=null;try{d=t?JSON.parse(t):null}catch(e){}if(!r.ok){var err=new Error(d&&d.message?d.message:('HTTP '+r.status));err.http=r.status;var rem=r.headers.get('x-ratelimit-remaining');if(r.status===403&&rem!==null&&Number(rem)<=0)err.rateLimited=true;throw err}return d})});
-}
+function subName(catSlug,subSlug){var c=CATEGORIES.find(function(x){return x.slug===catSlug});if(!c)return'';var s=(c.subcategories||[]).find(function(x){return x.slug===subSlug});return s?s.name:''}
+function sub2Name(catSlug,subSlug,sub2Slug){var c=CATEGORIES.find(function(x){return x.slug===catSlug});if(!c)return'';var s=(c.subcategories||[]).find(function(x){return x.slug===subSlug});if(!s)return'';var t=(s.subcategories||[]).find(function(x){return x.slug===sub2Slug});return t?t.name:''}
+function fileToBase64(file){return new Promise(function(res,rej){var fr=new FileReader();fr.onload=function(){var r=fr.result,i=r.indexOf(',');res(i>=0?r.slice(i+1):r)};fr.onerror=function(){rej(new Error('读取图片失败'))};fr.readAsDataURL(file)})}
+function uploadImage(file){var safe=String(file.name||'img').replace(/[^\w.\-]/g,'_');var name='images/jobs/'+Date.now()+'_'+safe;return fileToBase64(file).then(function(b64){return api(fileURL(name),'PUT',{message:'上传兼职图片 '+name,content:b64,branch:G.branch}).then(function(){return name})})}
+function bindImgPreview(inputId,prevId){var inp=$(inputId),prev=$(prevId);if(!inp||!prev)return;inp.onchange=function(){var f=inp.files&&inp.files[0];if(!f){prev.style.display='none';return}var fr=new FileReader();fr.onload=function(){prev.src=fr.result;prev.style.display='block'};fr.readAsDataURL(f)}}
+function api(path,method,body){var opt={method:method||'GET',headers:{'Authorization':'Bearer '+G.token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}};if(body){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(body)}return fetch('https://api.github.com'+path,opt).then(function(r){return r.text().then(function(t){var d=null;try{d=t?JSON.parse(t):null}catch(e){}if(!r.ok){var err=new Error(d&&d.message?d.message:('HTTP '+r.status));err.http=r.status;var rem=r.headers.get('x-ratelimit-remaining');if(r.status===403&&rem!==null&&Number(rem)<=0)err.rateLimited=true;throw err}return d})})}
 function fileURL(path){return '/repos/'+encodeURIComponent(G.user)+'/'+encodeURIComponent(G.repo)+'/contents/'+path}
 function readFile(path){return api(fileURL(path)+'?ref='+encodeURIComponent(G.branch)).then(function(x){if(!x||!x.content)throw new Error('读取失败：'+path);return{data:JSON.parse(dec(x.content)),sha:x.sha}})}
 function putContent(path,data,sha,message){var body={message:message,content:enc(JSON.stringify(data,null,2)+'\n'),branch:G.branch};if(sha)body.sha=sha;return api(fileURL(path),'PUT',body)}
 function writeFile(path,data,message){return readFile(path).then(function(f){return putContent(path,data,f.sha,message)}).catch(function(e){if(e&&e.http===409){return readFile(path).then(function(f){return putContent(path,data,f.sha,message)})}throw e})}
 function ensureDataFile(){return readFile('data/jobs.json').catch(function(e){if(e&&e.http===404)return putContent('data/jobs.json',[],null,'初始化 jobs.json');throw e}).then(function(){return readFile('data/jobs.json')})}
-function loadCategories(){return readFile('data/categories.json').then(function(f){var data=f.data||[];CATEGORIES.forEach(function(c){var d=data.find(function(x){return x.slug===c.slug});if(d&&d.subcategories)c.subcategories=d.subcategories})}).catch(function(){})}
+function loadCategories(){return readFile('data/categories.json').then(function(f){CATEGORIES=f.data||[]}).catch(function(){CATEGORIES=[]})}
+
 window.connectGithub=function(){
   var b=$('connectBtn'),u=$('user').value.trim(),r=$('repo').value.trim(),t=$('token').value.trim();
   if(!u){msg('请输入 GitHub 用户名。','err');return}if(!r){msg('请输入仓库名。','err');return}if(!t){msg('请输入 Fine-grained Token。','err');return}
@@ -176,66 +161,102 @@ window.connectGithub=function(){
     try{if($('remember').checked){sessionStorage.setItem('gh_user',u);sessionStorage.setItem('gh_repo',r);sessionStorage.setItem('gh_token',t)}else{sessionStorage.removeItem('gh_user');sessionStorage.removeItem('gh_repo');sessionStorage.removeItem('gh_token')}}catch(e){}
     $('login').style.display='none';$('app').style.display='block';stat('连接成功（分支：'+G.branch+'）','ok');render();loadConfig();
   }).catch(function(e){
-    if(e&&e.rateLimited)msg('连接失败：GitHub API 已达速率限制，请稍后再试。','err');
+    if(e&&e.rateLimited)msg('连接失败：GitHub API 已达速率限制。','err');
     else if(e&&e.http===401)msg('连接失败：Token 无效、过期或输入错误。','err');
-    else if(e&&e.http===403)msg('连接失败：Token 没有访问该仓库内容的权限，请给 Contents: Read and write。','err');
-    else if(e&&e.http===404)msg('连接失败：仓库不存在，或 Token 没有 Contents 读写权限。','err');
+    else if(e&&e.http===403)msg('连接失败：Token 没有 Contents 读写权限。','err');
+    else if(e&&e.http===404)msg('连接失败：仓库不存在或 Token 无权限。','err');
     else msg('连接失败：\n'+(e.message||e),'err');
   }).then(function(){b.disabled=false;b.innerText='连接'});
 };
 window.loadAll=function(){stat('正在同步…','wait');return Promise.all([readFile('data/jobs.json'),loadCategories()]).then(function(a){jobs=a[0].data;render();stat('数据已同步','ok')}).catch(function(e){stat('同步失败：'+e.message,'err')})};
-window.logoutGithub=function(){try{sessionStorage.removeItem('gh_token')}catch(e){}G={user:'',repo:'',token:'',branch:'main'};$('token').value='';$('app').style.display='none';$('login').style.display='block';msg('已退出，请重新输入 Token。')};
+window.logoutGithub=function(){try{sessionStorage.removeItem('gh_token')}catch(e){}G={user:'',repo:'',token:'',branch:'main'};$('token').value='';$('app').style.display='none';$('login').style.display='block';msg('已退出。')};
+
+/* ---------- 站点配置 ---------- */
 function cfgMsg(t,c){var el=$('cfgMsg');if(el){el.innerText=t;el.className='muted'+(c==='ok'?' ok':c==='err'?' err':'')}}
-window.loadConfig=function(){readFile('data/config.json').then(function(f){var c=f.data||{};$('cfgWorker').value=c.worker_url||'';cfgMsg('当前配置：'+(c.worker_url?'Worker URL 已设置':'Worker URL 为空（普通用户功能未启用）'),c.worker_url?'ok':'wait')}).catch(function(e){cfgMsg('读取失败：'+e.message,'err')})};
-window.saveConfig=function(){if(busy){stat('正在保存中，请稍候…','wait');return}var t=$('cfgWorker').value.trim();busy=true;stat('正在保存站点配置…','wait');writeFile('data/config.json',{worker_url:t},'更新站点 Worker URL').then(function(){cfgMsg('Worker URL 已保存','ok');return loadAll()}).catch(function(e){cfgMsg('保存失败：'+e.message,'err')}).then(function(){busy=false})};
-/* ---------- 分类管理 ---------- */
+window.loadConfig=function(){readFile('data/config.json').then(function(f){var c=f.data||{};
+  $('cfg_title').value=c.site_title||'';$('cfg_subtitle').value=c.site_subtitle||'';$('cfg_bg').value=c.background_image||'';
+  $('cfg_hero').value=c.hero_title||'';$('cfg_herodesc').value=c.hero_description||'';
+  $('cfg_abouttitle').value=c.about_title||'';$('cfg_abouttext').value=c.about_text||'';
+  $('cfg_tg').value=c.telegram||'';$('cfg_yt').value=c.youtube||'';$('cfg_ig').value=c.instagram||'';$('cfg_tt').value=c.tiktok||'';
+  $('cfg_worker').value=c.worker_url||'';$('cfg_safety').value=c.safety_notice||'';
+  cfgMsg('当前配置已读取','ok');
+}).catch(function(e){cfgMsg('读取失败：'+e.message,'err')})};
+window.saveConfig=function(){if(busy){stat('正在保存中…','wait');return}busy=true;stat('正在保存站点配置…','wait');
+  var data={worker_url:$('cfg_worker').value.trim(),site_title:$('cfg_title').value.trim(),site_subtitle:$('cfg_subtitle').value.trim(),background_image:$('cfg_bg').value.trim(),hero_title:$('cfg_hero').value.trim(),hero_description:$('cfg_herodesc').value,about_title:$('cfg_abouttitle').value.trim(),about_text:$('cfg_abouttext').value,telegram:$('cfg_tg').value.trim(),youtube:$('cfg_yt').value.trim(),instagram:$('cfg_ig').value.trim(),tiktok:$('cfg_tt').value.trim(),safety_notice:$('cfg_safety').value};
+  writeFile('data/config.json',data,'更新站点配置').then(function(){cfgMsg('站点配置已保存','ok');return loadAll()}).catch(function(e){cfgMsg('保存失败：'+e.message,'err')}).then(function(){busy=false})};
+
+/* ---------- 三级分类管理 ---------- */
 function renderCats(){
   $('cats').innerHTML=CATEGORIES.map(function(c,ci){
-    return '<div class="cat-group"><h3>'+esc(c.name)+'（一级分类，固定）</h3>'+
-      (c.subcategories||[]).map(function(s,si){return '<div class="sub-row"><input id="sub_'+ci+'_'+si+'" value="'+esc(s.name)+'"><button type="button" class="danger small" onclick="delSub('+ci+','+si+')">删除</button></div>'}).join('')+
-      '<button type="button" class="small ghost" onclick="addSub('+ci+')">+ 新增二级分类</button></div>';
-  }).join('');
+    return '<div class="cat1"><h3>一级分类 #'+(ci+1)+'</h3>'+
+      '<div class="row"><div><label>名称</label><input id="c1n_'+ci+'" value="'+esc(c.name)+'"></div>'+
+      '<div><label>Slug</label><input id="c1s_'+ci+'" value="'+esc(c.slug)+'"></div></div>'+
+      '<div class="row"><div><label>分类图片 URL</label><input id="c1img_'+ci+'" value="'+esc(c.image||'')+'"></div>'+
+      '<div><label>图片超链接（点击跳转）</label><input id="c1link_'+ci+'" value="'+esc(c.image_link||'')+'"></div></div>'+
+      '<label class="inline"><input id="c1en_'+ci+'" type="checkbox"'+(c.enabled===false?'':' checked')+'> 启用该分类</label>'+
+      '<div style="margin-top:8px">'+(c.subcategories||[]).map(function(s,sj){
+        return '<div class="cat2"><div class="cat2-name">二级：'+esc(s.name)+'</div>'+
+          '<div class="row"><div><label>名称</label><input id="c2n_'+ci+'_'+sj+'" value="'+esc(s.name)+'"></div>'+
+          '<div><label>Slug</label><input id="c2s_'+ci+'_'+sj+'" value="'+esc(s.slug)+'"></div></div>'+
+          '<div class="row"><div><label>分类图片 URL</label><input id="c2img_'+ci+'_'+sj+'" value="'+esc(s.image||'')+'"></div>'+
+          '<div><label>图片超链接</label><input id="c2link_'+ci+'_'+sj+'" value="'+esc(s.image_link||'')+'"></div></div>'+
+          '<div style="margin:4px 0">'+((s.subcategories||[]).map(function(t,sk){
+            return '<span class="cat3"><input id="c3n_'+ci+'_'+sj+'_'+sk+'" value="'+esc(t.name)+'"> <a href="javascript:delCat3('+ci+','+sj+','+sk+')" style="color:#b3261e;text-decoration:none;margin-left:4px">×</a></span>'
+          }).join(''))+'</div>'+
+          '<button type="button" class="small ghost" onclick="addCat3('+ci+','+sj+')">+ 三级分类</button> '+
+          '<button type="button" class="small danger" onclick="delCat2('+ci+','+sj+')">删除二级</button></div>';
+      }).join('')+'</div>'+
+      '<div class="ops"><button type="button" class="small ghost" onclick="addCat2('+ci+')">+ 新增二级分类</button> '+
+      '<button type="button" class="small danger" onclick="delCat1('+ci+')">删除一级分类</button></div></div>';
+  }).join('')||'<p class="muted">暂无分类，点击「新增一级分类」</p>';
 }
-window.addSub=function(ci){var n=prompt('二级分类名称');if(!n)return;CATEGORIES[ci].subcategories.push({slug:slugify(n,CATEGORIES[ci].slug)+'-'+Date.now(),name:n});renderCats()};
-window.delSub=function(ci,si){if(!confirm('确定删除该二级分类？'))return;CATEGORIES[ci].subcategories.splice(si,1);renderCats()};
+window.addCat1=function(){CATEGORIES.push({slug:'cat-'+Date.now(),name:'新分类',description:'',image:'',image_link:'',enabled:true,sort_order:CATEGORIES.length+1,subcategories:[]});renderCats()};
+window.delCat1=function(ci){if(!confirm('确定删除该一级分类及其所有子分类？'))return;CATEGORIES.splice(ci,1);renderCats()};
+window.addCat2=function(ci){CATEGORIES[ci].subcategories.push({slug:'sub-'+Date.now(),name:'新二级分类',image:'',image_link:'',subcategories:[]});renderCats()};
+window.delCat2=function(ci,sj){if(!confirm('确定删除该二级分类及其三级分类？'))return;CATEGORIES[ci].subcategories.splice(sj,1);renderCats()};
+window.addCat3=function(ci,sj){CATEGORIES[ci].subcategories[sj].subcategories=CATEGORIES[ci].subcategories[sj].subcategories||[];CATEGORIES[ci].subcategories[sj].subcategories.push({slug:'sub2-'+Date.now(),name:'新三级分类'});renderCats()};
+window.delCat3=function(ci,sj,sk){CATEGORIES[ci].subcategories[sj].subcategories.splice(sk,1);renderCats()};
 window.saveCategories=function(){
-  if(busy){stat('正在保存中，请稍候…','wait');return}
-  CATEGORIES.forEach(function(c,ci){(c.subcategories||[]).forEach(function(s,si){var inp=$('sub_'+ci+'_'+si);if(inp)s.name=inp.value.trim()||s.name})});
+  if(busy){stat('正在保存中…','wait');return}
+  CATEGORIES.forEach(function(c,ci){
+    c.name=$('c1n_'+ci).value.trim()||c.name;c.slug=$('c1s_'+ci).value.trim()||c.slug;c.image=$('c1img_'+ci).value;c.image_link=$('c1link_'+ci).value;c.enabled=$('c1en_'+ci).checked;
+    (c.subcategories||[]).forEach(function(s,sj){
+      s.name=$('c2n_'+ci+'_'+sj).value.trim()||s.name;s.slug=$('c2s_'+ci+'_'+sj).value.trim()||s.slug;s.image=$('c2img_'+ci+'_'+sj).value;s.image_link=$('c2link_'+ci+'_'+sj).value;
+      (s.subcategories||[]).forEach(function(t,sk){t.name=$('c3n_'+ci+'_'+sj+'_'+sk).value.trim()||t.name});
+    });
+  });
   busy=true;stat('正在保存分类…','wait');
-  writeFile('data/categories.json',CATEGORIES,'更新两级分类').then(function(){stat('分类已保存','ok');return loadAll()}).catch(function(e){stat('分类保存失败：'+e.message,'err')}).then(function(){busy=false});
+  writeFile('data/categories.json',CATEGORIES,'更新三级分类').then(function(){stat('分类已保存','ok');return loadAll()}).catch(function(e){stat('分类保存失败：'+e.message,'err')}).then(function(){busy=false})};
+
+/* ---------- 分类联动 ---------- */
+window.fillSub2=function(catId,subId,sub2Id){
+  var cat=$(catId),sub=$(subId);if(!cat||!sub)return;var c=CATEGORIES.find(function(x){return x.slug===cat.value});
+  sub.innerHTML='<option value="">（不选）</option>'+((c&&c.subcategories)||[]).map(function(s){return '<option value="'+esc(s.slug)+'">'+esc(s.name)+'</option>'}).join('');
+  if(sub2Id)fillSub3(catId,subId,sub2Id);
 };
-/* ---------- 二级分类联动 ---------- */
-function fillSubSelect(catId,subId){
-  var cat=$(catId),sub=$(subId);if(!cat||!sub)return;
-  var c=CATEGORIES.find(function(x){return x.slug===cat.value});
-  sub.innerHTML='<option value="">（不选二级分类）</option>'+((c&&c.subcategories)||[]).map(function(s){return '<option value="'+esc(s.slug)+'">'+esc(s.name)+'</option>'}).join('');
-}
-window.addSubcatFromForm=function(catId,subId){
-  var cat=$(catId);if(!cat||!cat.value){alert('请先选择一级分类');return}
-  var n=prompt('新增二级分类名称（属于「'+catName(cat.value)+'」）');if(!n)return;
-  var c=CATEGORIES.find(function(x){return x.slug===cat.value});
-  c.subcategories.push({slug:slugify(n,c.slug)+'-'+Date.now(),name:n});
-  fillSubSelect(catId,subId);subId&&$(subId)&&($(subId).value=c.subcategories[c.subcategories.length-1].slug);
-  // 自动保存分类
-  writeFile('data/categories.json',CATEGORIES,'新增二级分类：'+n).then(function(){stat('已新增二级分类「'+n+'」并保存','ok')}).catch(function(e){stat('保存二级分类失败：'+e.message,'err')});
+window.fillSub3=function(catId,subId,sub2Id){
+  var cat=$(catId),sub=$(subId),s2=$(sub2Id);if(!cat||!sub||!s2)return;
+  var c=CATEGORIES.find(function(x){return x.slug===cat.value});var s=c?(c.subcategories||[]).find(function(x){return x.slug===sub.value}):null;
+  s2.innerHTML='<option value="">（不选）</option>'+((s&&s.subcategories)||[]).map(function(t){return '<option value="'+esc(t.slug)+'">'+esc(t.name)+'</option>'}).join('');
 };
+
 /* ---------- 兼职发布 / 审核 ---------- */
-function saveJobs(message){if(busy){stat('正在保存中，请稍候…','wait');return}busy=true;stat('正在保存…','wait');writeFile('data/jobs.json',jobs,message).then(function(){return loadAll()}).catch(function(e){stat('兼职保存失败：'+e.message,'err')}).then(function(){busy=false})}
-function fillCatSelect(id,val){var sel=$(id);if(!sel)return;sel.innerHTML=CATEGORIES.map(function(c){return '<option value="'+esc(c.slug)+'"'+(c.slug===val?' selected':'')+'>'+esc(c.name)+'</option>'}).join('')}
-window.toggleJobForm=function(forceHide){var w=$('jobFormWrap');if(forceHide||w.style.display!=='none'){w.style.display='none';return}fillCatSelect('jf_cat','');fillSubSelect('jf_cat','jf_subcat');w.style.display='block';bindImgPreview('jf_img','jf_imgPrev')};
+function saveJobs(message){if(busy){stat('正在保存中…','wait');return}busy=true;stat('正在保存…','wait');writeFile('data/jobs.json',jobs,message).then(function(){return loadAll()}).catch(function(e){stat('兼职保存失败：'+e.message,'err')}).then(function(){busy=false})}
+function fillCatSelect(id,val){var sel=$(id);if(!sel)return;sel.innerHTML=CATEGORIES.filter(function(c){return c.enabled!==false}).map(function(c){return '<option value="'+esc(c.slug)+'"'+(c.slug===val?' selected':'')+'>'+esc(c.name)+'</option>'}).join('')}
+window.toggleJobForm=function(forceHide){var w=$('jobFormWrap');if(forceHide||w.style.display!=='none'){w.style.display='none';return}fillCatSelect('jf_cat','');fillSub2('jf_cat','jf_sub','jf_sub2');w.style.display='block';bindImgPreview('jf_img','jf_imgPrev')};
 window.submitJob=function(){
   if(busy)return;var title=$('jf_title').value.trim();if(!title){stat('请输入兼职标题。','err');return}
   busy=true;stat('正在保存…','wait');
   var imgFile=$('jf_img').files&&$('jf_img').files[0],image='';
   var p=imgFile?(stat('正在上传图片…','wait'),uploadImage(imgFile).then(function(x){image=x})):Promise.resolve();
   p.then(function(){
-    jobs.unshift({id:String(Date.now()),title:title,description:$('jf_desc').value,category:$('jf_cat').value,subcategory:$('jf_subcat').value,salary:$('jf_salary').value,location:$('jf_loc').value,contact:$('jf_contact').value,image:image,tags:parseTags($('jf_tags').value),author:'管理员',author_type:'admin',status:'pending',created_at:new Date().toISOString()});
+    jobs.unshift({id:String(Date.now()),title:title,description:$('jf_desc').value,category:$('jf_cat').value,subcategory:$('jf_sub').value,subcategory2:$('jf_sub2').value,salary:$('jf_salary').value,location:$('jf_loc').value,contact:$('jf_contact').value,image:image,tags:parseTags($('jf_tags').value),author:'管理员',author_type:'admin',status:'pending',created_at:new Date().toISOString()});
     ['jf_title','jf_desc','jf_salary','jf_loc','jf_contact','jf_tags'].forEach(function(i){$(i).value=''});$('jf_img').value='';$('jf_imgPrev').style.display='none';$('jobFormWrap').style.display='none';jobFilter='all';
     return writeFile('data/jobs.json',jobs,'管理员发布兼职（待审核）');
   }).then(function(){return loadAll()}).catch(function(e){stat('发布失败：'+(e.message||e),'err')}).then(function(){busy=false})};
 window.setFilter=function(f){jobFilter=f;render()};
-window.setJobStatus=function(id,status){if(busy)return;var j=jobs.find(function(x){return x.id===id});if(!j)return;if(status==='approved'&&!confirm('通过后该兼职将对网站公开显示，确认通过？'))return;if(status==='rejected'&&!confirm('确认拒绝该兼职？'))return;j.status=status;saveJobs('更新兼职状态')};
-window.editJob=function(id){editImg={removed:false};editingJobId=id;render();bindImgPreview('ej_img','ej_imgPrev');setTimeout(function(){fillSubSelect('ej_cat','ej_subcat');var j=jobs.find(function(x){return x.id===id});if(j&&j.subcategory)$('ej_subcat').value=j.subcategory},30)};
+window.setJobStatus=function(id,status){if(busy)return;var j=jobs.find(function(x){return x.id===id});if(!j)return;if(status==='approved'&&!confirm('通过后将公开展示，确认？'))return;if(status==='rejected'&&!confirm('确认拒绝？'))return;j.status=status;saveJobs('更新兼职状态')};
+window.editJob=function(id){editImg={removed:false};editingJobId=id;render();bindImgPreview('ej_img','ej_imgPrev');setTimeout(function(){fillCatSelect('ej_cat',jobs.find(function(x){return x.id===id})?.category);fillSub2('ej_cat','ej_sub','ej_sub2');var j=jobs.find(function(x){return x.id===id});if(j){if(j.subcategory)$('ej_sub').value=j.subcategory;fillSub3('ej_cat','ej_sub','ej_sub2');if(j.subcategory2)$('ej_sub2').value=j.subcategory2}},30)};
 window.cancelEdit=function(){editingJobId=null;render()};
 window.removeEditImg=function(){editImg.removed=true;var p=$('ej_imgPrev');if(p){p.style.display='none';p.removeAttribute('src')}};
 window.saveJobEdit=function(id){
@@ -244,10 +265,11 @@ window.saveJobEdit=function(id){
   var imgFile=$('ej_img').files&&$('ej_img').files[0];var p=Promise.resolve();
   if(editImg.removed){j.image=''}else if(imgFile){stat('正在上传图片…','wait');p=uploadImage(imgFile).then(function(x){j.image=x})}
   p.then(function(){
-    j.title=$('ej_title').value.trim()||j.title;j.description=$('ej_desc').value;j.category=$('ej_cat').value;j.subcategory=$('ej_subcat').value;j.salary=$('ej_salary').value;j.location=$('ej_loc').value;j.contact=$('ej_contact').value;j.tags=parseTags($('ej_tags').value);editingJobId=null;
+    j.title=$('ej_title').value.trim()||j.title;j.description=$('ej_desc').value;j.category=$('ej_cat').value;j.subcategory=$('ej_sub').value;j.subcategory2=$('ej_sub2').value;j.salary=$('ej_salary').value;j.location=$('ej_loc').value;j.contact=$('ej_contact').value;j.tags=parseTags($('ej_tags').value);editingJobId=null;
     return writeFile('data/jobs.json',jobs,'更新兼职');
   }).then(function(){return loadAll()}).catch(function(e){stat('保存失败：'+(e.message||e),'err')}).then(function(){busy=false})};
-window.delJob=function(id){if(busy)return;var j=jobs.find(function(x){return x.id===id});if(!j)return;if(!confirm('确定删除兼职「'+j.title+'」？'))return;jobs=jobs.filter(function(x){return x.id!==id});saveJobs('删除兼职')};
+window.delJob=function(id){if(busy)return;var j=jobs.find(function(x){return x.id===id});if(!j)return;if(!confirm('确定删除「'+j.title+'」？'))return;jobs=jobs.filter(function(x){return x.id!==id});saveJobs('删除兼职')};
+
 /* ---------- 渲染 ---------- */
 function statusBadge(s){if(s==='approved')return'<span class="badge ok">已通过</span>';if(s==='rejected')return'<span class="badge err">已拒绝</span>';return'<span class="badge wait">待审核</span>'}
 function authorBadge(j){if(j&&j.author_type==='user')return'<span class="auth-pill user">普通用户·'+esc(j.author||'')+'</span>';return'<span class="auth-pill admin">管理员</span>'}
@@ -255,20 +277,18 @@ function tagsHTML(tags){return(tags&&tags.length)?'<div class="tags">'+tags.map(
 function jobOps(j){var s=j.status||'pending',h='';if(s==='pending'){h+='<button type="button" onclick="setJobStatus(\''+j.id+'\',\'approved\')">通过</button><button type="button" class="danger" onclick="setJobStatus(\''+j.id+'\',\'rejected\')">拒绝</button>'}else if(s==='approved'){h+='<button type="button" onclick="setJobStatus(\''+j.id+'\',\'pending\')">下架</button>'}else{h+='<button type="button" onclick="setJobStatus(\''+j.id+'\',\'pending\')">重新提交</button>'}h+='<button type="button" onclick="editJob(\''+j.id+'\')">编辑</button><button type="button" class="danger" onclick="delJob(\''+j.id+'\')">删除</button>';return h}
 function renderJob(j){
   if(j.id===editingJobId){
-    fillCatSelect('ej_cat',j.category||'');
     return '<div class="item"><b>编辑兼职</b>'+statusBadge(j.status||'pending')+authorBadge(j)+
       '<label>标题</label><input id="ej_title" value="'+esc(j.title)+'">'+
-      '<div class="cat-select-row"><div><label>一级分类</label><select id="ej_cat" onchange="fillSubSelect(\'ej_cat\',\'ej_subcat\')"></select></div><div><label>二级分类</label><select id="ej_subcat"></select></div><button type="button" class="small ghost" onclick="addSubcatFromForm(\'ej_cat\',\'ej_subcat\')">新增二级</button></div>'+
+      '<div class="cat-select-row"><div><label>一级分类</label><select id="ej_cat" onchange="fillSub2(\'ej_cat\',\'ej_sub\',\'ej_sub2\')"></select></div><div><label>二级分类</label><select id="ej_sub" onchange="fillSub3(\'ej_cat\',\'ej_sub\',\'ej_sub2\')"></select></div><div><label>三级分类</label><select id="ej_sub2"></select></div></div>'+
       '<label>描述</label><textarea id="ej_desc">'+esc(j.description||'')+'</textarea>'+
-      '<div class="row"><div><label>薪资待遇</label><input id="ej_salary" value="'+esc(j.salary||'')+'"></div><div><label>工作地点</label><input id="ej_loc" value="'+esc(j.location||'')+'"></div></div>'+
+      '<div class="row"><div><label>薪资</label><input id="ej_salary" value="'+esc(j.salary||'')+'"></div><div><label>地点</label><input id="ej_loc" value="'+esc(j.location||'')+'"></div></div>'+
       '<label>联系方式</label><input id="ej_contact" value="'+esc(j.contact||'')+'">'+
-      '<label>自定义标签（用逗号分隔）</label><input id="ej_tags" value="'+esc((j.tags||[]).join(','))+'">'+
-      '<label>封面图片</label><input id="ej_img" type="file" accept="image/*">'+
-      '<img id="ej_imgPrev" class="preview-img"'+(j.image&&!editImg.removed?' src="'+esc(j.image)+'"':' style="display:none"')+'>'+
-      (j.image&&!editImg.removed?'<div class="ops"><button type="button" class="ghost" onclick="removeEditImg()">移除当前图片</button></div>':'')+
+      '<label>标签</label><input id="ej_tags" value="'+esc((j.tags||[]).join(','))+'">'+
+      '<label>封面图片</label><input id="ej_img" type="file" accept="image/*"><img id="ej_imgPrev" class="preview-img"'+(j.image&&!editImg.removed?' src="'+esc(j.image)+'"':' style="display:none"')+'>'+
+      (j.image&&!editImg.removed?'<div class="ops"><button type="button" class="ghost" onclick="removeEditImg()">移除图片</button></div>':'')+
       '<div class="ops"><button type="button" onclick="saveJobEdit(\''+j.id+'\')">保存</button><button type="button" class="ghost" onclick="cancelEdit()">取消</button></div></div>';
   }
-  var meta=[];var cn=catName(j.category);if(cn)meta.push('一级：'+cn);var sn=subName(j.category,j.subcategory);if(sn)meta.push('二级：'+sn);if(j.salary)meta.push('薪资：'+j.salary);if(j.location)meta.push('地点：'+j.location);if(j.contact)meta.push('联系：'+j.contact);meta.push('发布：'+fmtDate(j.created_at));
+  var meta=[];var cn=catName(j.category);if(cn)meta.push('一级：'+cn);var sn=subName(j.category,j.subcategory);if(sn)meta.push('二级：'+sn);var tn=sub2Name(j.category,j.subcategory,j.subcategory2);if(tn)meta.push('三级：'+tn);if(j.salary)meta.push('薪资：'+j.salary);if(j.location)meta.push('地点：'+j.location);if(j.contact)meta.push('联系：'+j.contact);meta.push('发布：'+fmtDate(j.created_at));
   return '<div class="item">'+(j.image?'<img class="job-img" src="'+esc(j.image)+'" alt="兼职图片">':'')+'<span class="job-title">'+esc(j.title)+'</span>'+statusBadge(j.status||'pending')+authorBadge(j)+tagsHTML(j.tags)+(j.description?'<p>'+esc(j.description)+'</p>':'')+'<div class="meta">'+esc(meta.join('　|　'))+'</div>'+'<div class="ops">'+jobOps(j)+'</div></div>';
 }
 function render(){
