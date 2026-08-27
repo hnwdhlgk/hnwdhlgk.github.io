@@ -383,68 +383,180 @@
     "sort_order": 3,
     "subcategories": [
       {
-        "slug": "fulltime",
-        "name": "全职推荐",
+        "slug": "city-1787865909995-unwy",
+        "name": "海口市",
         "image": "",
         "image_link": "",
         "subcategories": [
           {
-            "slug": "fulltime-tech",
-            "name": "技术岗"
+            "slug": "dist-1787865909995-zqo5",
+            "name": "秀英区"
           },
           {
-            "slug": "fulltime-ops",
-            "name": "运营岗"
+            "slug": "dist-1787865909995-o5b8",
+            "name": "龙华区"
+          },
+          {
+            "slug": "dist-1787865909995-o56x",
+            "name": "琼山区"
+          },
+          {
+            "slug": "dist-1787865909995-hx9x",
+            "name": "美兰区"
           }
         ]
       },
       {
-        "slug": "intern",
-        "name": "实习推荐",
+        "slug": "city-1787865909995-9a09",
+        "name": "三亚市",
         "image": "",
         "image_link": "",
         "subcategories": [
           {
-            "slug": "intern-daily",
-            "name": "日常实习"
+            "slug": "dist-1787865909995-furf",
+            "name": "海棠区"
           },
           {
-            "slug": "intern-summer",
-            "name": "暑期实习"
+            "slug": "dist-1787865909995-s3c4",
+            "name": "吉阳区"
+          },
+          {
+            "slug": "dist-1787865909995-v7so",
+            "name": "天涯区"
+          },
+          {
+            "slug": "dist-1787865909995-j3qo",
+            "name": "崖州区"
           }
         ]
       },
       {
-        "slug": "seasonal",
-        "name": "寒暑假工",
+        "slug": "city-1787865909995-62vb",
+        "name": "三沙市",
         "image": "",
         "image_link": "",
         "subcategories": [
           {
-            "slug": "seasonal-winter",
-            "name": "寒假工"
+            "slug": "dist-1787865909995-8yvm",
+            "name": "西沙区"
           },
           {
-            "slug": "seasonal-summer",
-            "name": "暑假工"
+            "slug": "dist-1787865909995-qxt7",
+            "name": "南沙区"
           }
         ]
       },
       {
-        "slug": "dispatch",
-        "name": "劳务派遣",
+        "slug": "city-1787865909995-f10p",
+        "name": "儋州市",
         "image": "",
         "image_link": "",
-        "subcategories": [
-          {
-            "slug": "dispatch-factory",
-            "name": "工厂普工"
-          },
-          {
-            "slug": "dispatch-guard",
-            "name": "安保人员"
-          }
-        ]
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865909995-i6hf",
+        "name": "五指山市",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865909995-um93",
+        "name": "琼海市",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865909995-775j",
+        "name": "文昌市",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865909995-mpf5",
+        "name": "万宁市",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865909995-7b11",
+        "name": "东方市",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865909995-5lgc",
+        "name": "定安县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865909995-st2b",
+        "name": "屯昌县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865909995-k0l8",
+        "name": "澄迈县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865909995-tc2b",
+        "name": "临高县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865909995-jccn",
+        "name": "白沙黎族自治县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865909995-36tv",
+        "name": "昌江黎族自治县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865909995-7zlk",
+        "name": "乐东黎族自治县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865909995-45m8",
+        "name": "陵水黎族自治县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865909995-vyn5",
+        "name": "保亭黎族苗族自治县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
+      },
+      {
+        "slug": "city-1787865909995-oq6q",
+        "name": "琼中黎族苗族自治县",
+        "image": "",
+        "image_link": "",
+        "subcategories": []
       }
     ]
   }
