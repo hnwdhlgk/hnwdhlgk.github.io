@@ -223,30 +223,7 @@ function toggleTag(t){
   renderAll();
 }
 function clearTags(){activeTags=[];renderAll()}
-const PIE_COLORS=["#0d47a1","#1976d2","#42a5f5","#64b5f6","#26a69a","#66bb6a","#9ccc65","#ffa726","#ff7043","#ef5350","#ec407a","#ab47bc","#8d6e63","#78909c","#5c6bc0","#26c6da","#d4e157","#ffca28","#29b6f6"];
-function renderPie(rows){
-  rows=rows.filter(r=>r.n>0);
-  if(!rows.length)return "";
-  const total=rows.reduce((s,r)=>s+r.n,0);
-  let angle=0;
-  const stops=rows.map((r,i)=>{const deg=r.n/total*360;const s=angle;angle+=deg;return `${PIE_COLORS[i%PIE_COLORS.length]} ${s}deg ${angle}deg`}).join(",");
-  const pie=`<div class="pie" style="background:conic-gradient(${stops})"></div>`;
-  const legend=rows.map((r,i)=>`<div class="legend-item"><span class="dot" style="background:${PIE_COLORS[i%PIE_COLORS.length]}"></span><span class="nm">${esc(r.lbl)}</span><span class="num">${r.n}条 ${r.p}%</span></div>`).join("");
-  return `<div class="pie-wrap">${pie}<div class="legend">${legend}</div></div>`;
-}
-function renderRatios(){
-  const list=filteredJobs();
-  if(!list.length){document.getElementById("ratioWrap").innerHTML="";return}
-  if(activeCat==="all"){
-    let rows=categories.filter(c=>c.enabled!==false).map(c=>{const n=jobs.filter(j=>j.category===c.slug).length;return{lbl:c.name,n:n,p:jobs.length?Math.round(n/jobs.length*100):0}});
-    document.getElementById("ratioWrap").innerHTML=renderPie(rows);
-  }else if(activeSub!=="all"&&activeSub2==="all"){
-    const s=(catObj(activeCat).subcategories||[]).find(x=>x.slug===activeSub);let rows=((s&&s.subcategories)||[]).map(t=>{const n=jobs.filter(j=>j.category===activeCat&&j.subcategory===activeSub&&j.subcategory2===t.slug).length;const total=jobs.filter(j=>j.category===activeCat&&j.subcategory===activeSub).length;return{lbl:t.name,n:n,p:total?Math.round(n/total*100):0}});
-    document.getElementById("ratioWrap").innerHTML=renderPie(rows);
-  }else{
-    document.getElementById("ratioWrap").innerHTML="";
-  }
-}
+function renderRatios(){document.getElementById("ratioWrap").innerHTML=""}
 function renderJobs(){
   const list=filteredJobs();
   let title="最新信息";
