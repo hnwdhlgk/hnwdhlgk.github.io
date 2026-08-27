@@ -115,6 +115,7 @@ footer{text-align:center;color:#8a99a9;font-size:12px;padding:30px 0 45px}
       <div><button id="btn_submit" onclick="submitMine()">提交（等待审核）</button><button class="ghost" onclick="togglePublish(true)">取消</button></div>
     </div>
   </div>
+  <div class="card" id="adminPanel" style="display:none"><h2>审核管理</h2><p style="color:var(--muted);font-size:13px">管理员权限：审核待发布的兼职信息。</p><button onclick="loadPending()">刷新待审核</button><div id="pendingList" style="margin-top:10px"></div></div>
   <div class="card"><h2>我发布的兼职</h2><div id="myJobs"></div></div>
 </div>
 </main>
@@ -270,7 +271,21 @@ function doLogout(){me=null;sessionStorage.removeItem("gh_me");renderAuth();show
 
 /* ====== 视图切换 ====== */
 function showPublic(){editingMineId=null;activeCat="all";activeSub="all";activeSub2="all";activeTags=[];document.getElementById("publicView").style.display="";document.getElementById("myView").style.display="none";init()}
-function showMyView(){document.getElementById("publicView").style.display="none";document.getElementById("myView").style.display="";loadMine()}
+function showMyView(){document.getElementById("publicView").style.display="none";document.getElementById("myView").style.display="";loadMine();checkAdmin()}
+let isAdmin=false;
+async function checkAdmin(){
+  try{await wApi("/api/pending-jobs",{username:me});isAdmin=true;document.getElementById("adminPanel").style.display="";loadPending()}
+  catch(e){isAdmin=false;document.getElementById("adminPanel").style.display="none"}
+}
+async function loadPending(){
+  try{
+    const d=await wApi("/api/pending-jobs",{username:me});
+    const jobs=d.jobs||[];
+    document.getElementById("pendingList").innerHTML=jobs.length?jobs.map(j=>`<div class="mjob"><b>${esc(j.title)}</b><div style="color:var(--muted);font-size:12px">发布者：${esc(j.author||"")} · ${fmt(j.created_at)}</div>${j.description?`<p>${esc(j.description)}</p>`:""}<div class="ops"><button onclick="approveJob('${j.id}')">通过</button><button class="danger" onclick="rejectJob('${j.id}')">拒绝</button></div></div>`).join(""):'<p class="empty">暂无待审核兼职</p>';
+  }catch(e){document.getElementById("pendingList").innerHTML='<p class="empty">加载失败：'+esc(e.message)+'</p>'}
+}
+async function approveJob(id){try{await wApi("/api/approve-job",{username:me,id});loadPending()}catch(e){alert("操作失败："+e.message)}}
+async function rejectJob(id){if(!confirm("确定拒绝该兼职？"))return;try{await wApi("/api/reject-job",{username:me,id});loadPending()}catch(e){alert("操作失败："+e.message)}}
 function fillCat(id,val){const s=document.getElementById(id);if(!s)return;s.innerHTML=categories.filter(c=>c.enabled!==false).map(c=>`<option value="${esc(c.slug)}"${c.slug===val?" selected":""}>${esc(c.name)}</option>`).join("")}
 function fillSub2(catId,subId,sub2Id){const cat=document.getElementById(catId),sub=document.getElementById(subId);if(!cat||!sub)return;const c=catObj(cat.value);sub.innerHTML='<option value="">（不选）</option>'+(c.subcategories||[]).map(s=>`<option value="${esc(s.slug)}">${esc(s.name)}</option>`).join("");if(sub2Id)fillSub3(catId,subId,sub2Id)}
 function fillSub3(catId,subId,sub2Id){const cat=document.getElementById(catId),sub=document.getElementById(subId),s2=document.getElementById(sub2Id);if(!cat||!sub||!s2)return;const c=catObj(cat.value);const s=(c.subcategories||[]).find(x=>x.slug===sub.value);s2.innerHTML='<option value="">（不选）</option>'+((s&&s.subcategories)||[]).map(t=>`<option value="${esc(t.slug)}">${esc(t.name)}</option>`).join("")}
