@@ -73,38 +73,22 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&
 const pad=n=>n<10?"0"+n:""+n;
 function fmt(iso){const d=new Date(iso);if(isNaN(d))return iso||"";return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
 function parseTags(s){return String(s||"").split(/[,，、;；\s]+/).map(x=>x.trim()).filter(Boolean)}
+function fileToBase64(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const r=fr.result,i=r.indexOf(",");res(i>=0?r.slice(i+1):r)};fr.onerror=rej;fr.readAsDataURL(file)})}
 const FIXED_CATS=[{slug:"personal",name:"个人"},{slug:"business",name:"商家"},{slug:"agency",name:"中介"}];
-let categories=FIXED_CATS,jobs=[],active="all",me=sessionStorage.getItem("gh_me")||null,editingMineId=null,PUB_TOKEN="";
+let categories=FIXED_CATS,jobs=[],active="all",me=sessionStorage.getItem("gh_me")||null,editingMineId=null,WORKER_URL="";
 
-/* ====== GitHub 读写（普通用户发布，使用站点公开的「发布令牌」） ====== */
-async function loadConfig(){try{const c=await getJson("config.json");PUB_TOKEN=(c&&c.publish_token)||""}catch(e){PUB_TOKEN=""}}
-function getTok(){return PUB_TOKEN}
-async function ghApi(path,method,body){
-  const t=getTok();
-  const opt={method:method||"GET",headers:{"Authorization":"Bearer "+t,"Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"}};
-  if(body){opt.headers["Content-Type"]="application/json";opt.body=JSON.stringify(body)}
-  const r=await fetch("https://api.github.com"+path,opt);
-  const txt=await r.text();let d=null;try{d=txt?JSON.parse(txt):null}catch(e){}
-  if(!r.ok){const err=new Error((d&&d.message)||("HTTP "+r.status));err.http=r.status;throw err}
+/* ====== 配置 & Worker 代理 ====== */
+async function getJson(f){const r=await fetch("./data/"+f+"?v="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error(r.status);return r.json()}
+async function loadConfig(){try{const c=await getJson("config.json");WORKER_URL=(c&&c.worker_url)||""}catch(e){WORKER_URL=""}}
+async function wApi(path,body){
+  if(!WORKER_URL)throw new Error("站点暂未开放普通用户功能（管理员尚未配置后端）");
+  const r=await fetch(WORKER_URL.replace(/\/+$/,"")+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  let d={};try{d=await r.json()}catch(e){}
+  if(!r.ok||d.error)throw new Error(d.error||("HTTP "+r.status));
   return d;
-}
-const enc=s=>btoa(unescape(encodeURIComponent(s)));
-const dec=s=>decodeURIComponent(escape(atob(s.replace(/\n/g,""))));
-const repoPath=p=>"/repos/hnwdhlgk/hnwdhlgk.github.io/contents/"+p;
-async function readJson(p){const d=await ghApi(repoPath(p)+"?ref=main");return JSON.parse(dec(d.content))}
-async function writeJson(p,data,msg){const d=await ghApi(repoPath(p)+"?ref=main");await ghApi(repoPath(p),"PUT",{message:msg,content:enc(JSON.stringify(data,null,2)+"\n"),sha:d.sha,branch:"main"})}
-async function readUsers(){try{return await readJson("data/users.json")}catch(e){if(e.http===404)return [];throw e}}
-async function sha256(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
-async function uploadImg(file){
-  const safe=String(file.name||"img").replace(/[^\w.\-]/g,"_");
-  const name="images/jobs/"+Date.now()+"_"+safe;
-  const b64=await new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const r=fr.result,i=r.indexOf(",");res(i>=0?r.slice(i+1):r)};fr.onerror=rej;fr.readAsDataURL(file)});
-  await ghApi(repoPath(name),"PUT",{message:"上传兼职图片 "+name,content:b64,branch:"main"});
-  return name;
 }
 
 /* ====== 公开视图 ====== */
-async function getJson(f){const r=await fetch("./data/"+f+"?v="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error(r.status);return r.json()}
 async function init(){renderAuth();loadConfig();try{[categories,jobs]=await Promise.all([getJson("categories.json"),getJson("jobs.json")])}catch(e){categories=FIXED_CATS;jobs=[]}jobs=jobs.filter(j=>j.status==="approved");renderFilters();renderJobs()}
 function catName(slug){const c=[...FIXED_CATS,...categories].find(x=>x.slug===slug);return c?c.name:""}
 function renderFilters(){
@@ -121,7 +105,7 @@ function renderJobs(){
   document.querySelector("#jobs").innerHTML=list.length?list.map(j=>`<article class="job">${j.image?`<img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy">`:""}<span class="tag">${esc(catName(j.category)||"兼职")}</span><h3>${esc(j.title)}</h3><div class="meta">${esc(j.location||"")}${j.time?" · "+esc(j.time):""}</div>${j.salary?`<div class="salary">${esc(j.salary)}</div>`:""}${j.tags&&j.tags.length?`<div class="tags">${j.tags.map(t=>`<span class="jtag">${esc(t)}</span>`).join("")}</div>`:""}<p>${esc(j.description||"")}</p>${j.contact?`<p><b>联系方式：</b>${esc(j.contact)}</p>`:""}</article>`).join(""):'<div class="empty">暂无已审核信息</div>'
 }
 
-/* ====== 认证（注册/登录） ====== */
+/* ====== 认证（注册/登录，走 Worker） ====== */
 function renderAuth(){
   const a=document.getElementById("authArea");
   if(me){a.innerHTML='<span class="who">'+esc(me)+'</span><button class="ghost" onclick="showMyView()">我的后台</button><button onclick="doLogout()">退出</button>'}
@@ -137,25 +121,13 @@ async function doRegister(){
   if(!/^[\w\u4e00-\u9fa5-]{2,20}$/.test(u)){e.textContent="用户名需为2-20位中文/字母/数字/下划线/连字符";return}
   if(p.length<6){e.textContent="密码至少6位";return}
   if(p!==p2){e.textContent="两次密码不一致";return}
-  if(!getTok()){e.textContent="站点暂未开放注册：管理员尚未配置「发布令牌」，请联系管理员。";return}
-  try{
-    const users=await readUsers();
-    if(users.some(x=>x.username===u)){e.textContent="该用户名已被注册";return}
-    users.push({username:u,pass:await sha256(p),created_at:new Date().toISOString()});
-    await writeJson("data/users.json",users,"注册用户："+u);
-    me=u;sessionStorage.setItem("gh_me",u);closeModal();renderAuth();showMyView();
-  }catch(err){e.textContent="注册失败："+(err.http===401?"需要管理员在本浏览器登录授权":err.message)}
+  try{await wApi("/api/register",{username:u,password:p});me=u;sessionStorage.setItem("gh_me",u);closeModal();renderAuth();showMyView()}
+  catch(err){e.textContent=err.message}
 }
 async function doLogin(){
   const u=document.getElementById("lu").value.trim(),p=document.getElementById("lp").value,e=document.getElementById("loginErr");
-  if(!getTok()){e.textContent="站点暂未开放登录：管理员尚未配置「发布令牌」，请联系管理员。";return}
-  try{
-    const users=await readUsers();
-    const user=users.find(x=>x.username===u);
-    if(!user){e.textContent="用户不存在";return}
-    if(user.pass!==await sha256(p)){e.textContent="密码错误";return}
-    me=u;sessionStorage.setItem("gh_me",u);closeModal();renderAuth();showMyView();
-  }catch(err){e.textContent="登录失败："+err.message}
+  try{await wApi("/api/login",{username:u,password:p});me=u;sessionStorage.setItem("gh_me",u);closeModal();renderAuth();showMyView()}
+  catch(err){e.textContent=err.message}
 }
 function doLogout(){me=null;sessionStorage.removeItem("gh_me");renderAuth();showPublic()}
 
@@ -165,17 +137,14 @@ function showMyView(){document.getElementById("publicView").style.display="none"
 function fillCat(id,val){const s=document.getElementById(id);if(!s)return;s.innerHTML=FIXED_CATS.map(c=>`<option value="${esc(c.slug)}"${c.slug===val?" selected":""}>${esc(c.name)}</option>`).join("")}
 function bindImgPrev(inputId,prevId){const inp=document.getElementById(inputId),prev=document.getElementById(prevId);if(!inp||!prev)return;inp.onchange=()=>{const f=inp.files&&inp.files[0];if(!f){prev.style.display="none";return}const fr=new FileReader();fr.onload=()=>{prev.src=fr.result;prev.style.display="block"};fr.readAsDataURL(f)}}
 
-/* ====== 普通用户后台 ====== */
+/* ====== 普通用户后台（走 Worker） ====== */
 function togglePublish(forceHide){const w=document.getElementById("pubForm");if(forceHide||w.style.display!=="none"){w.style.display="none";return}fillCat("mf_cat");bindImgPrev("mf_img","mf_imgPrev");w.style.display="block"}
 async function loadMine(){
   fillCat("mf_cat");bindImgPrev("mf_img","mf_imgPrev");
   const el=document.getElementById("myJobs");
-  if(!getTok()){el.innerHTML='<p class="empty">站点暂未开放发布：管理员尚未配置「发布令牌」。<br>请联系网站管理员。</p>';return}
-  try{
-    jobs=await readJson("data/jobs.json");
-    const mine=jobs.filter(j=>j.author===me);
-    el.innerHTML=mine.map(renderMine).join("")||'<p class="empty">你还没有发布过兼职，点击上方「+ 发布兼职」。</p>';
-  }catch(e){el.innerHTML='<p class="empty">加载失败：'+esc(e.message)+'</p>'}
+  if(!WORKER_URL){el.innerHTML='<p class="empty">站点暂未开放普通用户功能：管理员尚未配置后端。<br>请联系网站管理员。</p>';return}
+  try{const d=await wApi("/api/my-jobs",{username:me});jobs=d.jobs||[];el.innerHTML=jobs.map(renderMine).join("")||'<p class="empty">你还没有发布过兼职，点击上方「+ 发布兼职」。</p>'}
+  catch(e){el.innerHTML='<p class="empty">加载失败：'+esc(e.message)+'</p>'}
 }
 function renderMine(j){
   if(j.id===editingMineId){
@@ -191,44 +160,29 @@ window.removeMineImg=function(){const p=document.getElementById("mj_imgPrev");if
 async function submitMine(){
   const title=document.getElementById("mf_title").value.trim();
   if(!title){alert("请输入标题");return}
-  if(!getTok()){alert("站点暂未开放发布：管理员尚未配置「发布令牌」，请联系管理员。");return}
   const imgFile=document.getElementById("mf_img").files[0];
   try{
     let image="";
-    if(imgFile){const btn=[...document.querySelectorAll("#pubForm button")].find(b=>b.textContent.includes("提交"));btn.disabled=true;image=await uploadImg(imgFile);btn.disabled=false}
-    jobs=await readJson("data/jobs.json");
-    jobs.unshift({id:String(Date.now()),title:title,description:document.getElementById("mf_desc").value,category:document.getElementById("mf_cat").value,salary:document.getElementById("mf_salary").value,location:document.getElementById("mf_loc").value,contact:document.getElementById("mf_contact").value,image:image,tags:parseTags(document.getElementById("mf_tags").value),author:me,author_type:"user",status:"pending",created_at:new Date().toISOString()});
-    await writeJson("data/jobs.json",jobs,"普通用户发布兼职（待审核）");
+    if(imgFile){const b64=await fileToBase64(imgFile);const r=await wApi("/api/upload-image",{username:me,filename:imgFile.name,content:b64});image=r.path}
+    await wApi("/api/publish",{username:me,job:{title:title,description:document.getElementById("mf_desc").value,category:document.getElementById("mf_cat").value,salary:document.getElementById("mf_salary").value,location:document.getElementById("mf_loc").value,contact:document.getElementById("mf_contact").value,image:image,tags:parseTags(document.getElementById("mf_tags").value)}});
     ["mf_title","mf_desc","mf_salary","mf_loc","mf_contact","mf_tags"].forEach(i=>document.getElementById(i).value="");
     const fi=document.getElementById("mf_img");fi.value="";document.getElementById("mf_imgPrev").style.display="none";
     togglePublish(true);loadMine();alert("已提交，等待管理员审核通过后公开展示");
   }catch(e){alert("发布失败："+e.message)}
 }
 async function saveMineEdit(id){
-  if(!getTok()){alert("无权限");return}
   try{
     const imgFile=document.getElementById("mj_img").files[0];
     let image=null;
     if(window._rmMineImg){image=""}
-    else if(imgFile){image=await uploadImg(imgFile)}
-    jobs=await readJson("data/jobs.json");
-    const j=jobs.find(x=>x.id===id);if(!j){alert("兼职不存在");return}
-    j.title=document.getElementById("mj_title").value.trim()||j.title;
-    j.description=document.getElementById("mj_desc").value;
-    j.category=document.getElementById("mj_cat").value;
-    j.salary=document.getElementById("mj_salary").value;
-    j.location=document.getElementById("mj_loc").value;
-    j.contact=document.getElementById("mj_contact").value;
-    j.tags=parseTags(document.getElementById("mj_tags").value);
-    if(image!==null)j.image=image;
-    await writeJson("data/jobs.json",jobs,"普通用户更新兼职");
+    else if(imgFile){const b64=await fileToBase64(imgFile);const r=await wApi("/api/upload-image",{username:me,filename:imgFile.name,content:b64});image=r.path}
+    await wApi("/api/update-job",{username:me,id:id,job:{title:document.getElementById("mj_title").value.trim(),description:document.getElementById("mj_desc").value,category:document.getElementById("mj_cat").value,salary:document.getElementById("mj_salary").value,location:document.getElementById("mj_loc").value,contact:document.getElementById("mj_contact").value,tags:parseTags(document.getElementById("mj_tags").value),image:image}});
     editingMineId=null;window._rmMineImg=false;loadMine();
   }catch(e){alert("保存失败："+e.message)}
 }
 async function delMine(id){
   if(!confirm("确定删除这条兼职？"))return;
-  if(!getTok()){alert("无权限");return}
-  try{jobs=await readJson("data/jobs.json");jobs=jobs.filter(j=>j.id!==id);await writeJson("data/jobs.json",jobs,"普通用户删除兼职");loadMine()}catch(e){alert("删除失败："+e.message)}
+  try{await wApi("/api/delete-job",{username:me,id});loadMine()}catch(e){alert("删除失败："+e.message)}
 }
 
 init().catch(e=>{document.querySelector("#jobs").innerHTML='<div class="empty">数据加载失败，请刷新页面</div>';console.error(e)});
