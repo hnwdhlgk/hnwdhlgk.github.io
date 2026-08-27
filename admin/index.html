@@ -133,6 +133,7 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
         <select id="cat2Parent" onchange="renderCat2()"></select>
       </div>
       <button onclick="addCat2()">+ 新增二级分类</button>
+      <button class="ghost" onclick="importHainan()">导入海南行政区划</button>
       <div id="cat2List" style="margin-top:14px"></div>
       <div class="ops" style="margin-top:14px"><button onclick="saveCats()">保存全部分类</button></div>
     </div>
@@ -367,6 +368,40 @@ function renderCat2(){
 }
 window.addCat2=function(){var ci=Number($('cat2Parent').value);if(isNaN(ci)||!CATEGORIES[ci])return;CATEGORIES[ci].subcategories=CATEGORIES[ci].subcategories||[];CATEGORIES[ci].subcategories.push({slug:'sub-'+Date.now(),name:'新二级分类',image:'',image_link:'',subcategories:[]});renderCat2()}
 window.delCat2=function(ci,sj){if(!confirm('确定删除该二级分类及其三级分类？'))return;CATEGORIES[ci].subcategories.splice(sj,1);renderCat2()}
+var HAINAN_CITIES=[
+  {name:'海口市',districts:['秀英区','龙华区','琼山区','美兰区']},
+  {name:'三亚市',districts:['海棠区','吉阳区','天涯区','崖州区']},
+  {name:'三沙市',districts:['西沙区','南沙区']},
+  {name:'儋州市',districts:[]},
+  {name:'五指山市',districts:[]},
+  {name:'琼海市',districts:[]},
+  {name:'文昌市',districts:[]},
+  {name:'万宁市',districts:[]},
+  {name:'东方市',districts:[]},
+  {name:'定安县',districts:[]},
+  {name:'屯昌县',districts:[]},
+  {name:'澄迈县',districts:[]},
+  {name:'临高县',districts:[]},
+  {name:'白沙黎族自治县',districts:[]},
+  {name:'昌江黎族自治县',districts:[]},
+  {name:'乐东黎族自治县',districts:[]},
+  {name:'陵水黎族自治县',districts:[]},
+  {name:'保亭黎族苗族自治县',districts:[]},
+  {name:'琼中黎族苗族自治县',districts:[]}
+];
+window.importHainan=function(){
+  var ci=Number($('cat2Parent').value);if(isNaN(ci)||!CATEGORIES[ci]){alert('请先选择一级分类');return}
+  if(!confirm('将在「'+CATEGORIES[ci].name+'」下导入海南全部19个市/县，地级市自动添加下属区。现有二级分类将保留，重复名称会跳过。是否继续？'))return;
+  var existing={};(CATEGORIES[ci].subcategories||[]).forEach(function(s){existing[s.name]=true});
+  var added=0;
+  HAINAN_CITIES.forEach(function(city){
+    if(existing[city.name])return;
+    var sub={slug:'city-'+Date.now()+'-'+Math.random().toString(36).slice(2,6),name:city.name,image:'',image_link:'',subcategories:[]};
+    if(city.districts.length)sub.subcategories=city.districts.map(function(d){return{slug:'dist-'+Date.now()+'-'+Math.random().toString(36).slice(2,6),name:d}});
+    CATEGORIES[ci].subcategories.push(sub);added++;
+  });
+  renderCat2();alert('已导入 '+added+' 个市/县（跳过重复）。记得点击「保存全部分类」写入仓库。');
+}
 
 /* ====== 三级分类 ====== */
 function fillCat3Parent1(){
