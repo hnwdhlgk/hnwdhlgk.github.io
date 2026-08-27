@@ -23,7 +23,7 @@
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 16px;cursor:pointer;font-size:14px;display:inline-flex;align-items:center;gap:6px;transition:.15s}.chip:hover{border-color:var(--blue)}.chip.active{background:var(--blue);color:#fff;border-color:var(--blue)}.chip .cnt{font-size:11px;background:#eef2f7;color:var(--muted);border-radius:999px;padding:1px 7px}.chip.active .cnt{background:#ffffff33;color:#fff}
 .sub-label{color:var(--muted);font-size:12px;margin:12px 0 6px}
 /* 比例条 */
-.ratio-row{display:flex;align-items:center;gap:10px;margin:4px 0;font-size:13px}.ratio-row .lbl{width:90px;flex-shrink:0;color:var(--text)}.ratio-row .bar{flex:1;height:8px;background:#e9eff5;border-radius:8px;overflow:hidden}.ratio-row .bar i{display:block;height:100%;background:var(--blue);border-radius:8px}.ratio-row .num{width:50px;text-align:right;color:var(--muted);font-size:12px}
+.pie-wrap{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap;margin:10px 0}.pie{width:170px;height:170px;border-radius:50%;flex-shrink:0;box-shadow:0 2px 8px #0001}.legend{flex:1;min-width:180px;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:4px 12px}.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;padding:2px 0}.legend-item .dot{width:11px;height:11px;border-radius:3px;flex-shrink:0}.legend-item .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.legend-item .num{color:var(--muted);font-size:11px;flex-shrink:0}
 /* 兼职卡片 */
 .jobs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.job{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;transition:.15s}.job:hover{box-shadow:0 6px 20px #143c6415;transform:translateY(-2px)}.job-img{width:100%;aspect-ratio:4/3;height:auto;object-fit:cover;border-radius:10px;margin-bottom:10px;display:block;background:#eef2f7}.job .cats{margin-bottom:6px}.job .tag{color:var(--blue);background:#eef5ff;border-radius:20px;padding:3px 9px;font-size:12px;margin-right:5px}.job .tag.sub{background:#f0f4ff;color:#3949ab}.job .tag.sub2{background:#f5f0ff;color:#7b1fa2}.job h3{margin:6px 0;font-size:16px}.job .meta{color:var(--muted);font-size:13px}.job .salary{color:var(--blue);font-weight:bold;margin:5px 0}.job .jtags{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}.job .jtag{background:#eef5ff;color:var(--blue);border-radius:20px;padding:2px 8px;font-size:11px;cursor:pointer}.job .jtag.active{background:var(--blue);color:#fff}.job p{color:#4a6080;font-size:13px;line-height:1.6;margin:6px 0}.job .contact{font-size:13px}.job .contact a{color:var(--blue2);text-decoration:none}.empty{grid-column:1/-1;background:#fff;padding:40px;text-align:center;color:var(--muted);border-radius:14px}
 /* 分类图片卡片 */
@@ -223,19 +223,29 @@ function toggleTag(t){
   renderAll();
 }
 function clearTags(){activeTags=[];renderAll()}
+const PIE_COLORS=["#0d47a1","#1976d2","#42a5f5","#64b5f6","#26a69a","#66bb6a","#9ccc65","#ffa726","#ff7043","#ef5350","#ec407a","#ab47bc","#8d6e63","#78909c","#5c6bc0","#26c6da","#d4e157","#ffca28","#29b6f6"];
+function renderPie(rows){
+  rows=rows.filter(r=>r.n>0);
+  if(!rows.length)return "";
+  const total=rows.reduce((s,r)=>s+r.n,0);
+  let angle=0;
+  const stops=rows.map((r,i)=>{const deg=r.n/total*360;const s=angle;angle+=deg;return `${PIE_COLORS[i%PIE_COLORS.length]} ${s}deg ${angle}deg`}).join(",");
+  const pie=`<div class="pie" style="background:conic-gradient(${stops})"></div>`;
+  const legend=rows.map((r,i)=>`<div class="legend-item"><span class="dot" style="background:${PIE_COLORS[i%PIE_COLORS.length]}"></span><span class="nm">${esc(r.lbl)}</span><span class="num">${r.n}条 ${r.p}%</span></div>`).join("");
+  return `<div class="pie-wrap">${pie}<div class="legend">${legend}</div></div>`;
+}
 function renderRatios(){
   const list=filteredJobs();
   if(!list.length){document.getElementById("ratioWrap").innerHTML="";return}
-  // 按当前筛选层级显示比例图
-  let rows=[];
   if(activeCat==="all"){
-    rows=categories.filter(c=>c.enabled!==false).map(c=>{const n=jobs.filter(j=>j.category===c.slug).length;return{lbl:c.name,n:n,p:jobs.length?Math.round(n/jobs.length*100):0}});
-  }else if(activeSub==="all"){
-    const c=catObj(activeCat);rows=(c.subcategories||[]).map(s=>{const n=jobs.filter(j=>j.category===activeCat&&j.subcategory===s.slug).length;const total=jobs.filter(j=>j.category===activeCat).length;return{lbl:s.name,n:n,p:total?Math.round(n/total*100):0}});
+    let rows=categories.filter(c=>c.enabled!==false).map(c=>{const n=jobs.filter(j=>j.category===c.slug).length;return{lbl:c.name,n:n,p:jobs.length?Math.round(n/jobs.length*100):0}});
+    document.getElementById("ratioWrap").innerHTML=renderPie(rows);
+  }else if(activeSub!=="all"&&activeSub2==="all"){
+    const s=(catObj(activeCat).subcategories||[]).find(x=>x.slug===activeSub);let rows=((s&&s.subcategories)||[]).map(t=>{const n=jobs.filter(j=>j.category===activeCat&&j.subcategory===activeSub&&j.subcategory2===t.slug).length;const total=jobs.filter(j=>j.category===activeCat&&j.subcategory===activeSub).length;return{lbl:t.name,n:n,p:total?Math.round(n/total*100):0}});
+    document.getElementById("ratioWrap").innerHTML=renderPie(rows);
   }else{
-    const s=(catObj(activeCat).subcategories||[]).find(x=>x.slug===activeSub);rows=((s&&s.subcategories)||[]).map(t=>{const n=jobs.filter(j=>j.category===activeCat&&j.subcategory===activeSub&&j.subcategory2===t.slug).length;const total=jobs.filter(j=>j.category===activeCat&&j.subcategory===activeSub).length;return{lbl:t.name,n:n,p:total?Math.round(n/total*100):0}});
+    document.getElementById("ratioWrap").innerHTML="";
   }
-  document.getElementById("ratioWrap").innerHTML=rows.map(r=>`<div class="ratio-row"><span class="lbl">${esc(r.lbl)}</span><div class="bar"><i style="width:${r.p}%"></i></div><span class="num">${r.n}条 ${r.p}%</span></div>`).join("");
 }
 function renderJobs(){
   const list=filteredJobs();
