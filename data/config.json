@@ -16,5 +16,22 @@
     "name": "老师名称",
     "link": "老师榜单链接",
     "sort": "标签[服务项目用,号分割]"
+  },
+  "form_labels": {
+    "title": "老师名称",
+    "cat": "兼职项目",
+    "sub": "城市",
+    "sub2": "地区",
+    "salary": "p",
+    "loc": "具体开课位",
+    "contact": "联系方式",
+    "tags": "服务项目",
+    "img": "老师照片"
+  },
+  "form_placeholders": {
+    "title": "请输入老师艺名",
+    "salary": "如:800p",
+    "contact": "如:@hainanguanlibot",
+    "tags": "如:嫩妹,胸推,69,口爆"
   }
 }
