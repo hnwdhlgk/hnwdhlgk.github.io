@@ -644,11 +644,18 @@ window.saveConfig=function(){
 function renderUsers(){
   $('users').innerHTML=USERS.length?USERS.map(function(u,i){
     var pwdStatus=u.pass?'<span class="ok">已设置密码</span>':'<span class="wait">未设置密码</span>';
-    return '<div class="user-row"><span class="uname">'+esc(u.username)+'</span>'+pwdStatus+'<span class="role">普通用户</span><button class="small" onclick="resetUserPwd('+i+')">重置密码</button><button class="danger small" onclick="delUser('+i+')">删除</button></div>';
+    var role=u.role==='admin'?'管理员':'普通用户';
+    var roleBtn=u.role==='admin'?'<button class="small" onclick="setUserRole('+i+",'user')\">设为普通用户</button>":'<button class="small" onclick="setUserRole('+i+",'admin')\">设为管理员</button>";
+    return '<div class="user-row"><span class="uname">'+esc(u.username)+'</span>'+pwdStatus+'<span class="role">'+role+'</span>'+roleBtn+'<button class="small" onclick="resetUserPwd('+i+')">重置密码</button><button class="danger small" onclick="delUser('+i+')">删除</button></div>';
   }).join(''):'<p class="muted">暂无普通用户</p>';
 }
 window.addUser=function(){var n=prompt('用户名');if(!n)return;if(USERS.some(function(u){return u.username===n})){alert('用户名已存在');return};USERS.push({username:n,pass:'',created_at:new Date().toISOString()});stat('正在添加…','wait');writeFile('data/users.json',USERS,userSha,'新增用户').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();stat('已添加','ok')}).catch(function(e){stat('添加失败：'+e.message,'err')})}
 window.delUser=function(i){if(!confirm('确定删除用户 '+USERS[i].username+'？'))return;USERS.splice(i,1);stat('正在删除…','wait');writeFile('data/users.json',USERS,userSha,'删除用户').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();stat('已删除','ok')}).catch(function(e){stat('删除失败：'+e.message,'err')})}
+window.setUserRole=function(i,role){
+  USERS[i].role=role;
+  stat('正在保存…','wait');
+  writeFile('data/users.json',USERS,userSha,'设置用户角色').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();stat('角色已更新','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
+}
 window.resetUserPwd=async function(i){
   var pwd=prompt("请输入 "+USERS[i].username+" 的新密码（至少6位）");
   if(!pwd)return;
