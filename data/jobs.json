@@ -2,7 +2,7 @@
   {
     "title": "贝贝",
     "description": "本人真实照片,个人兼职",
-    "category": "",
+    "category": "personal",
     "subcategory": "",
     "subcategory2": "",
     "salary": "900p",
@@ -27,7 +27,8 @@
     "id": "1787866180350",
     "author": "12345",
     "author_type": "user",
-    "status": "approved",
-    "created_at": "2026-08-27T21:29:40.350Z"
+    "status": "pending",
+    "created_at": "2026-08-27T21:29:40.350Z",
+    "image_link": "https://t.me/hnwdhlgk/51?single"
   }
 ]
