@@ -215,7 +215,12 @@ function renderJobs(){
 function renderAuth(){const a=document.getElementById("authArea");if(me){a.innerHTML='<span class="who">'+esc(me)+'</span><button class="ghost" onclick="showMyView()">我的后台</button><button onclick="doLogout()">退出</button>'}else{a.innerHTML='<button class="ghost" onclick="openModal(regForm)">注册</button><button onclick="openModal(loginForm)">登录</button>'}}
 const regForm=`<h3>注册普通用户</h3><label>用户名</label><input id="ru" placeholder="2-20位"><label>密码</label><input id="rp" type="password" placeholder="至少6位"><label>确认密码</label><input id="rp2" type="password"><div class="err" id="regErr"></div><button onclick="doRegister()">注册并登录</button>`;
 const loginForm=`<h3>普通用户登录</h3><label>用户名</label><input id="lu"><label>密码</label><input id="lp" type="password"><div class="err" id="loginErr"></div><button onclick="doLogin()">登录</button>`;
-function openModal(html){document.getElementById("modalBody").innerHTML=html;document.getElementById("modalMask").style.display="flex"}
+function openModal(html){
+  if(!WORKER_URL&&(html===regForm||html===loginForm)){
+    html='<h3>注册 / 登录暂未开放</h3><p style="color:#71859a;line-height:1.7">管理员尚未配置后端服务（Cloudflare Worker），普通用户注册、登录、发布功能暂不可用。<br><br>请联系网站管理员开启后再试。</p>'
+  }
+  document.getElementById("modalBody").innerHTML=html;document.getElementById("modalMask").style.display="flex"
+}
 function closeModal(){document.getElementById("modalMask").style.display="none"}
 window.addEventListener("click",e=>{if(e.target.id==="modalMask")closeModal()});
 async function doRegister(){const u=document.getElementById("ru").value.trim(),p=document.getElementById("rp").value,p2=document.getElementById("rp2").value,e=document.getElementById("regErr");if(!/^[\w\u4e00-\u9fa5-]{2,20}$/.test(u)){e.textContent="用户名需为2-20位";return}if(p.length<6){e.textContent="密码至少6位";return}if(p!==p2){e.textContent="两次密码不一致";return}try{await wApi("/api/register",{username:u,password:p});me=u;sessionStorage.setItem("gh_me",u);closeModal();renderAuth();showMyView()}catch(err){e.textContent=err.message}}
