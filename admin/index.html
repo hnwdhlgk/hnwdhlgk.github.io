@@ -271,6 +271,7 @@ function esc(s){s=String(s==null?'':s);return s.replace(/&/g,'&amp;').replace(/<
 function L(key,def){return(CONFIG.labels&&CONFIG.labels[key])||def}
 function enc(s){return btoa(unescape(encodeURIComponent(s)))}
 function dec(s){return decodeURIComponent(escape(atob(s.replace(/\n/g,''))))}
+async function sha256(s){var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return[...new Uint8Array(b)].map(function(x){return x.toString(16).padStart(2,'0')}).join('')}
 function pad(n){return n<10?'0'+n:''+n}
 function fmtDate(iso){var d=new Date(iso);if(isNaN(d))return iso||'';return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())}
 function parseTags(s){return String(s||'').split(/[,，、;；\s]+/).map(function(x){return x.trim()}).filter(Boolean)}
@@ -642,11 +643,20 @@ window.saveConfig=function(){
 /* ====== 用户管理 ====== */
 function renderUsers(){
   $('users').innerHTML=USERS.length?USERS.map(function(u,i){
-    return '<div class="user-row"><span class="uname">'+esc(u.username)+'</span><span class="role">普通用户</span><button class="danger small" onclick="delUser('+i+')">删除</button></div>';
+    var pwdStatus=u.pass?'<span class="ok">已设置密码</span>':'<span class="wait">未设置密码</span>';
+    return '<div class="user-row"><span class="uname">'+esc(u.username)+'</span>'+pwdStatus+'<span class="role">普通用户</span><button class="small" onclick="resetUserPwd('+i+')">重置密码</button><button class="danger small" onclick="delUser('+i+')">删除</button></div>';
   }).join(''):'<p class="muted">暂无普通用户</p>';
 }
 window.addUser=function(){var n=prompt('用户名');if(!n)return;if(USERS.some(function(u){return u.username===n})){alert('用户名已存在');return};USERS.push({username:n,pass:'',created_at:new Date().toISOString()});stat('正在添加…','wait');writeFile('data/users.json',USERS,userSha,'新增用户').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();stat('已添加','ok')}).catch(function(e){stat('添加失败：'+e.message,'err')})}
 window.delUser=function(i){if(!confirm('确定删除用户 '+USERS[i].username+'？'))return;USERS.splice(i,1);stat('正在删除…','wait');writeFile('data/users.json',USERS,userSha,'删除用户').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();stat('已删除','ok')}).catch(function(e){stat('删除失败：'+e.message,'err')})}
+window.resetUserPwd=async function(i){
+  var pwd=prompt('请输入 '+USERS[i].username+' 的新密码（至少6位）');
+  if(!pwd)return;
+  if(pwd.length<6){alert('密码至少6位');return}
+  USERS[i].pass=await sha256(pwd);
+  stat('正在保存…','wait');
+  writeFile('data/users.json',USERS,userSha,'重置用户密码').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();stat('密码已重置','ok')}).catch(function(e){stat('保存失败：'+e.message,'err'})
+}
 
 window.addEventListener('error',function(e){try{msg('页面脚本错误：'+e.message,'err')}catch(x){}})
 </script>
