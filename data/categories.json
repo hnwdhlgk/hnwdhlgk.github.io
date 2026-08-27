@@ -5,7 +5,25 @@
     "description": "个人发布",
     "image": "",
     "enabled": true,
-    "sort_order": 1
+    "sort_order": 1,
+    "subcategories": [
+      {
+        "slug": "personal-daily",
+        "name": "日结兼职"
+      },
+      {
+        "slug": "personal-tutor",
+        "name": "家教辅导"
+      },
+      {
+        "slug": "personal-errand",
+        "name": "跑腿代办"
+      },
+      {
+        "slug": "personal-skill",
+        "name": "技能服务"
+      }
+    ]
   },
   {
     "slug": "business",
@@ -13,7 +31,25 @@
     "description": "商家发布",
     "image": "",
     "enabled": true,
-    "sort_order": 2
+    "sort_order": 2,
+    "subcategories": [
+      {
+        "slug": "business-retail",
+        "name": "零售促销"
+      },
+      {
+        "slug": "business-catering",
+        "name": "餐饮服务"
+      },
+      {
+        "slug": "business-service",
+        "name": "客服文员"
+      },
+      {
+        "slug": "business-logistics",
+        "name": "物流仓储"
+      }
+    ]
   },
   {
     "slug": "agency",
@@ -21,6 +57,24 @@
     "description": "中介发布",
     "image": "",
     "enabled": true,
-    "sort_order": 3
+    "sort_order": 3,
+    "subcategories": [
+      {
+        "slug": "agency-fulltime",
+        "name": "全职推荐"
+      },
+      {
+        "slug": "agency-intern",
+        "name": "实习推荐"
+      },
+      {
+        "slug": "agency-seasonal",
+        "name": "寒暑假工"
+      },
+      {
+        "slug": "agency-dispatch",
+        "name": "劳务派遣"
+      }
+    ]
   }
 ]
