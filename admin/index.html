@@ -521,9 +521,11 @@ function renderJobEdit(j){
     '<div class="row"><div><label>薪资</label><input id="ej_salary" value="'+esc(j.salary||'')+'"></div><div><label>地点</label><input id="ej_loc" value="'+esc(j.location||'')+'"></div></div>'+
     '<label>联系方式</label><input id="ej_contact" value="'+esc(j.contact||'')+'">'+
     '<label>标签（逗号分隔）</label><input id="ej_tags" value="'+esc((j.tags||[]).join(','))+'">'+
-    '<label>封面图片 URL</label><input id="ej_image" value="'+esc(j.image||'')+'">'+
-    (j.image?'<img src="'+esc(j.image)+'" class="preview-img">':'')+
-    '<div class="ops"><button onclick="saveJob(\''+j.id+'\')">保存</button><button class="ghost" onclick="cancelEdit(\''+j.id+'\')">取消</button><button class="danger" onclick="removeJobImg(\''+j.id+'\')">移除图片</button></div></div>';
+    '<label>封面图片</label>'+
+    '<input type="file" id="ej_imgfile" accept="image/*" onchange="uploadJobImg(this)" style="margin:6px 0">'+
+    '<input type="hidden" id="ej_image" value="'+esc(j.image||'')+'">'+
+    (j.image?'<div class="img-preview-wrap"><img src="'+esc(j.image)+'" class="preview-img"></div>':'')+
+    '<div class="ops"><button onclick="saveJob(\''+j.id+'\')">保存</button><button class="ghost" onclick="cancelEdit(\''+j.id+'\')">取消</button>'+(j.image?'<button class="danger" onclick="removeJobImg(\''+j.id+'\')">移除图片</button>':'')+'</div></div>';
 }
 function fillCat(id,val){var s=$(id);if(!s)return;s.innerHTML=CATEGORIES.map(function(c){return '<option value="'+esc(c.slug)+'"'+(c.slug===val?' selected':'')+'>'+esc(c.name)+'</option>'}).join('')}
 function fillSub2(catId,subId,sub2Id){var cat=$(catId),sub=$(subId);if(!cat||!sub)return;var c=CATEGORIES.find(function(x){return x.slug===cat.value});sub.innerHTML='<option value="">（不选）</option>'+((c&&c.subcategories)||[]).map(function(s){return '<option value="'+esc(s.slug)+'">'+esc(s.name)+'</option>'}).join('');if(sub2Id)fillSub3(catId,subId,sub2Id)}
@@ -542,7 +544,22 @@ window.editJob=function(id){
   if(j.subcategory2)$('ej_sub2').value=j.subcategory2;
 }
 window.cancelEdit=function(id){var j=JOBS.find(function(x){return x.id===id});if(j&&j.isNew){JOBS=JOBS.filter(function(x){return x.id!==id})}else if(j){delete j.editing}renderJobs()}
-window.removeJobImg=function(id){var j=JOBS.find(function(x){return x.id===id});if(j){j.image='';if($('ej_image'))$('ej_image').value='';renderJobs()}}
+window.removeJobImg=function(id){var j=JOBS.find(function(x){return x.id===id});if(j){j.image='';renderJobs()}}
+window.uploadJobImg=function(input){
+  if(!input.files||!input.files[0])return;
+  var file=input.files[0];
+  stat('正在上传图片…','wait');
+  uploadImage(file,'jobs').then(function(url){
+    $('ej_image').value=url;
+    stat('图片上传成功，记得点保存','ok');
+    var old=input.parentNode.querySelector('.img-preview-wrap');
+    if(old)old.remove();
+    var div=document.createElement('div');
+    div.className='img-preview-wrap';
+    div.innerHTML='<img src="'+url+'" class="preview-img">';
+    input.parentNode.insertBefore(div,input.nextSibling);
+  }).catch(function(e){stat('上传失败：'+e.message,'err')})
+}
 window.saveJob=function(id){
   var j=JOBS.find(function(x){return x.id===id});if(!j)return;
   j.title=$('ej_title').value.trim()||j.title;j.description=$('ej_desc').value;j.category=$('ej_cat').value;j.subcategory=$('ej_sub').value;j.subcategory2=$('ej_sub2').value;j.salary=$('ej_salary').value;j.location=$('ej_loc').value;j.contact=$('ej_contact').value;j.tags=parseTags($('ej_tags').value);j.image=$('ej_image').value.trim();
