@@ -519,8 +519,12 @@ function renderJobEdit(j){
     '<div><label>三级分类</label><select id="ej_sub2"></select></div></div>'+
     '<label>描述</label><textarea id="ej_desc">'+esc(j.description||'')+'</textarea>'+
     '<div class="row"><div><label>薪资</label><input id="ej_salary" value="'+esc(j.salary||'')+'"></div><div><label>地点</label><input id="ej_loc" value="'+esc(j.location||'')+'"></div></div>'+
-    '<label>联系方式</label><input id="ej_contact" value="'+esc(j.contact||'')+'">'+
-    '<label>联系方式超链接（点击跳转）</label><input id="ej_contactlink" value="'+esc(j.contact_link||'')+'">'+
+    '<label>个人联系方式</label><input id="ej_contact" value="'+esc(j.contact||'')+'">'+
+    '<label>个人联系方式超链接</label><input id="ej_contactlink" value="'+esc(j.contact_link||'')+'">'+
+    '<label>双向联系</label><input id="ej_contact2" value="'+esc(j.contact2||'')+'">'+
+    '<label>双向联系超链接</label><input id="ej_contact2link" value="'+esc(j.contact2_link||'')+'">'+
+    '<label>个人频道</label><input id="ej_contact3" value="'+esc(j.contact3||'')+'">'+
+    '<label>个人频道超链接</label><input id="ej_contact3link" value="'+esc(j.contact3_link||'')+'">'+
     '<label>标签（逗号分隔）</label><input id="ej_tags" value="'+esc((j.tags||[]).join(','))+'">'+
     '<label>封面图片</label>'+
     '<input type="file" id="ej_imgfile" accept="image/*" onchange="uploadJobImg(this)" style="margin:6px 0">'+
@@ -564,7 +568,7 @@ window.uploadJobImg=function(input){
 }
 window.saveJob=function(id){
   var j=JOBS.find(function(x){return x.id===id});if(!j)return;
-  j.title=$('ej_title').value.trim()||j.title;j.description=$('ej_desc').value;j.category=$('ej_cat').value;j.subcategory=$('ej_sub').value;j.subcategory2=$('ej_sub2').value;j.salary=$('ej_salary').value;j.location=$('ej_loc').value;j.contact=$('ej_contact').value;j.contact_link=$('ej_contactlink').value.trim();j.tags=parseTags($('ej_tags').value);j.image=$('ej_image').value.trim();j.image_link=$('ej_imagelink').value.trim();
+  j.title=$('ej_title').value.trim()||j.title;j.description=$('ej_desc').value;j.category=$('ej_cat').value;j.subcategory=$('ej_sub').value;j.subcategory2=$('ej_sub2').value;j.salary=$('ej_salary').value;j.location=$('ej_loc').value;j.contact=$('ej_contact').value;j.contact_link=$('ej_contactlink').value.trim();j.contact2=$('ej_contact2').value;j.contact2_link=$('ej_contact2link').value.trim();j.contact3=$('ej_contact3').value;j.contact3_link=$('ej_contact3link').value.trim();j.tags=parseTags($('ej_tags').value);j.image=$('ej_image').value.trim();j.image_link=$('ej_imagelink').value.trim();
   delete j.editing;delete j.isNew;
   stat('正在保存…','wait');writeFile('data/jobs.json',JOBS,jobSha,'更新兼职').then(function(){return readFile('data/jobs.json')}).then(function(d){JOBS=d.data;jobSha=d.sha;renderJobs();renderDashboard();stat('兼职已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
 }
