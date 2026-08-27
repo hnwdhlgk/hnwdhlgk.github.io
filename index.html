@@ -202,14 +202,7 @@ function renderRatios(){
   document.getElementById("ratioWrap").innerHTML=rows.map(r=>`<div class="ratio-row"><span class="lbl">${esc(r.lbl)}</span><div class="bar"><i style="width:${r.p}%"></i></div><span class="num">${r.n}条 ${r.p}%</span></div>`).join("");
 }
 function renderJobs(){
-  let list=filteredJobs();
-  if(!list.length){
-    if(activeSub2!=="all"){activeSub2="all";list=filteredJobs()}
-    if(!list.length&&activeSub!=="all"){activeSub="all";list=filteredJobs()}
-    if(!list.length&&activeCat!=="all"){activeCat="all";list=filteredJobs()}
-    if(!list.length&&activeTag){activeTag="";list=filteredJobs()}
-    renderCat1Chips();renderCat2Chips();renderCat3Chips();renderTagChips();renderRatios();
-  }
+  const list=filteredJobs();
   let title="最新信息";
   if(activeCat!=="all"){title=catName(activeCat);if(activeSub!=="all")title+=" / "+subName(activeCat,activeSub);if(activeSub2!=="all")title+=" / "+sub2Name(activeCat,activeSub,activeSub2)}
   if(activeTag)title+=" · #"+activeTag;
