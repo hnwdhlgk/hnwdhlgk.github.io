@@ -99,9 +99,9 @@ footer{text-align:center;color:#8a99a9;font-size:12px;padding:30px 0 45px}
       <div class="row2"><div><label id="lb_salary">薪资</label><input id="mf_salary" placeholder="如：150元/天"></div><div><label id="lb_loc">地点</label><input id="mf_loc"></div></div>
       <label id="lb_contact">个人联系方式</label><input id="mf_contact">
       <label>个人联系方式超链接（点击跳转）</label><input id="mf_contactlink" placeholder="https://...">
-      <label>双向联系</label><input id="mf_contact2">
+      <label id="lb_contact2">双向联系</label><input id="mf_contact2">
       <label>双向联系超链接（点击跳转）</label><input id="mf_contact2link" placeholder="https://...">
-      <label>个人频道</label><input id="mf_contact3">
+      <label id="lb_contact3">个人频道</label><input id="mf_contact3">
       <label>个人频道超链接（点击跳转）</label><input id="mf_contact3link" placeholder="https://...">
       <label id="lb_tags">自定义标签（逗号分隔）</label><input id="mf_tags">
       <label id="lb_img">封面图片</label>
@@ -155,10 +155,10 @@ function applyFormLabels(){
   const setP=(id,txt)=>{const el=document.getElementById(id);if(el&&txt)el.placeholder=txt};
   setL('lb_title',fl.title);setL('lb_cat',fl.cat);setL('lb_sub',fl.sub);setL('lb_sub2',fl.sub2);
   setL('lb_desc',fl.desc);setL('lb_salary',fl.salary);setL('lb_loc',fl.loc);
-  setL('lb_contact',fl.contact);setL('lb_tags',fl.tags);setL('lb_img',fl.img);
+  setL('lb_contact',fl.contact);setL('lb_contact2',fl.contact2);setL('lb_contact3',fl.contact3);setL('lb_tags',fl.tags);setL('lb_img',fl.img);
   setL('btn_submit',fl.submit);
   setP('mf_title',fp.title);setP('mf_desc',fp.desc);setP('mf_salary',fp.salary);
-  setP('mf_loc',fp.loc);setP('mf_contact',fp.contact);setP('mf_tags',fp.tags);
+  setP('mf_loc',fp.loc);setP('mf_contact',fp.contact);setP('mf_contact2',fp.contact2);setP('mf_contact3',fp.contact3);setP('mf_tags',fp.tags);
 }
 function renderSocial(){
   const links=cfg.social_links||[];
