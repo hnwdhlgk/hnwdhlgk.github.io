@@ -82,6 +82,7 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
         <div class="menu-item" data-view="config" data-section="appearance" onclick="showView('config','appearance')">外观与背景</div>
         <div class="menu-item" data-view="config" data-section="social" onclick="showView('config','social')">官方渠道</div>
         <div class="menu-item" data-view="config" data-section="safety" onclick="showView('config','safety')">安全提醒</div>
+        <div class="menu-item" data-view="config" data-section="labels" onclick="showView('config','labels')">字段标签</div>
       </div>
     </div>
     <div class="menu-item" data-view="users" onclick="showView('users')"><span class="mi-ic">👥</span>用户管理</div>
@@ -186,6 +187,15 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <div class="row"><div><label>Telegram 链接</label><input id="cfg_telegram"></div><div><label>YouTube 链接</label><input id="cfg_youtube"></div></div>
       <div class="row"><div><label>Instagram 链接</label><input id="cfg_instagram"></div><div><label>TikTok 链接</label><input id="cfg_tiktok"></div></div>
     </div>
+    <div class="card" id="sec-labels"><h3>字段标签自定义</h3>
+      <p class="muted">自定义分类管理页面的字段名称，留空则使用默认文字。</p>
+      <div class="row"><div><label>「名称」标签</label><input id="lbl_name" placeholder="默认：名称"></div>
+      <div><label>「Slug」标签</label><input id="lbl_slug" placeholder="默认：Slug"></div></div>
+      <div class="row"><div><label>「分类图片 URL」标签</label><input id="lbl_image" placeholder="默认：分类图片 URL"></div>
+      <div><label>「图片超链接」标签</label><input id="lbl_link" placeholder="默认：图片超链接（点击跳转）"></div></div>
+      <div class="row"><div><label>「启用」标签</label><input id="lbl_enabled" placeholder="默认：启用该分类"></div>
+      <div><label>「排序」标签</label><input id="lbl_sort" placeholder="默认：排序"></div></div>
+    </div>
     <div class="card" id="sec-safety"><h3>安全提醒</h3>
       <label>安全提醒文案</label><textarea id="cfg_safety_notice"></textarea>
       <div class="ops"><button onclick="saveConfig()">保存站点配置</button></div>
@@ -209,6 +219,7 @@ function $(id){return document.getElementById(id)}
 function msg(t,c){var el=$('msg');if(el){el.innerText=t;el.className='notice '+(c||'muted')}}
 function stat(t,c){var el=$('status');if(el){el.innerText=t;el.className=c||'muted'}}
 function esc(s){s=String(s==null?'':s);return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+function L(key,def){return(CONFIG.labels&&CONFIG.labels[key])||def}
 function enc(s){return btoa(unescape(encodeURIComponent(s)))}
 function dec(s){return decodeURIComponent(escape(atob(s.replace(/\n/g,''))))}
 function pad(n){return n<10?'0'+n:''+n}
@@ -290,11 +301,11 @@ function renderDashboard(){
 function renderCat1(){
   $('cat1List').innerHTML=CATEGORIES.map(function(c,ci){
     return '<div class="cat-item"><h4>一级分类 #'+(ci+1)+'</h4>'+
-      '<div class="row"><div><label>名称</label><input id="c1n_'+ci+'" value="'+esc(c.name)+'"></div>'+
-      '<div><label>Slug</label><input id="c1s_'+ci+'" value="'+esc(c.slug)+'"></div></div>'+
-      '<div class="row"><div><label>分类图片 URL</label><input id="c1img_'+ci+'" value="'+esc(c.image||'')+'"></div>'+
-      '<div><label>图片超链接（点击跳转）</label><input id="c1link_'+ci+'" value="'+esc(c.image_link||'')+'"></div></div>'+
-      '<label class="inline"><input id="c1en_'+ci+'" type="checkbox"'+(c.enabled===false?'':' checked')+'> 启用该分类</label>'+
+      '<div class="row"><div><label>'+L('name','名称')+'</label><input id="c1n_'+ci+'" value="'+esc(c.name)+'"></div>'+
+      '<div><label>'+L('slug','Slug')+'</label><input id="c1s_'+ci+'" value="'+esc(c.slug)+'"></div></div>'+
+      '<div class="row"><div><label>'+L('image','分类图片 URL')+'</label><input id="c1img_'+ci+'" value="'+esc(c.image||'')+'"></div>'+
+      '<div><label>'+L('link','图片超链接（点击跳转）')+'</label><input id="c1link_'+ci+'" value="'+esc(c.image_link||'')+'"></div></div>'+
+      '<label class="inline"><input id="c1en_'+ci+'" type="checkbox"'+(c.enabled===false?'':' checked')+'> '+L('enabled','启用该分类')+'</label>'+
       '<div style="color:#71859a;font-size:12px;margin-top:4px">下属二级分类：'+((c.subcategories||[]).length)+' 个</div>'+
       '<button type="button" class="small danger" onclick="delCat1('+ci+')" style="margin-top:8px">删除该一级分类</button></div>';
   }).join('')||'<p class="muted">暂无一级分类，点击「新增一级分类」</p>';
@@ -312,10 +323,10 @@ function renderCat2(){
   var c=CATEGORIES[ci],subs=c.subcategories||[];
   $('cat2List').innerHTML=subs.map(function(s,sj){
     return '<div class="cat-item"><h4>二级分类 #'+(sj+1)+'：'+esc(s.name)+'</h4>'+
-      '<div class="row"><div><label>名称</label><input id="c2n_'+ci+'_'+sj+'" value="'+esc(s.name)+'"></div>'+
-      '<div><label>Slug</label><input id="c2s_'+ci+'_'+sj+'" value="'+esc(s.slug)+'"></div></div>'+
-      '<div class="row"><div><label>分类图片 URL</label><input id="c2img_'+ci+'_'+sj+'" value="'+esc(s.image||'')+'"></div>'+
-      '<div><label>图片超链接</label><input id="c2link_'+ci+'_'+sj+'" value="'+esc(s.image_link||'')+'"></div></div>'+
+      '<div class="row"><div><label>'+L('name','名称')+'</label><input id="c2n_'+ci+'_'+sj+'" value="'+esc(s.name)+'"></div>'+
+      '<div><label>'+L('slug','Slug')+'</label><input id="c2s_'+ci+'_'+sj+'" value="'+esc(s.slug)+'"></div></div>'+
+      '<div class="row"><div><label>'+L('image','分类图片 URL')+'</label><input id="c2img_'+ci+'_'+sj+'" value="'+esc(s.image||'')+'"></div>'+
+      '<div><label>'+L('link','图片超链接')+'</label><input id="c2link_'+ci+'_'+sj+'" value="'+esc(s.image_link||'')+'"></div></div>'+
       '<div style="color:#71859a;font-size:12px;margin-top:4px">下属三级分类：'+((s.subcategories||[]).length)+' 个</div>'+
       '<button type="button" class="small danger" onclick="delCat2('+ci+','+sj+')" style="margin-top:8px">删除该二级分类</button></div>';
   }).join('')||'<p class="muted">该一级分类下暂无二级分类</p>';
@@ -340,7 +351,7 @@ function renderCat3(){
   if(isNaN(ci)||isNaN(sj)||!CATEGORIES[ci]||!CATEGORIES[ci].subcategories[sj]){$('cat3List').innerHTML='<p class="muted">请先选择一级和二级分类</p>';return}
   var subs=CATEGORIES[ci].subcategories[sj].subcategories||[];
   $('cat3List').innerHTML=subs.map(function(t,sk){
-    return '<div class="cat-item" style="padding:12px"><div class="row"><div><label>名称</label><input id="c3n_'+ci+'_'+sj+'_'+sk+'" value="'+esc(t.name)+'" style="margin:0"></div>'+
+    return '<div class="cat-item" style="padding:12px"><div class="row"><div><label>'+L('name','名称')+'</label><input id="c3n_'+ci+'_'+sj+'_'+sk+'" value="'+esc(t.name)+'" style="margin:0"></div>'+
     '<div style="display:flex;align-items:flex-end"><button type="button" class="small danger" onclick="delCat3('+ci+','+sj+','+sk+')">删除</button></div></div></div>';
   }).join('')||'<p class="muted">该二级分类下暂无三级分类</p>';
 }
@@ -434,11 +445,14 @@ window.rejectJob=function(id){var j=JOBS.find(function(x){return x.id===id});if(
 function renderConfig(){
   var fields=['site_title','site_subtitle','hero_title','hero_description','about_title','about_text','worker_url','background_image','telegram','youtube','instagram','tiktok','safety_notice'];
   fields.forEach(function(f){var el=$('cfg_'+f);if(el)el.value=CONFIG[f]||''});
+  var lb=CONFIG.labels||{};['name','slug','image','link','enabled','sort'].forEach(function(k){var el=$('lbl_'+k);if(el)el.value=lb[k]||''});
   var bg=$('cfg_background_image');if(bg&&bg.value){var p=$('bgPreview');p.src=bg.value;p.style.display='block'}
 }
 window.saveConfig=function(){
   ['site_title','site_subtitle','hero_title','hero_description','about_title','about_text','worker_url','background_image','telegram','youtube','instagram','tiktok','safety_notice'].forEach(function(f){var el=$('cfg_'+f);if(el)CONFIG[f]=el.value.trim()});
-  stat('正在保存…','wait');writeFile('data/config.json',CONFIG,cfgSha,'更新站点配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;stat('配置已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
+  var lb={};['name','slug','image','link','enabled','sort'].forEach(function(k){var el=$('lbl_'+k);if(el&&el.value.trim())lb[k]=el.value.trim()});
+  CONFIG.labels=lb;
+  stat('正在保存…','wait');writeFile('data/config.json',CONFIG,cfgSha,'更新站点配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderAll();stat('配置已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
 }
 
 /* ====== 用户管理 ====== */
