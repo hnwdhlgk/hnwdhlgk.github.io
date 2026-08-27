@@ -531,9 +531,16 @@ function fillSub3(catId,subId,sub2Id){var cat=$(catId),sub=$(subId),s2=$(sub2Id)
 window.newJob=function(){
   var j={id:String(Date.now()),title:'新兼职',description:'',category:CATEGORIES[0]?CATEGORIES[0].slug:'',subcategory:'',subcategory2:'',salary:'',location:'',contact:'',image:'',tags:[],status:'pending',created_at:new Date().toISOString(),editing:true,isNew:true};
   JOBS.unshift(j);currentFilter='all';renderJobs();
-  setTimeout(function(){fillCat('ej_cat',j.category);fillSub2('ej_cat','ej_sub','ej_sub2')},50);
+  fillCat('ej_cat',j.category);fillSub2('ej_cat','ej_sub','ej_sub2');
 }
-window.editJob=function(id){JOBS.forEach(function(j){if(j.id===id)j.editing=true});renderJobs();setTimeout(function(){var j=JOBS.find(function(x){return x.id===id});if(j){fillCat('ej_cat',j.category);fillSub2('ej_cat','ej_sub','ej_sub2');if(j.subcategory)$('ej_sub').value=j.subcategory;fillSub3('ej_cat','ej_sub','ej_sub2');if(j.subcategory2)$('ej_sub2').value=j.subcategory2}},50)}
+window.editJob=function(id){
+  JOBS.forEach(function(j){if(j.id===id)j.editing=true});renderJobs();
+  var j=JOBS.find(function(x){return x.id===id});if(!j)return;
+  fillCat('ej_cat',j.category);fillSub2('ej_cat','ej_sub','ej_sub2');
+  if(j.subcategory)$('ej_sub').value=j.subcategory;
+  fillSub3('ej_cat','ej_sub','ej_sub2');
+  if(j.subcategory2)$('ej_sub2').value=j.subcategory2;
+}
 window.cancelEdit=function(id){var j=JOBS.find(function(x){return x.id===id});if(j&&j.isNew){JOBS=JOBS.filter(function(x){return x.id!==id})}else if(j){delete j.editing}renderJobs()}
 window.removeJobImg=function(id){var j=JOBS.find(function(x){return x.id===id});if(j){j.image='';if($('ej_image'))$('ej_image').value='';renderJobs()}}
 window.saveJob=function(id){
