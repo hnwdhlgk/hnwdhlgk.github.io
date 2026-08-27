@@ -31,7 +31,9 @@
   },
   "form_placeholders": {
     "title": "请输入老师艺名",
+    "desc": "简单自我介绍",
     "salary": "如:800p",
+    "loc": "如:月川北区",
     "contact": "如:@hainanguanlibot",
     "contactlink": "如:https://t.me/hainanguanlibot",
     "contact2": "如:@hainanguanlibot",
