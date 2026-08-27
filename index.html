@@ -86,14 +86,14 @@ footer{text-align:center;color:#8a99a9;font-size:12px;padding:30px 0 45px}
   <button class="backbtn" onclick="showPublic()">← 返回公开列表</button>
   <div class="card"><h2>我的兼职后台</h2><p style="color:var(--muted);font-size:13px">发布后进入「待审核」，管理员审核通过后公开展示。</p><button onclick="togglePublish()">+ 发布兼职</button>
     <div id="pubForm" style="display:none">
-      <label>标题 *</label><input id="mf_title">
-      <div class="row3"><div><label>一级分类</label><select id="mf_cat" onchange="fillSub2('mf_cat','mf_sub','mf_sub2')"></select></div><div><label>二级分类</label><select id="mf_sub" onchange="fillSub3('mf_cat','mf_sub','mf_sub2')"></select></div><div><label>三级分类</label><select id="mf_sub2"></select></div></div>
-      <label>描述</label><textarea id="mf_desc" placeholder="工作内容、要求等"></textarea>
-      <div class="row2"><div><label>薪资</label><input id="mf_salary" placeholder="如：150元/天"></div><div><label>地点</label><input id="mf_loc"></div></div>
-      <label>联系方式（电话/邮箱/网址，自动变超链接）</label><input id="mf_contact">
-      <label>自定义标签（逗号分隔）</label><input id="mf_tags">
-      <label>封面图片</label><input id="mf_img" type="file" accept="image/*"><img id="mf_imgPrev" class="preview-img" style="display:none">
-      <div><button onclick="submitMine()">提交（等待审核）</button><button class="ghost" onclick="togglePublish(true)">取消</button></div>
+      <label id="lb_title">标题 *</label><input id="mf_title">
+      <div class="row3"><div><label id="lb_cat">一级分类</label><select id="mf_cat" onchange="fillSub2('mf_cat','mf_sub','mf_sub2')"></select></div><div><label id="lb_sub">二级分类</label><select id="mf_sub" onchange="fillSub3('mf_cat','mf_sub','mf_sub2')"></select></div><div><label id="lb_sub2">三级分类</label><select id="mf_sub2"></select></div></div>
+      <label id="lb_desc">描述</label><textarea id="mf_desc" placeholder="工作内容、要求等"></textarea>
+      <div class="row2"><div><label id="lb_salary">薪资</label><input id="mf_salary" placeholder="如：150元/天"></div><div><label id="lb_loc">地点</label><input id="mf_loc"></div></div>
+      <label id="lb_contact">联系方式（电话/邮箱/网址，自动变超链接）</label><input id="mf_contact">
+      <label id="lb_tags">自定义标签（逗号分隔）</label><input id="mf_tags">
+      <label id="lb_img">封面图片</label><input id="mf_img" type="file" accept="image/*"><img id="mf_imgPrev" class="preview-img" style="display:none">
+      <div><button id="btn_submit" onclick="submitMine()">提交（等待审核）</button><button class="ghost" onclick="togglePublish(true)">取消</button></div>
     </div>
   </div>
   <div class="card"><h2>我发布的兼职</h2><div id="myJobs"></div></div>
@@ -128,7 +128,18 @@ async function loadConfig(){try{const c=await getJson("config.json");cfg=Object.
   document.getElementById("aboutText").textContent=cfg.about_text||DEFAULTS.about_text;
   document.getElementById("safetyText").textContent=cfg.safety_notice||DEFAULTS.safety_notice;
   if(cfg.background_image)document.body.style.backgroundImage='url("'+cfg.background_image+'")';
-  renderSocial();
+  renderSocial();applyFormLabels();
+}
+function applyFormLabels(){
+  const fl=cfg.form_labels||{},fp=cfg.form_placeholders||{};
+  const setL=(id,txt)=>{const el=document.getElementById(id);if(el&&txt)el.textContent=txt};
+  const setP=(id,txt)=>{const el=document.getElementById(id);if(el&&txt)el.placeholder=txt};
+  setL('lb_title',fl.title);setL('lb_cat',fl.cat);setL('lb_sub',fl.sub);setL('lb_sub2',fl.sub2);
+  setL('lb_desc',fl.desc);setL('lb_salary',fl.salary);setL('lb_loc',fl.loc);
+  setL('lb_contact',fl.contact);setL('lb_tags',fl.tags);setL('lb_img',fl.img);
+  setL('btn_submit',fl.submit);
+  setP('mf_title',fp.title);setP('mf_desc',fp.desc);setP('mf_salary',fp.salary);
+  setP('mf_loc',fp.loc);setP('mf_contact',fp.contact);setP('mf_tags',fp.tags);
 }
 function renderSocial(){
   const items=[{k:"telegram",n:"Telegram",c:"#0088cc",i:"TG"},{k:"youtube",n:"YouTube",c:"#ff0000",i:"YT"},{k:"instagram",n:"Instagram",c:"#e1306c",i:"IG"},{k:"tiktok",n:"TikTok",c:"#000",i:"TT"}];
