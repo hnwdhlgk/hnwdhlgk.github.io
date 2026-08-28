@@ -613,9 +613,9 @@ function setCat3(slug){activeSub2=slug;activeTags=[];renderAll()}
 function renderTagChips(){
   // 只统计当前分类筛选下的兼职标签
   let filtered = jobs.filter(j=>j.status==="approved");
-  if(activeCat)filtered=filtered.filter(j=>j.category===activeCat);
-  if(activeSub)filtered=filtered.filter(j=>j.subcategory===activeSub);
-  if(activeSub2)filtered=filtered.filter(j=>j.subcategory2===activeSub2);
+  if(activeCat && activeCat!=="all")filtered=filtered.filter(j=>j.category===activeCat);
+  if(activeSub && activeSub!=="all")filtered=filtered.filter(j=>j.subcategory===activeSub);
+  if(activeSub2 && activeSub2!=="all")filtered=filtered.filter(j=>j.subcategory2===activeSub2);
   const allTags={};
   filtered.forEach(j=>(j.tags||[]).forEach(t=>allTags[t]=(allTags[t]||0)+1));
   const tags=Object.entries(allTags).sort((a,b)=>b[1]-a[1]);
