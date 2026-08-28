@@ -619,10 +619,12 @@ function setRTE(id,html){var e=document.getElementById(id);if(e)e.innerHTML=html
 // URL转可点击链接
 function linkify(text){
   if(!text)return "";
-  // 如果已经是HTML，把\n转成<br>后返回
+  // 如果已经是HTML，清理div标签后返回
   var isHTML=/<[a-z][\s\S]*>/i.test(text);
   if(isHTML){
-    return text.replace(/\n/g,"<br>");
+    // 把<div>替换为<br>，删除</div>，避免p标签内嵌套div导致样式异常
+    var cleaned=text.replace(/<div[^>]*>/gi,"<br>").replace(/<\/div>/gi,"").replace(/(<br>\s*){2,}/g,"<br>");
+    return cleaned.replace(/\n/g,"<br>");
   }
   // 纯文本：先转义
   var escaped=text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
