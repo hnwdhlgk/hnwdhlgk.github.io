@@ -811,6 +811,13 @@ function renderConfig(){
   ['title','desc','salary','loc','contact','contactlink','contact2','contact2link','contact3','contact3link','tags'].forEach(function(k){var el=$('fp_'+k);if(el)el.value=fp[k]||''});
   var bg=$('cfg_background_image');if(bg&&bg.value){var p=$('bgPreview');p.src=bg.value;p.style.display='block'}
   renderSocialList();
+  // 设置默认横幅按钮
+  if(!CONFIG.hero_buttons || !CONFIG.hero_buttons.length){
+    CONFIG.hero_buttons=[
+      {text:"浏览兼职",url:"#jobSection",type:"primary"},
+      {text:"了解平台",url:"#aboutSection",type:"outline"}
+    ];
+  }
   renderHeroBtnsCfg();
 }
 function renderSocialList(){
@@ -852,12 +859,16 @@ window.uploadSocialIcon=function(i){
   inp.click();
 }
 window.saveConfig=function(){
+  try{
   ['site_title','site_subtitle','hero_title','hero_description','about_title','about_text','worker_url','background_image','safety_notice'].forEach(function(f){var el=$('cfg_'+f);if(el)CONFIG[f]=el.value.trim()});
   // 保存横幅按钮
-  CONFIG.hero_buttons=(CONFIG.hero_buttons||[]).map(function(b,i){
+  var hbCount=document.querySelectorAll('[id^=hb_text_]').length;
+  var hbList=[];
+  for(var i=0;i<hbCount;i++){
     var t=$('hb_text_'+i),u=$('hb_url_'+i),ty=$('hb_type_'+i);
-    return {text:t?t.value.trim():'',url:u?u.value.trim():'',type:ty?ty.value:'outline'};
-  }).filter(function(b){return b.text;});
+    if(t&&t.value.trim())hbList.push({text:t.value.trim(),url:u?u.value.trim():'',type:ty?ty.value:'outline'});
+  }
+  CONFIG.hero_buttons=hbList;
   var lb={};['name','slug','image','link','enabled','sort'].forEach(function(k){var el=$('lbl_'+k);if(el&&el.value.trim())lb[k]=el.value.trim()});
   CONFIG.labels=lb;
   var fl={},fp={};
@@ -871,6 +882,7 @@ window.saveConfig=function(){
   lr.forEach(function(r,i){r.char=$('lr_char_'+i).value.trim();r.prefix=$('lr_prefix_'+i).value.trim()});
   CONFIG.link_rules=lr.filter(function(r){return r.char&&r.prefix});
     stat('正在保存…','wait');writeFile('data/config.json',CONFIG,cfgSha,'更新站点配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderAll();stat('配置已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
+  }catch(e){stat('保存出错：'+e.message,'err');console.error(e)}
 }
 
 function renderTelegram(){
