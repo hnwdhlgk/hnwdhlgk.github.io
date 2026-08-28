@@ -32,6 +32,7 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
 .job-item{border-top:1px solid #edf2f6;padding:14px 0}.job-item:first-child{border-top:0}.job-item h4{margin:0 0 4px;font-size:15px}.job-item .meta{color:#71859a;font-size:12px;margin-bottom:6px}.job-item .desc{color:#4a6080;font-size:13px;line-height:1.6}.job-item .ops button{padding:7px 12px;font-size:13px;margin-right:5px}
 .badge{font-size:11px;padding:2px 8px;border-radius:999px;margin-left:6px}.badge.pending{background:#fef7e0;color:#8a5a00}.badge.approved{background:#e6f4ea;color:#137333}.badge.rejected{background:#fce8e6;color:#b3261e}
 .filter-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}.filter-tabs button{background:#fff;border:1px solid #d6e2ed;color:#4a6080;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px;margin:0}.filter-tabs button.active{background:#0d47a1;color:#fff;border-color:#0d47a1}.filter-label{font-size:13px;color:#71859a;margin-top:10px;margin-bottom:4px}
+.form-table{width:100%;border-collapse:collapse;margin:10px 0}.form-table th,.form-table td{border:1px solid #e2e8f0;padding:8px 10px;text-align:left;font-size:13px}.form-table th{background:#f6f8fa;color:#4a6080;font-weight:600}.form-table input{width:100%;padding:7px;border:1px solid #d6e2ed;border-radius:6px;font:inherit;font-size:13px}
 .preview-img{max-width:200px;max-height:130px;object-fit:cover;border-radius:8px;display:block;margin:5px 0}
 .upload-row{display:flex;gap:8px;align-items:center}.upload-row input{flex:1;margin:0}.upload-row button{white-space:nowrap;margin:0}
 .user-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #edf2f6}.user-row:first-child{border-top:0}.user-row .uname{flex:1;font-weight:500}.user-row .role{font-size:12px;color:#71859a}
@@ -200,11 +201,6 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <div id="socialList"></div>
       <button type="button" class="small ghost" onclick="addSocial()">+ 新增渠道</button>
     </div>
-    <div class="card" id="sec-linkrules"><h3>联系方式自动转换规则</h3>
-      <p class="muted">普通用户发布时无需填写超链接，系统自动根据以下规则转换。例如：字符「@」+ 前缀「https://t.me/」，输入 @hainanguanli 自动变为 https://t.me/hainanguanli 的可点击链接。</p>
-      <div id="linkRulesList"></div>
-      <button type="button" class="small ghost" onclick="addLinkRule()">+ 新增规则</button>
-    </div>
     <div class="card" id="sec-safety"><h3>安全提醒</h3>
       <label>安全提醒文案</label><textarea id="cfg_safety_notice"></textarea>
       <div class="ops"><button onclick="saveConfig()">保存站点配置</button></div>
@@ -328,6 +324,7 @@ function showView(name,param){
   if(name==='cat2'){fillCat2Parent();renderCat2()}
   if(name==='cat3'){fillCat3Parent1();renderCat3()}
   if(name==='jobs'){initJobFilterCats();renderJobs()}
+  if(name==='formlabels'){renderLinkRules()}
   if(name==='labels')renderConfig();
   if(name==='formlabels')renderConfig();
   if(name==='jobs'){if(param)currentFilter=param;renderJobs()}
@@ -654,7 +651,6 @@ function renderConfig(){
   ['title','desc','salary','loc','contact','contactlink','contact2','contact2link','contact3','contact3link','tags'].forEach(function(k){var el=$('fp_'+k);if(el)el.value=fp[k]||''});
   var bg=$('cfg_background_image');if(bg&&bg.value){var p=$('bgPreview');p.src=bg.value;p.style.display='block'}
   renderSocialList();
-  renderLinkRules();
 }
 function renderSocialList(){
   var list=CONFIG.social_links;
