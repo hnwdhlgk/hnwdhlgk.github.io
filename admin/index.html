@@ -239,6 +239,11 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <img id="bgPreview" class="preview-img" style="display:none">
       <p class="muted">留空则使用默认浅色背景。建议 1920×1080 以上。上传的图片保存到仓库 assets/ 目录。</p>
     </div>
+    <div class="card" id="sec-herobtns"><h3>横幅按钮</h3>
+      <p class="muted">自定义主页顶部横幅的按钮，可增减、修改文字和跳转链接。链接以 # 开头则滚动到页面对应位置，否则打开新标签页跳转。</p>
+      <div id="heroBtnList"></div>
+      <button type="button" class="small ghost" onclick="addHeroBtn()">+ 新增按钮</button>
+    </div>
     <div class="card" id="sec-social"><h3>官方渠道</h3>
       <p class="muted">可自定义渠道名称、上传图标图片。点击「新增渠道」可添加更多。</p>
       <div id="socialList"></div>
@@ -782,6 +787,21 @@ window.approveJob=function(id){var j=JOBS.find(function(x){return x.id===id});if
 window.rejectJob=function(id){var j=JOBS.find(function(x){return x.id===id});if(j)j.status='rejected';stat('正在审核…','wait');writeFile('data/jobs.json',JOBS,jobSha,'审核拒绝').then(function(){return readFile('data/jobs.json')}).then(function(d){JOBS=d.data;jobSha=d.sha;renderJobs();renderDashboard();stat('已拒绝','ok')}).catch(function(e){stat('操作失败：'+e.message,'err')})}
 
 /* ====== 站点配置 ====== */
+function renderHeroBtnsCfg(){
+  var btns=CONFIG.hero_buttons||[];
+  $('heroBtnList').innerHTML=btns.map(function(b,i){
+    return '<div class="item" style="display:grid;grid-template-columns:1fr 2fr 120px 40px;gap:10px;align-items:end"><div><label>文字</label><input id="hb_text_'+i+'" value="'+esc(b.text||'')+'"></div><div><label>链接（#开头为页面内滚动）</label><input id="hb_url_'+i+'" value="'+esc(b.url||'')+'" placeholder="#jobSection 或 https://..."></div><div><label>样式</label><select id="hb_type_'+i+'"><option value="primary"'+(b.type==='primary'?' selected':'')+'>主按钮</option><option value="outline"'+(b.type!=='primary'?' selected':'')+'>次按钮</option></select></div><div><button class="danger small" onclick="delHeroBtn('+i+')">删</button></div></div>';
+  }).join("")||'<p class="muted">暂无按钮</p>';
+}
+window.addHeroBtn=function(){
+  CONFIG.hero_buttons=CONFIG.hero_buttons||[];
+  CONFIG.hero_buttons.push({text:"新按钮",url:"#",type:"outline"});
+  renderHeroBtnsCfg();
+}
+window.delHeroBtn=function(i){
+  CONFIG.hero_buttons.splice(i,1);
+  renderHeroBtnsCfg();
+}
 function renderConfig(){
   var fields=['site_title','site_subtitle','hero_title','hero_description','about_title','about_text','worker_url','background_image','safety_notice'];
   fields.forEach(function(f){var el=$('cfg_'+f);if(el)el.value=CONFIG[f]||''});
@@ -832,6 +852,11 @@ window.uploadSocialIcon=function(i){
 }
 window.saveConfig=function(){
   ['site_title','site_subtitle','hero_title','hero_description','about_title','about_text','worker_url','background_image','safety_notice'].forEach(function(f){var el=$('cfg_'+f);if(el)CONFIG[f]=el.value.trim()});
+  // 保存横幅按钮
+  CONFIG.hero_buttons=(CONFIG.hero_buttons||[]).map(function(b,i){
+    var t=$('hb_text_'+i),u=$('hb_url_'+i),ty=$('hb_type_'+i);
+    return {text:t?t.value.trim():'',url:u?u.value.trim():'',type:ty?ty.value:'outline'};
+  }).filter(function(b){return b.text;});
   var lb={};['name','slug','image','link','enabled','sort'].forEach(function(k){var el=$('lbl_'+k);if(el&&el.value.trim())lb[k]=el.value.trim()});
   CONFIG.labels=lb;
   var fl={},fp={};
