@@ -8,11 +8,14 @@
   "about_text": "",
   "background_image": "",
   "telegram": {
-    "enabled": true,
+    "enabled": false,
     "default_status": "pending",
     "bot_token": "7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs",
     "channel": "@hnwdhlgk",
-    "default_category": ""
+    "default_category": "",
+    "ocr_api_key": "K84664811188957",
+    "ocr_language": "chs",
+    "tag_maps": []
   },
   "youtube": "",
   "instagram": "",
