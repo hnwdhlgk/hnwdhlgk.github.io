@@ -1,7 +1,9 @@
 {
-  "processed": [
-    "link-hnwdhlgk-10390",
-    "link-hnwdhlgk-9727"
-  ],
-  "last_fetch": "2026-08-28T23:09:51.381Z"
+  "processed_map": {
+    "hnwdhlgk": [
+      "link-hnwdhlgk-10390",
+      "link-hnwdhlgk-9727"
+    ]
+  },
+  "last_fetch": "2026-08-28T23:30:31.488Z"
 }
