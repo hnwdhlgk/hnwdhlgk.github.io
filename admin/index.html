@@ -752,6 +752,13 @@ function renderJobEdit(j){
     '<label>个人频道</label><input id="ej_contact3" value="'+esc(j.contact3||'')+'">'+
     '<label>个人频道超链接</label><input id="ej_contact3link" value="'+esc(j.contact3_link||'')+'">'+
     '<label>标签（逗号分隔）</label><input id="ej_tags" value="'+esc((j.tags||[]).join(','))+'">'+
+    '<div style="background:#f0f9ff;padding:12px;border-radius:8px;margin:10px 0;border:1px solid #bae6fd">'+
+    '<div style="font-weight:600;margin-bottom:8px;color:#0369a1">认证设置</div>'+
+    '<div style="margin-bottom:6px">发布者：<b>'+esc(j.author||'')+'</b></div>'+
+    '<label style="display:flex;align-items:center;gap:8px;cursor:pointer">'+
+    '<input type="checkbox" id="ej_show_verified" '+(j.show_verified!==false?'checked':'')+'>'+
+    '显示认证图标（发布者已认证时生效）'+
+    '</label></div>'+
     '<label>封面图片</label>'+
     '<input type="file" id="ej_imgfile" accept="image/*" onchange="uploadJobImg(this)" style="margin:6px 0">'+
     '<input type="hidden" id="ej_image" value="'+esc(j.image||'')+'">'+
@@ -794,7 +801,7 @@ window.uploadJobImg=function(input){
 }
 window.saveJob=function(id){
   var j=JOBS.find(function(x){return x.id===id});if(!j)return;
-  j.title=$('ej_title').value.trim()||j.title;j.description=getRTE('ej_desc');j.category=$('ej_cat').value;j.subcategory=$('ej_sub').value;j.subcategory2=$('ej_sub2').value;j.salary=$('ej_salary').value;j.location=$('ej_loc').value;j.contact=$('ej_contact').value;j.contact_link=$('ej_contactlink').value.trim();j.contact2=$('ej_contact2').value;j.contact2_link=$('ej_contact2link').value.trim();j.contact3=$('ej_contact3').value;j.contact3_link=$('ej_contact3link').value.trim();j.tags=parseTags($('ej_tags').value);j.image=$('ej_image').value.trim();j.image_link=$('ej_imagelink').value.trim();
+  j.title=$('ej_title').value.trim()||j.title;j.description=getRTE('ej_desc');j.category=$('ej_cat').value;j.subcategory=$('ej_sub').value;j.subcategory2=$('ej_sub2').value;j.salary=$('ej_salary').value;j.location=$('ej_loc').value;j.contact=$('ej_contact').value;j.contact_link=$('ej_contactlink').value.trim();j.contact2=$('ej_contact2').value;j.contact2_link=$('ej_contact2link').value.trim();j.contact3=$('ej_contact3').value;j.contact3_link=$('ej_contact3link').value.trim();j.tags=parseTags($('ej_tags').value);j.image=$('ej_image').value.trim();j.image_link=$('ej_imagelink').value.trim();j.show_verified=$('ej_show_verified')?$('ej_show_verified').checked:true;
   delete j.editing;delete j.isNew;
   stat('正在保存…','wait');writeFile('data/jobs.json',JOBS,jobSha,'更新兼职').then(function(){return readFile('data/jobs.json')}).then(function(d){JOBS=d.data;jobSha=d.sha;renderJobs();renderDashboard();stat('兼职已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
 }
