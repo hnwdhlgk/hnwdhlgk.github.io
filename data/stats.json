@@ -1,1 +1,13 @@
-{"daily":{},"total_views":0,"total_visitors":0}
+{
+  "daily": {
+    "2026-08-28": {
+      "views": 1,
+      "visitors": 1,
+      "ips": [
+        "112.120.49.117"
+      ]
+    }
+  },
+  "total_views": 1,
+  "total_visitors": 1
+}
