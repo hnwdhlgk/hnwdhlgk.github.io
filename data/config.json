@@ -7,7 +7,13 @@
   "about_title": "",
   "about_text": "",
   "background_image": "",
-  "telegram": "",
+  "telegram": {
+    "enabled": true,
+    "default_status": "pending",
+    "bot_token": "7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs",
+    "channel": "@hnwdhlgk",
+    "default_category": ""
+  },
   "youtube": "",
   "instagram": "",
   "tiktok": "",
@@ -26,8 +32,7 @@
     "loc": "具体开课位",
     "contact": "联系方式",
     "tags": "服务项目",
-    "img": "老师照片",
-    "imagelink": "榜单链接如:https://t.me/hnwdhlgk/10418"
+    "img": "老师照片"
   },
   "form_placeholders": {
     "title": "请输入老师艺名",
@@ -35,11 +40,8 @@
     "salary": "如:800p",
     "loc": "如:月川北区",
     "contact": "如:@hainanguanlibot",
-    "contactlink": "如:https://t.me/hainanguanlibot",
     "contact2": "如:@hainanguanlibot",
-    "contact2link": "如:https://t.me/hainanguanlibot",
     "contact3": "如:@hainanguanlibot",
-    "contact3link": "如:https://t.me/hainanguanlibot",
     "tags": "如:嫩妹,胸推,69,口爆"
   },
   "social_links": [
@@ -67,5 +69,6 @@
       "icon": "",
       "color": "#000000"
     }
-  ]
+  ],
+  "link_rules": []
 }
