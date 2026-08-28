@@ -98,11 +98,8 @@ footer{text-align:center;color:#8a99a9;font-size:12px;padding:30px 0 45px}
       <label id="lb_desc">描述</label><textarea id="mf_desc" placeholder="工作内容、要求等"></textarea>
       <div class="row2"><div><label id="lb_salary">薪资</label><input id="mf_salary" placeholder="如：150元/天"></div><div><label id="lb_loc">地点</label><input id="mf_loc"></div></div>
       <label id="lb_contact">个人联系方式</label><input id="mf_contact">
-      <label id="lb_contactlink">个人联系方式超链接</label><input id="mf_contactlink" placeholder="https://...">
       <label id="lb_contact2">双向联系</label><input id="mf_contact2">
-      <label id="lb_contact2link">双向联系超链接</label><input id="mf_contact2link" placeholder="https://...">
       <label id="lb_contact3">个人频道</label><input id="mf_contact3">
-      <label id="lb_contact3link">个人频道超链接</label><input id="mf_contact3link" placeholder="https://...">
       <label id="lb_tags">自定义标签（逗号分隔）</label><input id="mf_tags">
       <label id="lb_img">封面图片</label>
       <div class="upload-row">
@@ -111,7 +108,6 @@ footer{text-align:center;color:#8a99a9;font-size:12px;padding:30px 0 45px}
         <span id="mf_imgStatus" class="upload-status"></span>
       </div>
       <img id="mf_imgPrev" class="preview-img" style="display:none">
-      <label id="lb_imagelink">封面图片超链接</label><input id="mf_imagelink" placeholder="https://...">
       <div><button id="btn_submit" onclick="submitMine()">提交（等待审核）</button><button class="ghost" onclick="togglePublish(true)">取消</button></div>
     </div>
   </div>
@@ -128,10 +124,24 @@ const pad=n=>n<10?"0"+n:""+n;
 function fmt(iso){const d=new Date(iso);if(isNaN(d))return iso||"";return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
 function parseTags(s){return String(s||"").split(/[,，、;；\s]+/).map(x=>x.trim()).filter(Boolean)}
 function fileToBase64(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const r=fr.result,i=r.indexOf(",");res(i>=0?r.slice(i+1):r)};fr.onerror=rej;fr.readAsDataURL(file)})}
-const DEFAULTS={site_title:"海南大学兼职公开榜",site_subtitle:"HAINAN UNIVERSITY PART-TIME BOARD",hero_title:"海南大学兼职公开榜",hero_description:"最全面的校园兼职信息平台，实时更新优质岗位。",about_title:"让校园信息更容易找到",about_text:"海南大学兼职公开榜致力于为海南大学学子提供安全、可靠的兼职信息平台。所有信息均经审核，确保真实有效。",safety_notice:"任何要求先交押金、培训费的兼职均为诈骗，请提高警惕。如遇可疑信息，请立即举报。"};
+const DEFAULTS={site_title:"海南大学兼职公开榜",site_subtitle:"HAINAN UNIVERSITY PART-TIME BOARD",hero_title:"海南大学兼职公开榜",hero_description:"最全面的校园兼职信息平台，实时更新优质岗位。",about_title:"让校园信息更容易找到",about_text:"海南大学兼职公开榜致力于为海南大学学子提供安全、可靠的兼职信息平台。所有信息均经审核，确保真实有效。",safety_notice:"任何要求先交押金、培训费的兼职均为诈骗，请提高警惕。如遇可疑信息，请立即举报。",link_rules:[{char:"@",prefix:"https://t.me/"}]};
 let categories=[],jobs=[],cfg=DEFAULTS,activeCat="all",activeSub="all",activeSub2="all",activeTags=[],me=sessionStorage.getItem("gh_me")||null,editingMineId=null,WORKER_URL="";
 
-function contactHTML(c){if(!c)return"";c=String(c).trim();if(/^https?:\/\//i.test(c))return'<a href="'+esc(c)+'" target="_blank" rel="noopener">'+esc(c)+"</a>";if(/^[\w.+-]+@[\w-]+\.[\w.-]+$/.test(c))return'<a href="mailto:'+esc(c)+'">'+esc(c)+"</a>";if(/^[\d\s+-]{7,}$/.test(c))return'<a href="tel:'+esc(c.replace(/\s/g,""))+'">'+esc(c)+"</a>";return esc(c)}
+function contactHTML(c){
+  if(!c)return"";c=String(c).trim();
+  var rules=(cfg&&cfg.link_rules)||[];
+  for(var i=0;i<rules.length;i++){
+    var r=rules[i];
+    if(r.char&&c.indexOf(r.char)===0){
+      var url=r.prefix+c.slice(r.char.length);
+      return '<a href="'+esc(url)+'" target="_blank" rel="noopener">'+esc(c)+'</a>';
+    }
+  }
+  if(/^https?:\/\//i.test(c))return'<a href="'+esc(c)+'" target="_blank" rel="noopener">'+esc(c)+"</a>";
+  if(/^[\w.+-]+@[\w-]+\.[\w.-]+$/.test(c))return'<a href="mailto:'+esc(c)+'">'+esc(c)+"</a>";
+  if(/^[\d\s+-]{7,}$/.test(c))return'<a href="tel:'+esc(c.replace(/\s/g,""))+'">'+esc(c)+"</a>";
+  return esc(c)
+}
 function catObj(slug){return categories.find(x=>x.slug===slug)||{subcategories:[]}}
 function catName(slug){const c=catObj(slug);return c?c.name:""}
 function subName(catSlug,subSlug){const s=(catObj(catSlug).subcategories||[]).find(x=>x.slug===subSlug);return s?s.name:""}
@@ -239,13 +249,13 @@ function renderJobs(){
   if(activeTags.length)title+=" · #"+activeTags.join(" #");
   document.getElementById("listTitle").textContent=title;
   document.getElementById("resultCnt").textContent=list.length+" 条";
-  document.getElementById("jobs").innerHTML=list.length?list.map(j=>`<article class="job" onclick="viewJob('${esc(j.id)}')">${j.image?(j.image_link?`<a href="${esc(j.image_link)}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy"></a>`:`<img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy">`):""}<div class="cats"><span class="tag">${esc(catName(j.category)||"兼职")}</span>${j.subcategory?`<span class="tag sub">${esc(subName(j.category,j.subcategory))}</span>`:""}${j.subcategory2?`<span class="tag sub2">${esc(sub2Name(j.category,j.subcategory,j.subcategory2))}</span>`:""}</div><h3>${esc(j.title)}</h3><div class="meta">${esc(j.location||"")}${j.time?" · "+esc(j.time):""}</div>${j.salary?`<div class="salary">${esc(j.salary)}</div>`:""}${j.tags&&j.tags.length?`<div class="jtags">${j.tags.map(t=>`<span class="jtag ${activeTags.includes(t)?"active":""}" onclick="event.stopPropagation();toggleTag('${esc(t)}')">#${esc(t)}</span>`).join("")}</div>`:""}<p>${esc(j.description||"")}</p>${renderContacts(j)}<div class="views">👁 ${j.views||0}</div></article>`).join(""):'<div class="empty">暂无兼职信息</div>';
+  document.getElementById("jobs").innerHTML=list.length?list.map(j=>`<article class="job" onclick="viewJob('${esc(j.id)}')">${j.image?(j.image_link?`<a href="${esc(j.image_link)}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy"></a>`:`<img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy">`):""}<div class="cats"><span class="tag">${esc(catName(j.category)||"兼职")}</span>${j.subcategory?`<span class="tag sub">${esc(subName(j.category,j.subcategory))}</span>`:""}${j.subcategory2?`<span class="tag sub2">${esc(sub2Name(j.category,j.subcategory,j.subcategory2))}</span>`:""}</div><h3>${esc(j.title)}</h3><div class="meta">${esc(j.location||"")}${j.time?" · "+esc(j.time):""}</div>${j.salary?`<div class="salary">${esc(j.salary)}</div>`:""}<p>${esc(j.description||"")}</p>${renderContacts(j)}<div class="views">👁 ${j.views||0}</div></article>`).join(""):'<div class="empty">暂无兼职信息</div>';
 }
 
 function renderContacts(j){
   let html="";
-  [{label:"个人联系方式",val:j.contact,link:j.contact_link},{label:"双向联系",val:j.contact2,link:j.contact2_link},{label:"个人频道",val:j.contact3,link:j.contact3_link}].forEach(item=>{
-    if(item.val){html+=`<p class="contact"><b>${item.label}：</b>${item.link?`<a href="${esc(item.link)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${esc(item.val)}</a>`:contactHTML(item.val)}</p>`}
+  [{label:"个人联系方式",val:j.contact},{label:"双向联系",val:j.contact2},{label:"个人频道",val:j.contact3}].forEach(item=>{
+    if(item.val){html+=`<p class="contact"><b>${item.label}：</b>${contactHTML(item.val)}</p>`}
   });
   return html;
 }
@@ -323,8 +333,8 @@ function renderMine(j){
 async function editMine(id){editingMineId=id;await loadMine();const j=jobs.find(x=>x.id===id);if(j){fillCat("mj_cat",j.category);fillSub2("mj_cat","mj_sub","mj_sub2");if(j.subcategory)document.getElementById("mj_sub").value=j.subcategory;fillSub3("mj_cat","mj_sub","mj_sub2");if(j.subcategory2)document.getElementById("mj_sub2").value=j.subcategory2}_mj_imgUrl=j?j.image||"":"";bindUpload("mj_img","mj_imgBtn","mj_imgPrev","mj_imgStatus","_mj_imgUrl");if(j&&j.image){const btn=document.getElementById("mj_imgBtn");if(btn){btn.textContent="重新选择";btn.classList.add("has-file")}}}
 function cancelMineEdit(){editingMineId=null;loadMine()}
 window.removeMineImg=function(){const p=document.getElementById("mj_imgPrev");if(p){p.style.display="none";p.removeAttribute("src")}const btn=document.getElementById("mj_imgBtn");if(btn){btn.textContent="选择图片上传";btn.classList.remove("has-file")}const st=document.getElementById("mj_imgStatus");if(st)st.textContent="";_mj_imgUrl="";window._rmMineImg=true}
-async function submitMine(){const title=document.getElementById("mf_title").value.trim();if(!title){alert("请输入标题");return}try{await wApi("/api/publish",{username:me,job:{title:title,description:document.getElementById("mf_desc").value,category:document.getElementById("mf_cat").value,subcategory:document.getElementById("mf_sub").value,subcategory2:document.getElementById("mf_sub2").value,salary:document.getElementById("mf_salary").value,location:document.getElementById("mf_loc").value,contact:document.getElementById("mf_contact").value,contact_link:document.getElementById("mf_contactlink").value.trim(),contact2:document.getElementById("mf_contact2").value,contact2_link:document.getElementById("mf_contact2link").value.trim(),contact3:document.getElementById("mf_contact3").value,contact3_link:document.getElementById("mf_contact3link").value.trim(),image:_mf_imgUrl||"",image_link:document.getElementById("mf_imagelink").value.trim(),tags:parseTags(document.getElementById("mf_tags").value)}});["mf_title","mf_desc","mf_salary","mf_loc","mf_contact","mf_contactlink","mf_contact2","mf_contact2link","mf_contact3","mf_contact3link","mf_tags","mf_imagelink"].forEach(i=>document.getElementById(i).value="");document.getElementById("mf_img").value="";document.getElementById("mf_imgPrev").style.display="none";document.getElementById("mf_imgStatus").textContent="";document.getElementById("mf_imgBtn").textContent="选择图片上传";document.getElementById("mf_imgBtn").classList.remove("has-file");_mf_imgUrl="";togglePublish(true);loadMine();alert("已提交，等待管理员审核")}catch(e){alert("发布失败："+e.message)}}
-async function saveMineEdit(id){try{let image=undefined;if(window._rmMineImg){image=""}else if(_mj_imgUrl){image=_mj_imgUrl}await wApi("/api/update-job",{username:me,id:id,job:{title:document.getElementById("mj_title").value.trim(),description:document.getElementById("mj_desc").value,category:document.getElementById("mj_cat").value,subcategory:document.getElementById("mj_sub").value,subcategory2:document.getElementById("mj_sub2").value,salary:document.getElementById("mj_salary").value,location:document.getElementById("mj_loc").value,contact:document.getElementById("mj_contact").value,contact_link:document.getElementById("mj_contactlink").value.trim(),contact2:document.getElementById("mj_contact2").value,contact2_link:document.getElementById("mj_contact2link").value.trim(),contact3:document.getElementById("mj_contact3").value,contact3_link:document.getElementById("mj_contact3link").value.trim(),tags:parseTags(document.getElementById("mj_tags").value),image:image,image_link:document.getElementById("mj_imagelink").value.trim()}});editingMineId=null;window._rmMineImg=false;_mj_imgUrl="";loadMine();alert("修改已提交，等待管理员重新审核")}catch(e){alert("保存失败："+e.message)}}
+async function submitMine(){const title=document.getElementById("mf_title").value.trim();if(!title){alert("请输入标题");return}try{await wApi("/api/publish",{username:me,job:{title:title,description:document.getElementById("mf_desc").value,category:document.getElementById("mf_cat").value,subcategory:document.getElementById("mf_sub").value,subcategory2:document.getElementById("mf_sub2").value,salary:document.getElementById("mf_salary").value,location:document.getElementById("mf_loc").value,contact:document.getElementById("mf_contact").value,contact2:document.getElementById("mf_contact2").value,contact3:document.getElementById("mf_contact3").value,image:_mf_imgUrl||"",tags:parseTags(document.getElementById("mf_tags").value)}});["mf_title","mf_desc","mf_salary","mf_loc","mf_contact","mf_contact2","mf_contact3","mf_tags"].forEach(i=>document.getElementById(i).value="");document.getElementById("mf_img").value="";document.getElementById("mf_imgPrev").style.display="none";document.getElementById("mf_imgStatus").textContent="";document.getElementById("mf_imgBtn").textContent="选择图片上传";document.getElementById("mf_imgBtn").classList.remove("has-file");_mf_imgUrl="";togglePublish(true);loadMine();alert("已提交，等待管理员审核")}catch(e){alert("发布失败："+e.message)}}
+async function saveMineEdit(id){try{let image=undefined;if(window._rmMineImg){image=""}else if(_mj_imgUrl){image=_mj_imgUrl}await wApi("/api/update-job",{username:me,id:id,job:{title:document.getElementById("mj_title").value.trim(),description:document.getElementById("mj_desc").value,category:document.getElementById("mj_cat").value,subcategory:document.getElementById("mj_sub").value,subcategory2:document.getElementById("mj_sub2").value,salary:document.getElementById("mj_salary").value,location:document.getElementById("mj_loc").value,contact:document.getElementById("mj_contact").value,contact2:document.getElementById("mj_contact2").value,contact3:document.getElementById("mj_contact3").value,tags:parseTags(document.getElementById("mj_tags").value),image:image,}});editingMineId=null;window._rmMineImg=false;_mj_imgUrl="";loadMine();alert("修改已提交，等待管理员重新审核")}catch(e){alert("保存失败："+e.message)}}
 async function delMine(id){if(!confirm("确定删除？"))return;try{await wApi("/api/delete-job",{username:me,id});loadMine()}catch(e){alert("删除失败："+e.message)}}
 
 init().catch(e=>{document.querySelector("#jobs").innerHTML='<div class="empty">数据加载失败，请刷新</div>';console.error(e)});
