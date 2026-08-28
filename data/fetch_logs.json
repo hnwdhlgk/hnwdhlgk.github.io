@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-28T21:22:37.134Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-08-28T21:00:33.067Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
