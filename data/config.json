@@ -8,7 +8,17 @@
     "channel": "@hnwdhlgk",
     "default_category": "personal",
     "default_status": "approved",
-    "tag_maps": []
+    "tag_maps": [],
+    "channels": [
+      {
+        "bot_token": "7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs",
+        "channel": "@hnwdhlgk",
+        "default_category": "personal",
+        "default_status": "approved",
+        "tag_maps": [],
+        "enabled": true
+      }
+    ]
   },
   "on_duty": {
     "enabled": true,
