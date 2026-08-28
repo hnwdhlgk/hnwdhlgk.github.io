@@ -8,7 +8,7 @@
   "about_text": "",
   "background_image": "",
   "telegram": {
-    "enabled": false,
+    "enabled": true,
     "default_status": "pending",
     "bot_token": "7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs",
     "channel": "@hnwdhlgk",
