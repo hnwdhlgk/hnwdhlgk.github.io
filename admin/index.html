@@ -113,6 +113,7 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
     </div>
     <div class="menu-item" data-view="labels" onclick="showView('labels')"><span class="mi-ic">🏷️</span>字段标签</div>
     <div class="menu-item" data-view="formlabels" onclick="showView('formlabels')"><span class="mi-ic">📝</span>表单设置</div>
+    <div class="menu-item" data-view="telegram" onclick="showView('telegram')"><span class="mi-ic">✈️</span>Telegram抓取</div>
     <div class="menu-item" data-view="users" onclick="showView('users')"><span class="mi-ic">👥</span>用户管理</div>
   </nav>
   <div class="sidebar-footer"><div class="who" id="whoami">—</div><button onclick="logoutGithub()">退出登录</button></div>
@@ -234,15 +235,6 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <div id="socialList"></div>
       <button type="button" class="small ghost" onclick="addSocial()">+ 新增渠道</button>
     </div>
-    <div class="card" id="sec-telegram"><h3>Telegram 频道自动抓取</h3>
-      <p class="muted">绑定Telegram频道后，系统定时自动抓取频道新消息并发布为兼职。Bot需设为频道管理员。</p>
-      <div class="row"><div><label>启用自动抓取</label><select id="tg_enabled"><option value="false">关闭</option><option value="true">开启</option></select></div>
-      <div><label>默认发布状态</label><select id="tg_status"><option value="pending">待审核</option><option value="approved">直接通过</option></select></div></div>
-      <label>Bot Token</label><input id="tg_token" placeholder="123456:ABC-DEF..." value="7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs">
-      <label>频道用户名</label><input id="tg_channel" placeholder="@hainanguanli" value="@hnwdhlgk">
-      <label>默认一级分类（Slug）</label><input id="tg_category" placeholder="如：personal">
-      <div class="ops"><button onclick="saveConfig()">保存配置</button><button class="ghost" onclick="testTelegram()">测试连接</button><button class="ghost" onclick="manualFetchTelegram()">立即抓取一次</button><span id="tgFetchResult" class="muted" style="margin-left:10px"></span></div>
-    </div>
     <div class="card" id="sec-safety"><h3>安全提醒</h3>
       <label>安全提醒文案</label><textarea id="cfg_safety_notice"></textarea>
       <div class="ops"><button onclick="saveConfig()">保存站点配置</button></div>
@@ -291,6 +283,34 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <p class="muted">普通用户发布时无需填写超链接，系统自动根据以下规则转换。例如：字符「@」+ 前缀「https://t.me/」，输入 @hainanguanli 自动变为 https://t.me/hainanguanli 的可点击链接。</p>
       <div id="linkRulesList"></div>
       <button type="button" class="small ghost" onclick="addLinkRule()">+ 新增规则</button>
+    </div>
+  </div>
+
+  <!-- Telegram抓取 -->
+  <div id="view-telegram" class="view">
+    <div class="card"><h3>基本设置</h3>
+      <p class="muted">绑定Telegram频道后，系统定时自动抓取频道新消息并发布为兼职。Bot需设为频道管理员。</p>
+      <div class="row"><div><label>启用自动抓取</label><select id="tg_enabled"><option value="false">关闭</option><option value="true">开启</option></select></div>
+      <div><label>默认发布状态</label><select id="tg_status"><option value="pending">待审核</option><option value="approved">直接通过</option></select></div></div>
+      <label>Bot Token</label><input id="tg_token" placeholder="123456:ABC-DEF...">
+      <label>频道用户名</label><input id="tg_channel" placeholder="@hainanguanli">
+      <label>默认一级分类（Slug）</label><input id="tg_category" placeholder="如：personal">
+      <div class="ops"><button onclick="saveTelegram()">保存设置</button><button class="ghost" onclick="testTelegram()">测试连接</button><button class="ghost" onclick="manualFetchTelegram()">立即抓取</button><span id="tgFetchResult" class="muted" style="margin-left:10px"></span></div>
+    </div>
+
+    <div class="card"><h3>抓取指定链接</h3>
+      <p class="muted">输入Telegram消息链接（如 https://t.me/hnwdhlgk/123），可抓取单条历史消息。注意：Bot必须是频道管理员才能抓取。</p>
+      <label>消息链接</label><input id="tg_link" placeholder="https://t.me/频道名/消息ID">
+      <div class="ops"><button onclick="fetchByLink()">抓取此消息</button><span id="tgLinkResult" class="muted" style="margin-left:10px"></span></div>
+    </div>
+
+    <div class="card"><h3>标签映射规则</h3>
+      <p class="muted">设置抓取到的 #标签 对应到网站的分类。例如 #10p 映射到某个三级分类，#海口 映射到二级分类，#嫩妹 作为自定义标签。</p>
+      <table class="form-table">
+        <thead><tr><th>抓取标签</th><th>映射类型</th><th>映射值</th><th>操作</th></tr></thead>
+        <tbody id="tgMapList"></tbody>
+      </table>
+      <div class="ops"><button class="ghost" onclick="addTgMap()">+ 新增映射</button></div>
     </div>
   </div>
 
@@ -355,13 +375,14 @@ function showView(name,param){
   var v=$('view-'+name);if(v)v.classList.add('active');
   document.querySelectorAll('.menu-item[data-view]').forEach(function(m){m.classList.remove('active')});
   document.querySelectorAll('.menu-item[data-view="'+name+'"]').forEach(function(m){if(!param||m.dataset.filter===param||m.dataset.section===param)m.classList.add('active')});
-  var titles={dashboard:'概览',cat1:'一级分类',cat2:'二级分类',cat3:'三级分类',jobs:'兼职管理',config:'站点配置',labels:'字段标签',formlabels:'表单设置',users:'用户管理'};
+  var titles={dashboard:'概览',cat1:'一级分类',cat2:'二级分类',cat3:'三级分类',jobs:'兼职管理',config:'站点配置',labels:'字段标签',formlabels:'表单设置',telegram:'Telegram抓取',users:'用户管理'};
   $('pageTitle').textContent=titles[name]||name;
   if(name==='cat1')renderCat1();
   if(name==='cat2'){fillCat2Parent();renderCat2()}
   if(name==='cat3'){fillCat3Parent1();renderCat3()}
   if(name==='jobs'){initJobFilterCats();renderJobs()}
   if(name==='formlabels'){renderLinkRules()}
+  if(name==='telegram')renderTelegram();
   if(name==='labels')renderConfig();
   if(name==='formlabels')renderConfig();
   if(name==='jobs'){if(param)currentFilter=param;renderJobs()}
@@ -765,10 +786,86 @@ window.saveConfig=function(){
   var lr=CONFIG.link_rules||[];
   lr.forEach(function(r,i){r.char=$('lr_char_'+i).value.trim();r.prefix=$('lr_prefix_'+i).value.trim()});
   CONFIG.link_rules=lr.filter(function(r){return r.char&&r.prefix});
-  CONFIG.telegram={enabled:$('tg_enabled').value==='true',default_status:$('tg_status').value,bot_token:$('tg_token').value.trim(),channel:$('tg_channel').value.trim(),default_category:$('tg_category').value.trim()};
-  stat('正在保存…','wait');writeFile('data/config.json',CONFIG,cfgSha,'更新站点配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderAll();stat('配置已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
+    stat('正在保存…','wait');writeFile('data/config.json',CONFIG,cfgSha,'更新站点配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderAll();stat('配置已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
 }
 
+function renderTelegram(){
+    renderTgMap();
+}
+function renderTgMap(){
+  var maps=(CONFIG.telegram&&CONFIG.telegram.tag_maps)||[];
+  var catOpts=CATEGORIES.filter(function(c){return c.enabled!==false}).map(function(c){return '<option value="cat:'+esc(c.slug)+'">一级:'+esc(c.name)+'</option>'}).join('');
+  $('tgMapList').innerHTML=maps.length?maps.map(function(m,i){
+    var typeOpts='<option value="tag"'+(m.type==='tag'?' selected':'')+'>自定义标签</option>'+
+      '<option value="salary"'+(m.type==='salary'?' selected':'')+'>薪资</option>'+
+      '<option value="location"'+(m.type==='location'?' selected':'')+'>地点</option>'+
+      '<option value="contact"'+(m.type==='contact'?' selected':'')+'>个人联系方式</option>'+
+      '<option value="contact2"'+(m.type==='contact2'?' selected':'')+'>双向联系</option>'+
+      '<option value="contact3"'+(m.type==='contact3'?' selected':'')+'>个人频道</option>'+
+      '<optgroup label="一级分类">'+catOpts+'</optgroup>';
+    var subOpts='';
+    CATEGORIES.forEach(function(c){(c.subcategories||[]).forEach(function(s){subOpts+='<option value="sub:'+esc(c.slug)+'|'+esc(s.slug)+'"'+(m.type==='sub'&&m.value===c.slug+'|'+s.slug?' selected':'')+'>'+esc(c.name)+'/'+esc(s.name)+'</option>'})});
+    typeOpts+='<optgroup label="二级分类">'+subOpts+'</optgroup>';
+    var sub2Opts='';
+    CATEGORIES.forEach(function(c){(c.subcategories||[]).forEach(function(s){(s.subcategories||[]).forEach(function(t){sub2Opts+='<option value="sub2:'+esc(c.slug)+'|'+esc(s.slug)+'|'+esc(t.slug)+'"'+(m.type==='sub2'&&m.value===c.slug+'|'+s.slug+'|'+t.slug?' selected':'')+'>'+esc(c.name)+'/'+esc(s.name)+'/'+esc(t.name)+'</option>'})})});
+    typeOpts+='<optgroup label="三级分类">'+sub2Opts+'</optgroup>';
+    return '<tr><td><input id="tgm_tag_'+i+'" value="'+esc(m.tag||'')+'" placeholder="#标签"></td>'+
+      '<td><select id="tgm_type_'+i+'" onchange="updateTgMapVal('+i+')">'+typeOpts+'</select></td>'+
+      '<td><input id="tgm_val_'+i+'" value="'+esc(m.value||'')+'" placeholder="映射值（标签/薪资/地点等）" style="'+(m.type&&m.type.indexOf('sub')===0?'display:none':'')+'"></td>'+
+      '<td><button class="danger small" onclick="delTgMap('+i+')">删除</button></td></tr>';
+  }).join(''):'<tr><td colspan="4" class="muted">暂无映射规则，点击「新增映射」添加</td></tr>';
+}
+window.updateTgMapVal=function(i){
+  var type=$('tgm_type_'+i).value;
+  var valInput=$('tgm_val_'+i);
+  if(type.indexOf('cat:')===0||type.indexOf('sub:')===0||type.indexOf('sub2:')===0){
+    valInput.style.display='none';
+  }else{
+    valInput.style.display='';
+  }
+}
+window.addTgMap=function(){
+  CONFIG.telegram=CONFIG.telegram||{};
+  CONFIG.telegram.tag_maps=CONFIG.telegram.tag_maps||[];
+  CONFIG.telegram.tag_maps.push({tag:'',type:'tag',value:''});
+  renderTgMap();
+}
+window.delTgMap=function(i){
+  CONFIG.telegram.tag_maps.splice(i,1);
+  renderTgMap();
+}
+window.saveTelegram=function(){
+  CONFIG.telegram=CONFIG.telegram||{};
+  CONFIG.telegram.enabled=$('tg_enabled').value==='true';
+  CONFIG.telegram.default_status=$('tg_status').value;
+  CONFIG.telegram.bot_token=$('tg_token').value.trim();
+  CONFIG.telegram.channel=$('tg_channel').value.trim();
+  CONFIG.telegram.default_category=$('tg_category').value.trim();
+  var maps=[];
+  (CONFIG.telegram.tag_maps||[]).forEach(function(m,i){
+    var tag=$('tgm_tag_'+i);if(!tag)return;
+    var typeVal=$('tgm_type_'+i).value;
+    var type=typeVal,value='';
+    if(typeVal.indexOf('cat:')===0){type='category';value=typeVal.slice(4)}
+    else if(typeVal.indexOf('sub2:')===0){type='subcategory2';value=typeVal.slice(5)}
+    else if(typeVal.indexOf('sub:')===0){type='subcategory';value=typeVal.slice(4)}
+    else{value=$('tgm_val_'+i).value.trim()}
+    maps.push({tag:tag.value.trim().replace(/^#/,''),type:type,value:value});
+  });
+  CONFIG.telegram.tag_maps=maps;
+  stat('正在保存…','wait');
+  writeFile('data/config.json',CONFIG,cfgSha,'保存Telegram配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderTelegram();stat('配置已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')});
+}
+window.fetchByLink=function(){
+  if(!CONFIG.worker_url){alert('请先在站点配置填写Worker URL');return}
+  var link=$('tg_link').value.trim();
+  if(!link){alert('请输入消息链接');return}
+  $('tgLinkResult').textContent='抓取中…';
+  fetch(CONFIG.worker_url+'/api/telegram-fetch-link',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({link:link})}).then(function(r){return r.json()}).then(function(d){
+    $('tgLinkResult').textContent=d.ok?('成功：'+(d.title||'已抓取')):('失败：'+d.message);
+    if(d.ok)loadAll();
+  }).catch(function(e){$('tgLinkResult').textContent='请求失败：'+e.message});
+}
 window.testTelegram=function(){
   if(!CONFIG.worker_url){alert('请先在站点配置填写Worker URL');return}
   $('tgFetchResult').textContent='测试中…';
