@@ -19,11 +19,10 @@
   },
   "on_duty": {
     "enabled": true,
-    "channel": "@hnwdhldh",
     "channels": [
       {
         "channel": "@hnwdhldh",
-        "bot_token": "",
+        "bot_token": "7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs",
         "enabled": true
       }
     ]
