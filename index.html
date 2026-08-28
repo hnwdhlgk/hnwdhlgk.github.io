@@ -221,8 +221,32 @@ function contactHTML(c){
 }
 function catObj(slug){return categories.find(x=>x.slug===slug)||{subcategories:[]}}
 function catName(slug){const c=catObj(slug);return c?c.name:""}
-function subName(catSlug,subSlug){const s=(catObj(catSlug).subcategories||[]).find(x=>x.slug===subSlug);return s?s.name:""}
-function sub2Name(catSlug,subSlug,sub2Slug){const s=(catObj(catSlug).subcategories||[]).find(x=>x.slug===subSlug);const t=(s&&s.subcategories||[]).find(x=>x.slug===sub2Slug);return t?t.name:""}
+function subName(catSlug,subSlug){
+  // 先在当前分类下找
+  let s=(catObj(catSlug).subcategories||[]).find(x=>x.slug===subSlug);
+  if(s)return s.name;
+  // 找不到就在所有分类下找（兼容旧数据）
+  for(let i=0;i<categories.length;i++){
+    s=(categories[i].subcategories||[]).find(x=>x.slug===subSlug);
+    if(s)return s.name;
+  }
+  return "";
+}
+function sub2Name(catSlug,subSlug,sub2Slug){
+  // 先在当前分类下找
+  let s=(catObj(catSlug).subcategories||[]).find(x=>x.slug===subSlug);
+  let t=(s&&s.subcategories||[]).find(x=>x.slug===sub2Slug);
+  if(t)return t.name;
+  // 找不到就在所有分类下找（兼容旧数据）
+  for(let i=0;i<categories.length;i++){
+    const subs=categories[i].subcategories||[];
+    for(let j=0;j<subs.length;j++){
+      t=(subs[j].subcategories||[]).find(x=>x.slug===sub2Slug);
+      if(t)return t.name;
+    }
+  }
+  return "";
+}
 
 async function getJson(f){const r=await fetch("./data/"+f+"?v="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error(r.status);return r.json()}
 async function loadConfig(){try{const c=await getJson("config.json");cfg=Object.assign({},DEFAULTS,c);WORKER_URL=c.worker_url||""}catch(e){cfg=DEFAULTS}
