@@ -200,6 +200,11 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <div id="socialList"></div>
       <button type="button" class="small ghost" onclick="addSocial()">+ 新增渠道</button>
     </div>
+    <div class="card" id="sec-linkrules"><h3>联系方式自动转换规则</h3>
+      <p class="muted">普通用户发布时无需填写超链接，系统自动根据以下规则转换。例如：字符「@」+ 前缀「https://t.me/」，输入 @hainanguanli 自动变为 https://t.me/hainanguanli 的可点击链接。</p>
+      <div id="linkRulesList"></div>
+      <button type="button" class="small ghost" onclick="addLinkRule()">+ 新增规则</button>
+    </div>
     <div class="card" id="sec-safety"><h3>安全提醒</h3>
       <label>安全提醒文案</label><textarea id="cfg_safety_notice"></textarea>
       <div class="ops"><button onclick="saveConfig()">保存站点配置</button></div>
@@ -649,6 +654,7 @@ function renderConfig(){
   ['title','desc','salary','loc','contact','contactlink','contact2','contact2link','contact3','contact3link','tags'].forEach(function(k){var el=$('fp_'+k);if(el)el.value=fp[k]||''});
   var bg=$('cfg_background_image');if(bg&&bg.value){var p=$('bgPreview');p.src=bg.value;p.style.display='block'}
   renderSocialList();
+  renderLinkRules();
 }
 function renderSocialList(){
   var list=CONFIG.social_links;
@@ -669,6 +675,17 @@ function renderSocialList(){
     (s.icon?'<img src="'+esc(s.icon)+'" class="preview-img" style="max-width:48px;max-height:48px;margin-top:6px">':'')+'</div>';
   }).join('');
 }
+function renderLinkRules(){
+  var rules=CONFIG.link_rules;
+  if(!rules||!rules.length){rules=[{char:"@",prefix:"https://t.me/"}];CONFIG.link_rules=rules}
+  $('linkRulesList').innerHTML=rules.map(function(r,i){
+    return '<div class="cat-item"><div class="row"><div><label>触发字符</label><input id="lr_char_'+i+'" value="'+esc(r.char)+'" placeholder="@"></div>'+
+    '<div><label>替换为前缀</label><input id="lr_prefix_'+i+'" value="'+esc(r.prefix)+'" placeholder="https://t.me/"></div></div>'+
+    '<button type="button" class="small danger" onclick="delLinkRule('+i+')">删除规则</button></div>';
+  }).join('');
+}
+window.addLinkRule=function(){CONFIG.link_rules=CONFIG.link_rules||[];CONFIG.link_rules.push({char:"@",prefix:"https://t.me/"});renderLinkRules()}
+window.delLinkRule=function(i){if(!confirm('确定删除该规则？'))return;CONFIG.link_rules.splice(i,1);renderLinkRules()}
 window.addSocial=function(){CONFIG.social_links=CONFIG.social_links||[];CONFIG.social_links.push({name:'新渠道',url:'',icon:'',color:'#0d47a1'});renderSocialList()}
 window.delSocial=function(i){if(!confirm('确定删除该渠道？'))return;CONFIG.social_links.splice(i,1);renderSocialList()}
 window.uploadSocialIcon=function(i){
@@ -688,6 +705,9 @@ window.saveConfig=function(){
   var list=CONFIG.social_links||[];
   list.forEach(function(s,i){s.name=$('sl_name_'+i).value.trim()||s.name;s.url=$('sl_url_'+i).value.trim();s.icon=$('sl_icon_'+i).value.trim();s.color=$('sl_color_'+i).value});
   CONFIG.social_links=list;
+  var lr=CONFIG.link_rules||[];
+  lr.forEach(function(r,i){r.char=$('lr_char_'+i).value.trim();r.prefix=$('lr_prefix_'+i).value.trim()});
+  CONFIG.link_rules=lr.filter(function(r){return r.char&&r.prefix});
   stat('正在保存…','wait');writeFile('data/config.json',CONFIG,cfgSha,'更新站点配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderAll();stat('配置已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
 }
 
