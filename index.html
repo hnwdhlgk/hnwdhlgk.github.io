@@ -902,6 +902,10 @@ window.adminDelCat3=function(i,j,k){
 async function adminSaveAllCategories(){
   // 先收集所有输入框的值
   const cats=window._adminCats;
+  if(!cats||!Array.isArray(cats)||!cats.length){
+    alert('分类数据为空，无法保存');
+    return;
+  }
   cats.forEach((c,i)=>{
     c.name=document.getElementById('c1name'+i)?.value||c.name;
     c.slug=document.getElementById('c1slug'+i)?.value||c.slug;
@@ -933,6 +937,10 @@ async function renderAdminConfig(){
 }
 window.adminSaveConfig=async function(){
   const cfg=window._adminCfg||{};
+  if(typeof cfg!=='object'||cfg===null){
+    alert('配置数据异常，无法保存');
+    return;
+  }
   cfg.site_title=document.getElementById('cfg_title').value;
   cfg.site_subtitle=document.getElementById('cfg_subtitle').value;
   cfg.worker_url=document.getElementById('cfg_worker').value;
