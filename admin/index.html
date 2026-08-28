@@ -304,6 +304,8 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <label>Bot Token</label><input id="tg_token" placeholder="123456:ABC-DEF...">
       <label>频道用户名</label><input id="tg_channel" placeholder="@hainanguanli">
       <label>默认一级分类（Slug）</label><input id="tg_category" placeholder="如：personal">
+      <div class="row"><div><label>OCR API Key（ocr.space，可选）</label><input id="tg_ocr_key" placeholder="K812345678（用于识别图片文字）"></div>
+      <div><label>OCR语言</label><select id="tg_ocr_lang"><option value="chs">中文</option><option value="eng">英文</option><option value="jpn">日文</option><option value="kor">韩文</option></select></div></div>
       <div class="ops"><button onclick="saveTelegram()">保存设置</button><button class="ghost" onclick="testTelegram()">测试连接</button><button class="ghost" onclick="manualFetchTelegram()">立即抓取</button><span id="tgFetchResult" class="muted" style="margin-left:10px"></span></div>
     </div>
 
@@ -889,6 +891,8 @@ window.saveTelegram=function(){
   CONFIG.telegram.bot_token=$('tg_token').value.trim();
   CONFIG.telegram.channel=$('tg_channel').value.trim();
   CONFIG.telegram.default_category=$('tg_category').value.trim();
+  CONFIG.telegram.ocr_api_key=$('tg_ocr_key').value.trim();
+  CONFIG.telegram.ocr_language=$('tg_ocr_lang').value;
   var maps=[];
   (CONFIG.telegram.tag_maps||[]).forEach(function(m,i){
     var tag=$('tgm_tag_'+i);if(!tag)return;
