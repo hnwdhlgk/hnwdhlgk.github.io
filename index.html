@@ -646,7 +646,7 @@ function renderJobs(){
   var pageList=list.slice(start,start+pageSize);
   var pagHtml="";
   if(list.length>pageSize){pagHtml='<div class="pagination"><button onclick="changePage('+(currentPage-1)+')" '+(currentPage<=1?'disabled':'')+'>上一页</button><span class="page-info">第 '+currentPage+' / '+totalPages+' 页</span><button onclick="changePage('+(currentPage+1)+')" '+(currentPage>=totalPages?'disabled':'')+'>下一页</button></div>';}
-  document.getElementById("jobs").innerHTML=(pageList.length?pageList.map(j=>`<article class="job" onclick="viewJob('${esc(j.id)}')">${j.image?(function(){var il=j.image_link;if(!il&&j.telegram_channel&&j.telegram_msg_id){il="https://t.me/"+j.telegram_channel+"/"+j.telegram_msg_id+"?single"}return il?`<a href="${esc(il)}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy"></a>`:`<img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy">`})():""}<div class="cats"><span class="tag">${esc(catName(j.category)||"兼职")}</span>${j.subcategory?`<span class="tag sub">${esc(subName(j.category,j.subcategory))}</span>`:""}${j.subcategory2?`<span class="tag sub2">${esc(sub2Name(j.category,j.subcategory,j.subcategory2))}</span>`:""}</div><h3>${esc(j.title)} ${verifiedUsers.includes(j.author)?'<img src="assets/verified_badge.png" alt="已认证" title="海南大学已认证用户" style="width:18px;height:18px;vertical-align:middle;margin-left:4px;display:inline-block">':''}</h3><div class="meta">${esc(j.location||"")}${j.time?" · "+esc(j.time):""}</div>${j.salary?`<div class="salary">${esc(j.salary)}</div>`:""}<p>${linkify(j.description||"")}</p>${renderContacts(j)}<div class="views">👁 ${j.views||0}</div></article>`).join(""):'<div class="empty">暂无兼职信息</div>')+pagHtml;
+  document.getElementById("jobs").innerHTML=(pageList.length?pageList.map(j=>`<article class="job" onclick="viewJob('${esc(j.id)}')">${j.image?(function(){var il=j.image_link;if(!il&&j.telegram_channel&&j.telegram_msg_id){il="https://t.me/"+j.telegram_channel+"/"+j.telegram_msg_id+"?single"}return il?`<a href="${esc(il)}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy"></a>`:`<img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy">`})():""}<div class="cats"><span class="tag">${esc(catName(j.category)||"兼职")}</span>${j.subcategory?`<span class="tag sub">${esc(subName(j.category,j.subcategory))}</span>`:""}${j.subcategory2?`<span class="tag sub2">${esc(sub2Name(j.category,j.subcategory,j.subcategory2))}</span>`:""}</div><h3>${esc(j.title)} ${(j.show_verified!==false&&verifiedUsers.includes(j.author))?'<img src="assets/verified_badge.png" alt="已认证" title="海南大学已认证用户" style="width:18px;height:18px;vertical-align:middle;margin-left:4px;display:inline-block">':''}</h3><div class="meta">${esc(j.location||"")}${j.time?" · "+esc(j.time):""}</div>${j.salary?`<div class="salary">${esc(j.salary)}</div>`:""}<p>${linkify(j.description||"")}</p>${renderContacts(j)}<div class="views">👁 ${j.views||0}</div></article>`).join(""):'<div class="empty">暂无兼职信息</div>')+pagHtml;
 }
 
 function renderContacts(j){
@@ -727,22 +727,46 @@ async function renderAdminJobs(){
   try{
     const d=await wApi("/api/admin/jobs",{username:me});
     const jobs=d.jobs||[];
+    // 加载已认证用户列表
+    let verifiedList=[];
+    try{
+      const vd=await fetch(WORKER_URL+"/api/verified-users").then(r=>r.json());
+      verifiedList=(vd.users||[]).map(u=>u.username);
+    }catch(e){verifiedList=[];}
     let html='<div style="margin-bottom:12px"><input placeholder="搜索标题..." style="padding:8px 12px;border:1px solid var(--line);border-radius:8px;width:200px" oninput="filterAdminJobs(this.value)"></div>';
-    html+='<div id="adminJobsList"><table class="data-table"><thead><tr><th>标题</th><th>分类</th><th>状态</th><th>点击</th><th>操作</th></tr></thead><tbody>';
-    html+=jobs.map(j=>`<tr data-title="${esc(j.title||'').toLowerCase()}">
+    html+='<div id="adminJobsList"><table class="data-table"><thead><tr><th>标题</th><th>发布者</th><th>分类</th><th>认证状态</th><th>显示图标</th><th>状态</th><th>点击</th><th>操作</th></tr></thead><tbody>';
+    html+=jobs.map(j=>{
+      const isVerified=verifiedList.includes(j.author);
+      const showIcon=j.show_verified!==false; // 默认显示
+      return `<tr data-title="${esc(j.title||'').toLowerCase()}">
       <td>${esc(j.title||'')}</td>
+      <td>${esc(j.author||'')}</td>
       <td>${esc(j.category||'')}${j.subcategory?'/'+esc(j.subcategory):''}</td>
+      <td>${isVerified?'<span style="color:#16a34a;font-weight:700">✓ 已认证</span>':'<span style="color:#dc2626">✗ 未认证</span>'}</td>
+      <td><label style="cursor:pointer;display:flex;align-items:center;gap:4px"><input type="checkbox" ${showIcon?'checked':''} onchange="adminToggleVerifiedIcon('${j.id}',this.checked)"> ${showIcon?'显示':'隐藏'}</label></td>
       <td><span class="status-${j.status||'pending'}">${j.status==='approved'?'已通过':j.status==='rejected'?'已拒绝':'待审核'}</span></td>
       <td>${j.views||0}</td>
       <td>
         ${j.status!=='approved'?`<button class="small" onclick="adminApproveJob('${j.id}')">通过</button>`:''}
         ${j.status!=='rejected'?`<button class="small" onclick="adminRejectJob('${j.id}')">拒绝</button>`:''}
         <button class="danger small" onclick="adminDeleteJob('${j.id}')">删除</button>
-      </td></tr>`).join('');
+      </td></tr>`;
+    }).join('');
     html+='</tbody></table></div>';
     document.getElementById("adminPanels").innerHTML=html;
   }catch(e){document.getElementById("adminPanels").innerHTML='<div class="empty">加载失败：'+esc(e.message)+'</div>'}
 }
+window.adminToggleVerifiedIcon=async function(id,show){
+  try{
+    // 获取当前兼职数据
+    const d=await wApi("/api/admin/jobs",{username:me});
+    const jobs=d.jobs||[];
+    const j=jobs.find(x=>x.id===id);
+    if(!j)return alert('兼职不存在');
+    j.show_verified=show;
+    await wApi("/api/admin/update-job",{username:me,id:id,job:j});
+  }catch(e){alert('操作失败：'+e.message)}
+};
 window.filterAdminJobs=function(kw){
   kw=kw.toLowerCase();
   document.querySelectorAll('#adminJobsList tr[data-title]').forEach(tr=>{
