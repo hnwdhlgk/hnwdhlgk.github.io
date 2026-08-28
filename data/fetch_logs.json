@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-28T20:26:49.927Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "error",
+    "message": "未配置Bot Token"
+  },
+  {
     "time": "2026-08-28T20:15:43.389Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
