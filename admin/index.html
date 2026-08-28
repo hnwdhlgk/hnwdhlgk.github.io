@@ -299,9 +299,14 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
     </div>
 
     <div class="card"><h3>抓取指定链接</h3>
-      <p class="muted">输入Telegram消息链接（如 https://t.me/hnwdhlgk/123），可抓取单条历史消息。注意：Bot必须是频道管理员才能抓取。</p>
+      <p class="muted">输入Telegram消息链接（如 https://t.me/hnwdhlgk/123），可抓取单条历史消息。频道需为公开频道。</p>
       <label>消息链接</label><input id="tg_link" placeholder="https://t.me/频道名/消息ID">
       <div class="ops"><button onclick="fetchByLink()">抓取此消息</button><span id="tgLinkResult" class="muted" style="margin-left:10px"></span></div>
+    </div>
+
+    <div class="card" id="tgPreviewCard" style="display:none"><h3>抓取预览 <span class="muted" style="font-size:13px;font-weight:normal">确认无误后点击发布</span></h3>
+      <div id="tgPreviewContent"></div>
+      <div class="ops" style="margin-top:14px"><button onclick="confirmTelegramPublish()">确认发布</button><button class="ghost" onclick="cancelTelegramPreview()">取消</button></div>
     </div>
 
     <div class="card"><h3>标签映射规则</h3>
@@ -856,15 +861,90 @@ window.saveTelegram=function(){
   stat('正在保存…','wait');
   writeFile('data/config.json',CONFIG,cfgSha,'保存Telegram配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderTelegram();stat('配置已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')});
 }
+var _tgPreview=null;
 window.fetchByLink=function(){
   if(!CONFIG.worker_url){alert('请先在站点配置填写Worker URL');return}
   var link=$('tg_link').value.trim();
   if(!link){alert('请输入消息链接');return}
   $('tgLinkResult').textContent='抓取中…';
+  $('tgPreviewCard').style.display='none';
   fetch(CONFIG.worker_url+'/api/telegram-fetch-link',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({link:link})}).then(function(r){return r.json()}).then(function(d){
-    $('tgLinkResult').textContent=d.ok?('成功：'+(d.title||'已抓取')):('失败：'+d.message);
-    if(d.ok)loadAll();
+    if(d.ok&&d.preview){
+      _tgPreview=d;
+      $('tgLinkResult').textContent='抓取成功，请确认预览';
+      renderTgPreview(d);
+    }else{
+      $('tgLinkResult').textContent='失败：'+(d.message||d.error||'未知错误');
+      if(d.text)$('tgLinkResult').textContent+='（原文：'+d.text.slice(0,50)+'…）';
+    }
   }).catch(function(e){$('tgLinkResult').textContent='请求失败：'+e.message});
+}
+function renderTgPreview(d){
+  var p=d.parsed;
+  var maps=(d.tag_maps_applied||[]).map(function(m){
+    var typeName={tag:'自定义标签',salary:'薪资',location:'地点',contact:'个人联系方式',contact2:'双向联系',contact3:'个人频道',category:'一级分类',subcategory:'二级分类',subcategory2:'三级分类'}[m.type]||m.type;
+    return '<tr><td>#'+esc(m.tag)+'</td><td>'+typeName+'</td><td>'+esc(m.value||m.tag)+'</td></tr>';
+  }).join('')||'<tr><td colspan="3" class="muted">无映射规则匹配</td></tr>';
+  var html='<div class="row"><div style="flex:1">'+
+    '<h4 style="margin:0 0 8px">解析结果</h4>'+
+    '<table class="form-table"><tbody>'+
+    '<tr><td style="width:100px"><b>标题</b></td><td><input id="pv_title" value="'+esc(p.title)+'"></td></tr>'+
+    '<tr><td><b>描述</b></td><td><textarea id="pv_desc" rows="3">'+esc(p.description||'')+'</textarea></td></tr>'+
+    '<tr><td><b>薪资</b></td><td><input id="pv_salary" value="'+esc(p.salary||'')+'"></td></tr>'+
+    '<tr><td><b>地点</b></td><td><input id="pv_location" value="'+esc(p.location||'')+'"></td></tr>'+
+    '<tr><td><b>个人联系</b></td><td><input id="pv_contact" value="'+esc(p.contact||'')+'"></td></tr>'+
+    '<tr><td><b>双向联系</b></td><td><input id="pv_contact2" value="'+esc(p.contact2||'')+'"></td></tr>'+
+    '<tr><td><b>个人频道</b></td><td><input id="pv_contact3" value="'+esc(p.contact3||'')+'"></td></tr>'+
+    '<tr><td><b>标签</b></td><td><input id="pv_tags" value="'+esc((p.tags||[]).join(','))+'"></td></tr>'+
+    '<tr><td><b>一级分类</b></td><td><input id="pv_category" value="'+esc(p.category||'')+'"></td></tr>'+
+    '<tr><td><b>二级分类</b></td><td><input id="pv_subcategory" value="'+esc(p.subcategory||'')+'"></td></tr>'+
+    '<tr><td><b>三级分类</b></td><td><input id="pv_subcategory2" value="'+esc(p.subcategory2||'')+'"></td></tr>'+
+    '</tbody></table></div>'+
+    '<div style="width:280px"><h4 style="margin:0 0 8px">图片预览</h4>'+
+    (d.image?'<img src="'+esc(d.image)+'" style="width:100%;border-radius:8px">':'<p class="muted">无图片</p>')+
+    '<h4 style="margin:14px 0 8px">原始消息</h4><pre style="background:#f6f8fa;padding:10px;border-radius:8px;font-size:12px;white-space:pre-wrap;max-height:200px;overflow:auto">'+esc(d.original_text||'')+'</pre></div></div>'+
+    '<h4 style="margin:14px 0 8px">标签映射规则匹配</h4><table class="form-table"><thead><tr><th>抓取标签</th><th>映射类型</th><th>映射值</th></tr></thead><tbody>'+maps+'</tbody></table>';
+  $('tgPreviewContent').innerHTML=html;
+  $('tgPreviewCard').style.display='block';
+  $('tgPreviewCard').scrollIntoView({behavior:'smooth'});
+}
+window.confirmTelegramPublish=function(){
+  if(!_tgPreview){return}
+  var p=_tgPreview.parsed;
+  var job={
+    title:$('pv_title').value.trim(),
+    description:$('pv_desc').value,
+    salary:$('pv_salary').value.trim(),
+    location:$('pv_location').value.trim(),
+    contact:$('pv_contact').value.trim(),
+    contact2:$('pv_contact2').value.trim(),
+    contact3:$('pv_contact3').value.trim(),
+    tags:$('pv_tags').value.split(/[,，]/).map(function(t){return t.trim()}).filter(Boolean),
+    category:$('pv_category').value.trim(),
+    subcategory:$('pv_subcategory').value.trim(),
+    subcategory2:$('pv_subcategory2').value.trim(),
+    image:_tgPreview.image||'',
+    status:(CONFIG.telegram&&CONFIG.telegram.default_status==='approved')?'approved':'pending',
+  };
+  if(!job.title){alert('标题不能为空');return}
+  stat('正在发布…','wait');
+  fetch(CONFIG.worker_url+'/api/telegram-confirm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({job:job,channel:_tgPreview.channel,message_id:_tgPreview.message_id})}).then(function(r){return r.json()}).then(function(d){
+    if(d.ok){
+      stat('发布成功','ok');
+      $('tgPreviewCard').style.display='none';
+      $('tgLinkResult').textContent='发布成功';
+      $('tg_link').value='';
+      _tgPreview=null;
+      loadAll();
+    }else{
+      stat('发布失败：'+(d.message||d.error),'err');
+    }
+  }).catch(function(e){stat('发布失败：'+e.message,'err')});
+}
+window.cancelTelegramPreview=function(){
+  $('tgPreviewCard').style.display='none';
+  _tgPreview=null;
+  $('tgLinkResult').textContent='已取消';
 }
 window.testTelegram=function(){
   if(!CONFIG.worker_url){alert('请先在站点配置填写Worker URL');return}
