@@ -4,26 +4,63 @@
   "worker_url": "https://ndx.8851366.workers.dev",
   "telegram": {
     "enabled": true,
-    "bot_token": "7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs",
-    "channel": "@hnwdhlgk",
-    "default_category": "personal",
-    "default_status": "approved",
     "tag_maps": [],
     "channels": [
       {
         "bot_token": "7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs",
         "channel": "@hnwdhlgk",
         "default_category": "personal",
-        "default_status": "approved",
-        "tag_maps": [],
-        "enabled": true
+        "default_status": "pending",
+        "enabled": true,
+        "tag_maps": []
       }
-    ]
+    ],
+    "ocr_api_key": "K84664811188957"
   },
   "on_duty": {
     "enabled": true,
     "channel": "@hnwdhldh"
   },
   "background_image": "",
-  "official_links": []
+  "official_links": [],
+  "social_links": [
+    {
+      "name": "Telegram",
+      "url": {
+        "enabled": true,
+        "tag_maps": [],
+        "channels": [
+          {
+            "bot_token": "7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs",
+            "channel": "@hnwdhlgk",
+            "default_category": "personal",
+            "default_status": "pending",
+            "enabled": true,
+            "tag_maps": []
+          }
+        ],
+        "ocr_api_key": "K84664811188957"
+      },
+      "icon": "",
+      "color": "#0088cc"
+    }
+  ],
+  "link_rules": [
+    {
+      "char": "@",
+      "prefix": "https://t.me/"
+    }
+  ],
+  "hero_buttons": [
+    {
+      "text": "浏览兼职",
+      "url": "#jobSection",
+      "type": "primary"
+    },
+    {
+      "text": "了解平台",
+      "url": "#aboutSection",
+      "type": "outline"
+    }
+  ]
 }
