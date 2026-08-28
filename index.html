@@ -25,7 +25,12 @@
 /* 比例条 */
 .pie-wrap{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap;margin:10px 0}.pie{width:170px;height:170px;border-radius:50%;flex-shrink:0;box-shadow:0 2px 8px #0001}.legend{flex:1;min-width:180px;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:4px 12px}.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;padding:2px 0}.legend-item .dot{width:11px;height:11px;border-radius:3px;flex-shrink:0}.legend-item .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.legend-item .num{color:var(--muted);font-size:11px;flex-shrink:0}
 /* 兼职卡片 */
-.jobs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.job{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;transition:.15s}.job:hover{box-shadow:0 6px 20px #143c6415;transform:translateY(-2px)}.job-img{width:100%;aspect-ratio:3/4;height:auto;object-fit:cover;border-radius:10px;margin-bottom:10px;display:block;background:#eef2f7}.job .cats{margin-bottom:6px}.job .tag{color:var(--blue);background:#eef5ff;border-radius:20px;padding:3px 9px;font-size:12px;margin-right:5px}.job .tag.sub{background:#f0f4ff;color:#3949ab}.job .tag.sub2{background:#f5f0ff;color:#7b1fa2}.job h3{margin:6px 0;font-size:16px}.job .meta{color:var(--muted);font-size:13px}.job .salary{color:var(--blue);font-weight:bold;margin:5px 0}.job .jtags{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}.job .jtag{background:#eef5ff;color:var(--blue);border-radius:20px;padding:2px 8px;font-size:11px;cursor:pointer}.job .jtag.active{background:var(--blue);color:#fff}.job p{color:#4a6080;font-size:13px;line-height:1.6;margin:6px 0}.job .contact{font-size:13px}.job .contact a{color:var(--blue2);text-decoration:none}.job .views{position:absolute;bottom:10px;right:14px;font-size:12px;color:var(--muted)}.job{position:relative;cursor:pointer}.empty{grid-column:1/-1;background:#fff;padding:40px;text-align:center;color:var(--muted);border-radius:14px}
+.jobs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.job{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;transition:.15s}.job:hover{box-shadow:0 6px 20px #143c6415;transform:translateY(-2px)}.job-img{width:100%;aspect-ratio:3/4;height:auto;object-fit:cover;border-radius:10px;margin-bottom:10px;display:block;background:#eef2f7}.job .cats{margin-bottom:6px}.job .tag{color:var(--blue);background:#eef5ff;border-radius:20px;padding:3px 9px;font-size:12px;margin-right:5px}.job .tag.sub{background:#f0f4ff;color:#3949ab}.job .tag.sub2{background:#f5f0ff;color:#7b1fa2}.job h3{margin:5px 0;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.job .meta{color:var(--muted);font-size:13px}.job .salary{color:var(--blue);font-weight:bold;margin:5px 0}.job .jtags{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}.job .jtag{background:#eef5ff;color:var(--blue);border-radius:20px;padding:2px 8px;font-size:11px;cursor:pointer}.job .jtag.active{background:var(--blue);color:#fff}.job p{color:#4a6080;font-size:12px;line-height:1.5;margin:5px 0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.job .contact{font-size:13px}.job .contact a{color:var(--blue2);text-decoration:none}.job .views{position:absolute;bottom:10px;right:14px;font-size:12px;color:var(--muted)}.job{position:relative;cursor:pointer}.empty{grid-column:1/-1;background:#fff;padding:40px;text-align:center;color:var(--muted);border-radius:14px}
+.pagination{display:flex;justify-content:center;align-items:center;gap:10px;margin-top:20px;flex-wrap:wrap}
+.pagination button{border:1px solid var(--line);background:#fff;color:var(--text);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:14px}
+.pagination button:hover:not(:disabled){border-color:var(--blue);color:var(--blue)}
+.pagination button:disabled{opacity:.4;cursor:not-allowed}
+.pagination .page-info{color:var(--muted);font-size:13px}
 /* 分类图片卡片 */
 .cat-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}.cat-card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;text-align:left;font:inherit;transition:.15s}.cat-card:hover{box-shadow:0 6px 20px #143c6415}.cat-card.active{outline:3px solid #d6e7ff}.cat-card img{width:100%;height:100px;object-fit:cover;display:block}.cat-card .cc-body{padding:12px}.cat-card h3{margin:0 0 4px;font-size:15px}.cat-card p{margin:0;color:var(--muted);font-size:12px}
 /* 社交 */
@@ -62,7 +67,10 @@ footer{text-align:center;color:#8a99a9;font-size:12px;padding:30px 0 45px}
   .hero-logo{width:120px;height:120px}.hero-logo .hu{font-size:32px}
   .hero h1{font-size:28px}
   .about{grid-template-columns:1fr;padding:20px}
-  .jobs{grid-template-columns:1fr;gap:12px}
+  .jobs{grid-template-columns:repeat(2,1fr);gap:10px}
+  .job{padding:10px}
+  .job h3{font-size:13px}
+  .job p{font-size:11px;-webkit-line-clamp:2}
   .cat-cards{grid-template-columns:repeat(2,1fr);gap:10px}
   .cat-card img{height:80px}
   .social-grid{grid-template-columns:1fr}
@@ -387,6 +395,9 @@ function toggleTag(t){
 }
 function clearTags(){activeTags=[];renderAll()}
 function renderRatios(){document.getElementById("ratioWrap").innerHTML=""}
+let currentPage=1;
+const PAGE_SIZE=4;
+window.changePage=function(p){currentPage=p;renderJobs();var el=document.getElementById('listTitle');if(el)window.scrollTo({top:el.offsetTop-20,behavior:'smooth'});}
 function renderJobs(){
   const list=filteredJobs();
   let title="最新信息";
@@ -394,7 +405,13 @@ function renderJobs(){
   if(activeTags.length)title+=" · #"+activeTags.join(" #");
   document.getElementById("listTitle").textContent=title;
   document.getElementById("resultCnt").textContent=list.length+" 条";
-  document.getElementById("jobs").innerHTML=list.length?list.map(j=>`<article class="job" onclick="viewJob('${esc(j.id)}')">${j.image?(function(){var il=j.image_link;if(!il&&j.telegram_channel&&j.telegram_msg_id){il="https://t.me/"+j.telegram_channel+"/"+j.telegram_msg_id+"?single"}return il?`<a href="${esc(il)}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy"></a>`:`<img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy">`})():""}<div class="cats"><span class="tag">${esc(catName(j.category)||"兼职")}</span>${j.subcategory?`<span class="tag sub">${esc(subName(j.category,j.subcategory))}</span>`:""}${j.subcategory2?`<span class="tag sub2">${esc(sub2Name(j.category,j.subcategory,j.subcategory2))}</span>`:""}</div><h3>${esc(j.title)}</h3><div class="meta">${esc(j.location||"")}${j.time?" · "+esc(j.time):""}</div>${j.salary?`<div class="salary">${esc(j.salary)}</div>`:""}<p>${linkify(j.description||"")}</p>${renderContacts(j)}<div class="views">👁 ${j.views||0}</div></article>`).join(""):'<div class="empty">暂无兼职信息</div>';
+  var totalPages=Math.max(1,Math.ceil(list.length/PAGE_SIZE));
+  if(currentPage>totalPages)currentPage=totalPages;
+  var start=(currentPage-1)*PAGE_SIZE;
+  var pageList=list.slice(start,start+PAGE_SIZE);
+  var pagHtml="";
+  if(list.length>PAGE_SIZE){pagHtml='<div class="pagination"><button onclick="changePage('+(currentPage-1)+')" '+(currentPage<=1?'disabled':'')+'>上一页</button><span class="page-info">第 '+currentPage+' / '+totalPages+' 页</span><button onclick="changePage('+(currentPage+1)+')" '+(currentPage>=totalPages?'disabled':'')+'>下一页</button></div>';}
+  document.getElementById("jobs").innerHTML=(pageList.length?pageList.map(j=>`<article class="job" onclick="viewJob('${esc(j.id)}')">${j.image?(function(){var il=j.image_link;if(!il&&j.telegram_channel&&j.telegram_msg_id){il="https://t.me/"+j.telegram_channel+"/"+j.telegram_msg_id+"?single"}return il?`<a href="${esc(il)}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy"></a>`:`<img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy">`})():""}<div class="cats"><span class="tag">${esc(catName(j.category)||"兼职")}</span>${j.subcategory?`<span class="tag sub">${esc(subName(j.category,j.subcategory))}</span>`:""}${j.subcategory2?`<span class="tag sub2">${esc(sub2Name(j.category,j.subcategory,j.subcategory2))}</span>`:""}</div><h3>${esc(j.title)}</h3><div class="meta">${esc(j.location||"")}${j.time?" · "+esc(j.time):""}</div>${j.salary?`<div class="salary">${esc(j.salary)}</div>`:""}<p>${linkify(j.description||"")}</p>${renderContacts(j)}<div class="views">👁 ${j.views||0}</div></article>`).join(""):'<div class="empty">暂无兼职信息</div>')+pagHtml;
 }
 
 function renderContacts(j){
