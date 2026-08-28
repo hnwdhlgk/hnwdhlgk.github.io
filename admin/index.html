@@ -309,6 +309,14 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <div class="ops"><button onclick="saveTelegram()">保存设置</button><button class="ghost" onclick="testTelegram()">测试连接</button><button class="ghost" onclick="manualFetchTelegram()">立即抓取</button><span id="tgFetchResult" class="muted" style="margin-left:10px"></span></div>
     </div>
 
+    <div class="card"><h3>今日在岗老师</h3>
+      <p class="muted">监控频道最新消息中的按钮，自动显示在主页「今日在岗老师」区域。</p>
+      <div class="row"><div><label>启用</label><select id="od_enabled"><option value="false">关闭</option><option value="true">开启</option></select></div>
+      <div><label>监控频道</label><input id="od_channel" placeholder="@hnwdhldh"></div></div>
+      <label>Bot Token（留空则用上面的Telegram Bot Token）</label><input id="od_bot_token" placeholder="123456:ABC-DEF...">
+      <div class="ops"><button onclick="saveOnDuty()">保存设置</button><button class="ghost" onclick="fetchOnDutyNow()">立即抓取</button><span id="odResult" class="muted" style="margin-left:10px"></span></div>
+    </div>
+
     <div class="card"><h3>抓取指定链接</h3>
       <p class="muted">输入Telegram消息链接（如 https://t.me/hnwdhlgk/123），可抓取单条历史消息。频道需为公开频道。</p>
       <label>消息链接</label><input id="tg_link" placeholder="https://t.me/频道名/消息ID">
@@ -841,6 +849,10 @@ window.saveConfig=function(){
 
 function renderTelegram(){
     renderTgMap();
+  var od=CONFIG.on_duty||{};
+  $('od_enabled').value=od.enabled?'true':'false';
+  $('od_channel').value=od.channel||'';
+  $('od_bot_token').value=od.bot_token||'';
 }
 function renderTgMap(){
   var maps=(CONFIG.telegram&&CONFIG.telegram.tag_maps)||[];
@@ -879,10 +891,18 @@ window.addTgMap=function(){
   CONFIG.telegram.tag_maps=CONFIG.telegram.tag_maps||[];
   CONFIG.telegram.tag_maps.push({tag:'',type:'tag',value:''});
   renderTgMap();
+  var od=CONFIG.on_duty||{};
+  $('od_enabled').value=od.enabled?'true':'false';
+  $('od_channel').value=od.channel||'';
+  $('od_bot_token').value=od.bot_token||'';
 }
 window.delTgMap=function(i){
   CONFIG.telegram.tag_maps.splice(i,1);
   renderTgMap();
+  var od=CONFIG.on_duty||{};
+  $('od_enabled').value=od.enabled?'true':'false';
+  $('od_channel').value=od.channel||'';
+  $('od_bot_token').value=od.bot_token||'';
 }
 window.saveTelegram=function(){
   CONFIG.telegram=CONFIG.telegram||{};
@@ -909,6 +929,21 @@ window.saveTelegram=function(){
   writeFile('data/config.json',CONFIG,cfgSha,'保存Telegram配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderTelegram();stat('配置已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')});
 }
 var _tgPreview=null;
+window.saveOnDuty=function(){
+  CONFIG.on_duty=CONFIG.on_duty||{};
+  CONFIG.on_duty.enabled=$('od_enabled').value==='true';
+  CONFIG.on_duty.channel=$('od_channel').value.trim();
+  CONFIG.on_duty.bot_token=$('od_bot_token').value.trim();
+  stat('正在保存…','wait');
+  writeFile('data/config.json',CONFIG,cfgSha,'保存今日在岗老师配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderTelegram();stat('配置已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')});
+}
+window.fetchOnDutyNow=function(){
+  if(!CONFIG.worker_url){alert('请先在站点配置填写Worker URL');return}
+  $('odResult').textContent='抓取中…';
+  fetch(CONFIG.worker_url+'/api/fetch-on-duty',{method:'POST'}).then(function(r){return r.json()}).then(function(d){
+    $('odResult').textContent=d.ok?('成功：'+d.count+'个按钮'):('失败：'+(d.message||d.error));
+  }).catch(function(e){$('odResult').textContent='请求失败：'+e.message});
+}
 window.fetchByLink=function(){
   if(!CONFIG.worker_url){alert('请先在站点配置填写Worker URL');return}
   var link=$('tg_link').value.trim();
