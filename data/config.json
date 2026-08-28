@@ -19,7 +19,14 @@
   },
   "on_duty": {
     "enabled": true,
-    "channel": "@hnwdhldh"
+    "channel": "@hnwdhldh",
+    "channels": [
+      {
+        "channel": "@hnwdhldh",
+        "bot_token": "",
+        "enabled": true
+      }
+    ]
   },
   "background_image": "",
   "official_links": [],
