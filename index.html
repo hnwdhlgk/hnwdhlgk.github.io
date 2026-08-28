@@ -948,29 +948,201 @@ window.adminSaveConfig=async function(){
   alert('配置已保存');
 };
 async function renderAdminTelegram(){
-  document.getElementById("adminPanels").innerHTML=`
-    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
-      <button class="btn-primary" onclick="adminTgFetch()">立即抓取兼职</button>
-      <button class="btn-ghost" onclick="adminTgFetchOnDuty()">抓取在岗老师</button>
-      <button class="btn-ghost" onclick="adminTgTest()">测试连接</button>
-    </div>
-    <div id="tgResult" class="notice" style="display:none"></div>
-    <p style="color:var(--muted);font-size:13px">提示：Telegram配置（Bot Token、频道、标签映射等）请使用完整后台 admin/</p>`;
+  // 加载当前配置
+  let cfg={};
+  try{
+    const r=await wApi("/api/admin/config",{username:me});
+    cfg=r.config||{};
+  }catch(e){cfg={};}
+  const tg=cfg.telegram||{};
+  // 兼容旧配置
+  let channels=[];
+  if(Array.isArray(tg.channels)&&tg.channels.length>0){
+    channels=tg.channels;
+  }else if(tg.bot_token&&tg.channel){
+    channels=[{bot_token:tg.bot_token,channel:tg.channel,default_category:tg.default_category||"personal",default_status:tg.default_status||"pending",enabled:true}];
+  }
+  window._adminTgChannels=JSON.parse(JSON.stringify(channels));
+  window._adminTgEnabled=tg.enabled!==false;
+
+  let html=`<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+    <button class="btn-primary" onclick="adminTgFetch()">立即抓取兼职</button>
+    <button class="btn-ghost" onclick="adminTgFetchOnDuty()">抓取在岗老师</button>
+    <button class="btn-ghost" onclick="adminTgTest()">测试连接</button>
+    <label style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:14px">
+      <input type="checkbox" id="tgEnabled" ${window._adminTgEnabled?"checked":""}> 启用自动抓取
+    </label>
+  </div>
+  <div id="tgResult" class="notice" style="display:none"></div>
+  <h4 style="margin:16px 0 10px">多频道配置</h4>
+  <div id="tgChannelsList"></div>
+  <div style="margin:12px 0;display:flex;gap:10px">
+    <button class="btn-ghost" onclick="adminAddTgChannel()">+ 添加频道</button>
+    <button class="btn-primary" onclick="adminSaveTgConfig()">保存配置</button>
+  </div>
+  <p style="color:var(--muted);font-size:12px;margin-top:8px">每个频道使用独立的Bot Token，Bot需设为对应频道的管理员。标签映射规则请在完整后台 admin/ 配置。</p>`;
+  document.getElementById("adminPanels").innerHTML=html;
+  adminRenderTgChannels();
 }
+function adminRenderTgChannels(){
+  const list=document.getElementById("tgChannelsList");
+  const channels=window._adminTgChannels||[];
+  if(!channels.length){
+    list.innerHTML='<p style="color:var(--muted);font-size:13px">暂无频道，点击「添加频道」配置</p>';
+    return;
+  }
+  list.innerHTML=channels.map((ch,i)=>`
+    <div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:12px;background:#f8fafc">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <strong style="color:#1e293b">频道 ${i+1}${ch.channel?'：'+esc(ch.channel):'（未配置）'}</strong>
+        <button class="danger small" onclick="adminDelTgChannel(${i})" style="background:#b3261e;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer">删除</button>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
+          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Bot Token</label>
+          <input id="tgc_token_${i}" value="${esc(ch.bot_token||'')}" placeholder="123456:ABC-DEF..." style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px">
+        </div>
+        <div style="width:160px">
+          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">频道用户名</label>
+          <input id="tgc_channel_${i}" value="${esc(ch.channel||'')}" placeholder="@hainanguanli" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px">
+        </div>
+        <div style="width:130px">
+          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">默认分类</label>
+          <input id="tgc_category_${i}" value="${esc(ch.default_category||'personal')}" placeholder="personal" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px">
+        </div>
+        <div style="width:110px">
+          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">发布状态</label>
+          <select id="tgc_status_${i}" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px">
+            <option value="pending"${ch.default_status==='pending'?' selected':''}>待审核</option>
+            <option value="approved"${ch.default_status==='approved'?' selected':''}>直接通过</option>
+          </select>
+        </div>
+        <div style="width:80px">
+          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">启用</label>
+          <select id="tgc_enabled_${i}" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px">
+            <option value="true"${ch.enabled!==false?' selected':''}>开启</option>
+            <option value="false"${ch.enabled===false?' selected':''}>关闭</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+window.adminAddTgChannel=function(){
+  window._adminTgChannels.push({bot_token:"",channel:"",default_category:"personal",default_status:"pending",enabled:true});
+  adminRenderTgChannels();
+};
+window.adminDelTgChannel=function(i){
+  if(!confirm("确定删除此频道配置？"))return;
+  window._adminTgChannels.splice(i,1);
+  adminRenderTgChannels();
+};
+window.adminSaveTgConfig=async function(){
+  const channels=[];
+  (window._adminTgChannels||[]).forEach((ch,i)=>{
+    const tokenEl=document.getElementById("tgc_token_"+i);
+    if(!tokenEl)return;
+    channels.push({
+      bot_token:tokenEl.value.trim(),
+      channel:document.getElementById("tgc_channel_"+i).value.trim(),
+      default_category:document.getElementById("tgc_category_"+i).value.trim(),
+      default_status:document.getElementById("tgc_status_"+i).value,
+      enabled:document.getElementById("tgc_enabled_"+i).value==="true"
+    });
+  });
+  const enabled=document.getElementById("tgEnabled").checked;
+  // 读取当前配置，保留其他字段
+  let cfg={};
+  try{
+    const r=await wApi("/api/admin/config",{username:me});
+    cfg=r.config||{};
+  }catch(e){cfg={};}
+  cfg.telegram=cfg.telegram||{};
+  cfg.telegram.enabled=enabled;
+  cfg.telegram.channels=channels;
+  // 清理旧字段
+  delete cfg.telegram.bot_token;
+  delete cfg.telegram.channel;
+  delete cfg.telegram.default_category;
+  delete cfg.telegram.default_status;
+  try{
+    await wApi("/api/admin/config",{username:me,config:cfg});
+    const el=document.getElementById("tgResult");
+    el.style.display="";
+    el.textContent="✓ 配置已保存（"+channels.length+"个频道）";
+    el.style.color="#16a34a";
+  }catch(e){
+    const el=document.getElementById("tgResult");
+    el.style.display="";
+    el.textContent="✗ 保存失败："+e.message;
+    el.style.color="#dc2626";
+  }
+};
 window.adminTgFetch=async function(){
-  const r=await wApi("/api/telegram-fetch",{});
-  document.getElementById('tgResult').style.display='';
-  document.getElementById('tgResult').textContent=JSON.stringify(r);
+  const el=document.getElementById('tgResult');
+  el.style.display="";
+  el.style.color="var(--muted)";
+  el.textContent="抓取中…";
+  try{
+    const r=await wApi("/api/telegram-fetch",{});
+    if(r.ok){
+      let detail="";
+      if(r.details&&r.details.length){
+        detail=r.details.map(x=>(x.channel||'?')+":"+(x.new||0)+"条").join(", ");
+      }
+      el.style.color="#16a34a";
+      el.textContent="✓ 成功："+(r.channels||1)+"个频道，新增"+(r.new||0)+"条"+(detail?"（"+detail+"）":"");
+    }else{
+      el.style.color="#dc2626";
+      el.textContent="✗ 失败："+(r.message||r.error||"未知错误");
+    }
+  }catch(e){
+    el.style.color="#dc2626";
+    el.textContent="✗ 请求失败："+e.message;
+  }
 };
 window.adminTgFetchOnDuty=async function(){
-  const r=await wApi("/api/fetch-on-duty",{});
-  document.getElementById('tgResult').style.display='';
-  document.getElementById('tgResult').textContent=JSON.stringify(r);
+  const el=document.getElementById('tgResult');
+  el.style.display="";
+  el.style.color="var(--muted)";
+  el.textContent="抓取中…";
+  try{
+    const r=await wApi("/api/fetch-on-duty",{});
+    if(r.ok){
+      let detail="";
+      if(r.details&&r.details.length){
+        detail=r.details.map(x=>(x.channel||'?')+":"+(x.count||0)+"个").join(", ");
+      }
+      el.style.color="#16a34a";
+      el.textContent="✓ 成功："+(r.channels||1)+"个频道，共"+(r.count||0)+"个按钮"+(detail?"（"+detail+"）":"");
+    }else{
+      el.style.color="#dc2626";
+      el.textContent="✗ 失败："+(r.message||r.error||"未知错误");
+    }
+  }catch(e){
+    el.style.color="#dc2626";
+    el.textContent="✗ 请求失败："+e.message;
+  }
 };
 window.adminTgTest=async function(){
-  const r=await wApi("/api/telegram-test",{});
-  document.getElementById('tgResult').style.display='';
-  document.getElementById('tgResult').textContent=JSON.stringify(r);
+  const el=document.getElementById('tgResult');
+  el.style.display="";
+  el.style.color="var(--muted)";
+  el.textContent="测试中…";
+  try{
+    const r=await wApi("/api/telegram-test",{});
+    if(r.ok&&r.channels){
+      const msgs=r.channels.map(c=>(c.channel||'?')+":"+(c.bot_ok?"Bot✓":"Bot✗")+(c.channel_ok?" 频道✓":" 频道✗"));
+      el.style.color="#16a34a";
+      el.textContent="✓ "+msgs.join(" | ");
+    }else{
+      el.style.color="#dc2626";
+      el.textContent="✗ 失败："+(r.error||JSON.stringify(r));
+    }
+  }catch(e){
+    el.style.color="#dc2626";
+    el.textContent="✗ 请求失败："+e.message;
+  }
 };
 async function renderAdminLogs(){
   try{
