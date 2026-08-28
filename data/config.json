@@ -93,17 +93,17 @@
     {
       "text": "了解平台",
       "url": "#aboutSection",
-      "type": "outline"
+      "type": "primary"
     },
     {
       "text": "加入我们",
       "url": "https://t.me/hainanxueyuan",
-      "type": "outline"
+      "type": "primary"
     },
     {
       "text": "联系我们",
       "url": "https://t.me/hainanguanlibot",
-      "type": "outline"
+      "type": "primary"
     }
   ]
 }
