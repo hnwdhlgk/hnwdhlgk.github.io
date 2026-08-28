@@ -64,6 +64,15 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
   .badge{font-size:10px;padding:2px 5px}
   .preview-img{max-width:100%;max-height:160px}
 }
+
+.rte-wrap{border:1px solid #d6e2ed;border-radius:9px;margin:6px 0 12px;background:#fff}
+.rte-toolbar{display:flex;flex-wrap:wrap;gap:2px;padding:6px 8px;border-bottom:1px solid #e8eef4;background:#f8fafc;border-radius:9px 9px 0 0}
+.rte-toolbar button{border:1px solid transparent;background:transparent;padding:5px 9px;border-radius:5px;cursor:pointer;font-size:14px;min-width:30px;color:#333}
+.rte-toolbar button:hover{background:#e3f2fd;border-color:#90caf9}
+.rte-toolbar .rte-sep{width:1px;background:#ddd;margin:3px 4px}
+.rte-editor{min-height:90px;padding:10px;outline:none;font:inherit;line-height:1.6}
+.rte-editor:empty:before{content:attr(data-placeholder);color:#aaa}
+.rte-editor a{color:#1565c0;text-decoration:underline}
 </style>
 </head>
 <body>
@@ -663,13 +672,47 @@ function renderJobs(){
       '</tr>';
   }).join('')+'</tbody></table>':'<p class="muted">暂无'+(titles[currentFilter]||'')+'数据</p>';
 }
+// 富文本编辑器
+function initRTE(editorId, toolbarId){
+  var ed=$(editorId),tb=$(toolbarId);
+  if(!ed||!tb)return;
+  var btns=[
+    {cmd:"bold",icon:"B",title:"加粗"},
+    {cmd:"italic",icon:"I",title:"斜体"},
+    {cmd:"underline",icon:"U",title:"下划线"},
+    {cmd:"strikeThrough",icon:"S",title:"删除线"},
+    {sep:1},
+    {cmd:"insertUnorderedList",icon:"☰",title:"无序列表"},
+    {cmd:"insertOrderedList",icon:"1.",title:"有序列表"},
+    {sep:1},
+    {cmd:"createLink",icon:"🔗",title:"插入链接",prompt:true},
+    {cmd:"removeFormat",icon:"✕",title:"清除格式"},
+    {sep:1},
+    {cmd:"undo",icon:"↶",title:"撤销"},
+    {cmd:"redo",icon:"↷",title:"重做"},
+  ];
+  tb.innerHTML="";
+  btns.forEach(function(b){
+    if(b.sep){var sp=document.createElement("span");sp.className="rte-sep";tb.appendChild(sp);return}
+    var btn=document.createElement("button");
+    btn.type="button";btn.innerHTML=b.icon;btn.title=b.title;
+    btn.onmousedown=function(e){e.preventDefault()};
+    btn.onclick=function(){
+      if(b.prompt){var url=prompt("请输入链接地址","https://");if(url){document.execCommand("createLink",false,url)}}
+      else{document.execCommand(b.cmd,false,null)}
+      ed.focus();
+    };
+    tb.appendChild(btn);
+  });
+}
+function getRTE(id){var e=$(id);return e?e.innerHTML:""}
 function renderJobEdit(j){
   return '<div class="job-item"><h4>编辑兼职</h4>'+
     '<label>标题</label><input id="ej_title" value="'+esc(j.title)+'">'+
     '<div class="row3"><div><label>一级分类</label><select id="ej_cat" onchange="fillSub2(\'ej_cat\',\'ej_sub\',\'ej_sub2\')"></select></div>'+
     '<div><label>二级分类</label><select id="ej_sub" onchange="fillSub3(\'ej_cat\',\'ej_sub\',\'ej_sub2\')"></select></div>'+
     '<div><label>三级分类</label><select id="ej_sub2"></select></div></div>'+
-    '<label>描述</label><textarea id="ej_desc">'+esc(j.description||'')+'</textarea>'+
+    '<label>描述</label><div class="rte-wrap"><div class="rte-toolbar" id="ej_rte_tb"></div><div class="rte-editor" id="ej_desc" contenteditable="true" data-placeholder="工作内容、要求等">'+(j.description||'')+'</div></div>'+
     '<div class="row"><div><label>薪资</label><input id="ej_salary" value="'+esc(j.salary||'')+'"></div><div><label>地点</label><input id="ej_loc" value="'+esc(j.location||'')+'"></div></div>'+
     '<label>个人联系方式</label><input id="ej_contact" value="'+esc(j.contact||'')+'">'+
     '<label>个人联系方式超链接</label><input id="ej_contactlink" value="'+esc(j.contact_link||'')+'">'+
@@ -720,7 +763,7 @@ window.uploadJobImg=function(input){
 }
 window.saveJob=function(id){
   var j=JOBS.find(function(x){return x.id===id});if(!j)return;
-  j.title=$('ej_title').value.trim()||j.title;j.description=$('ej_desc').value;j.category=$('ej_cat').value;j.subcategory=$('ej_sub').value;j.subcategory2=$('ej_sub2').value;j.salary=$('ej_salary').value;j.location=$('ej_loc').value;j.contact=$('ej_contact').value;j.contact_link=$('ej_contactlink').value.trim();j.contact2=$('ej_contact2').value;j.contact2_link=$('ej_contact2link').value.trim();j.contact3=$('ej_contact3').value;j.contact3_link=$('ej_contact3link').value.trim();j.tags=parseTags($('ej_tags').value);j.image=$('ej_image').value.trim();j.image_link=$('ej_imagelink').value.trim();
+  j.title=$('ej_title').value.trim()||j.title;j.description=getRTE('ej_desc');j.category=$('ej_cat').value;j.subcategory=$('ej_sub').value;j.subcategory2=$('ej_sub2').value;j.salary=$('ej_salary').value;j.location=$('ej_loc').value;j.contact=$('ej_contact').value;j.contact_link=$('ej_contactlink').value.trim();j.contact2=$('ej_contact2').value;j.contact2_link=$('ej_contact2link').value.trim();j.contact3=$('ej_contact3').value;j.contact3_link=$('ej_contact3link').value.trim();j.tags=parseTags($('ej_tags').value);j.image=$('ej_image').value.trim();j.image_link=$('ej_imagelink').value.trim();
   delete j.editing;delete j.isNew;
   stat('正在保存…','wait');writeFile('data/jobs.json',JOBS,jobSha,'更新兼职').then(function(){return readFile('data/jobs.json')}).then(function(d){JOBS=d.data;jobSha=d.sha;renderJobs();renderDashboard();stat('兼职已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
 }
@@ -889,7 +932,7 @@ function renderTgPreview(d){
     '<h4 style="margin:0 0 8px">解析结果</h4>'+
     '<table class="form-table"><tbody>'+
     '<tr><td style="width:100px"><b>标题</b></td><td><input id="pv_title" value="'+esc(p.title)+'"></td></tr>'+
-    '<tr><td><b>描述</b></td><td><textarea id="pv_desc" rows="3">'+esc(p.description||'')+'</textarea></td></tr>'+
+    '<tr><td><b>描述</b></td><td><div class="rte-wrap"><div class="rte-toolbar" id="pv_rte_tb"></div><div class="rte-editor" id="pv_desc" contenteditable="true" data-placeholder="工作内容、要求等">'+(p.description||'')+'</div></div></td></tr>'+
     '<tr><td><b>薪资</b></td><td><input id="pv_salary" value="'+esc(p.salary||'')+'"></td></tr>'+
     '<tr><td><b>地点</b></td><td><input id="pv_location" value="'+esc(p.location||'')+'"></td></tr>'+
     '<tr><td><b>个人联系</b></td><td><input id="pv_contact" value="'+esc(p.contact||'')+'"></td></tr>'+
@@ -908,7 +951,7 @@ function renderTgPreview(d){
       d.links.map(function(l){return '<tr><td>'+esc(l.text||l.url)+'</td><td><a href="'+esc(l.url)+'" target="_blank" style="color:#1565c0">'+esc(l.url)+'</a></td></tr>'}).join('')+
       '</tbody></table>':'<p class="muted">无超链接</p>')+
     '<h4 style="margin:14px 0 8px">标签映射规则匹配</h4><table class="form-table"><thead><tr><th>抓取标签</th><th>映射类型</th><th>映射值</th></tr></thead><tbody>'+maps+'</tbody></table>';
-  $('tgPreviewContent').innerHTML=html;
+  $('tgPreviewContent').innerHTML=html;initRTE('pv_desc','pv_rte_tb');
   $('tgPreviewCard').style.display='block';
   $('tgPreviewCard').scrollIntoView({behavior:'smooth'});
 }
@@ -917,7 +960,7 @@ window.confirmTelegramPublish=function(){
   var p=_tgPreview.parsed;
   var job={
     title:$('pv_title').value.trim(),
-    description:$('pv_desc').value,
+    description:getRTE('pv_desc'),
     salary:$('pv_salary').value.trim(),
     location:$('pv_location').value.trim(),
     contact:$('pv_contact').value.trim(),
