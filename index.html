@@ -195,6 +195,40 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:32px 0 40px;b
 .btn.ghost:hover,.card button.ghost:hover{border-color:var(--sea);color:var(--sea)}
 .btn.danger{background:#dc2626}
 .backbtn{background:#fff;border:1px solid var(--line);padding:9px 16px;border-radius:8px;color:var(--text2);font-size:14px;cursor:pointer;margin-bottom:16px;transition:.2s}
+
+/* 普通用户后台 */
+.user-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:16px;box-shadow:var(--shadow)}
+.user-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;gap:16px;flex-wrap:wrap}
+.user-card-header h2{margin:0;font-size:20px;font-weight:700;color:var(--sea)}
+.card-subtitle{color:var(--muted);font-size:13px;margin:4px 0 0}
+.btn-primary{padding:10px 22px;border:0;border-radius:10px;background:linear-gradient(135deg,var(--sea),var(--sea-light));color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:.25s;box-shadow:0 3px 10px rgba(12,74,110,.25)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(12,74,110,.35)}
+.btn-ghost{padding:10px 22px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--text2);font-size:14px;font-weight:600;cursor:pointer;transition:.2s}
+.btn-ghost:hover{border-color:var(--sea);color:var(--sea);background:var(--sea-bg)}
+.pub-form{border-top:1px solid var(--line);padding-top:20px;margin-top:8px}
+.form-section{display:flex;flex-direction:column;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:6px;flex:1}
+.form-group label{font-size:13px;font-weight:600;color:var(--text2)}
+.form-group .required{color:#dc2626}
+.form-group input,.form-group select{padding:11px 14px;border:1px solid var(--line);border-radius:10px;font-size:14px;font-family:inherit;transition:.2s;background:#fff}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--sea);box-shadow:0 0 0 3px var(--sea-bg)}
+.form-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.form-row .form-group:nth-child(1):nth-last-child(2){grid-template-columns:1fr 1fr}
+.upload-area{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.upload-btn{padding:10px 20px;background:var(--sea-bg);color:var(--sea);border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;transition:.2s;border:1px dashed var(--sea)}
+.upload-btn:hover{background:var(--sea);color:#fff}
+.upload-btn.has-file{background:var(--palm-light);color:var(--palm);border-color:var(--palm)}
+.upload-status{font-size:13px;color:var(--muted)}
+.preview-img{max-width:200px;max-height:200px;border-radius:12px;margin-top:10px;object-fit:cover;border:1px solid var(--line)}
+.form-actions{display:flex;gap:12px;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+.form-actions .btn-primary,.form-actions .btn-ghost{min-width:140px}
+@media(max-width:700px){
+  .form-row{grid-template-columns:1fr}
+  .user-card{padding:16px}
+  .user-card-header{flex-direction:column}
+  .form-actions{flex-direction:column}
+  .form-actions .btn-primary,.form-actions .btn-ghost{width:100%}
+}
 .backbtn:hover{border-color:var(--sea);color:var(--sea)}
 .row2,.row3{display:grid;gap:12px}
 .row2{grid-template-columns:1fr 1fr}
@@ -254,28 +288,112 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:32px 0 40px;b
 
 <div id="myView" style="display:none">
   <button class="backbtn" onclick="showPublic()">← 返回公开列表</button>
-  <div class="card"><h2>我的兼职后台</h2><p style="color:var(--muted);font-size:13px">发布后进入「待审核」，管理员审核通过后公开展示。</p><button onclick="togglePublish()">+ 发布兼职</button>
-    <div id="pubForm" style="display:none">
-      <label id="lb_title">标题 *</label><input id="mf_title">
-      <div class="row3"><div><label id="lb_cat">类别</label><select id="mf_cat" onchange="fillSub2('mf_cat','mf_sub','mf_sub2')"></select></div><div><label id="lb_sub">城市</label><select id="mf_sub" onchange="fillSub3('mf_cat','mf_sub','mf_sub2')"></select></div><div><label id="lb_sub2">区县</label><select id="mf_sub2"></select></div></div>
-      <label id="lb_desc">描述</label><div class="rte-wrap"><div class="rte-toolbar" id="mf_rte_tb"></div><div class="rte-editor" id="mf_desc" contenteditable="true" data-placeholder="工作内容、要求等"></div></div>
-      <div class="row2"><div><label id="lb_salary">薪资</label><input id="mf_salary" placeholder="如：150元/天"></div><div><label id="lb_loc">地点</label><input id="mf_loc"></div></div>
-      <label id="lb_contact">个人联系方式</label><input id="mf_contact">
-      <label id="lb_contact2">双向联系</label><input id="mf_contact2">
-      <label id="lb_contact3">个人频道</label><input id="mf_contact3">
-      <label id="lb_tags">自定义标签（逗号分隔）</label><input id="mf_tags">
-      <label id="lb_img">封面图片</label>
-      <div class="upload-row">
-        <input id="mf_img" type="file" accept="image/*" class="hidden-file">
-        <label for="mf_img" class="upload-btn" id="mf_imgBtn">选择图片上传</label>
-        <span id="mf_imgStatus" class="upload-status"></span>
+  
+  <div class="user-card">
+    <div class="user-card-header">
+      <div>
+        <h2>我的兼职后台</h2>
+        <p class="card-subtitle">发布后进入「待审核」，管理员审核通过后公开展示</p>
       </div>
-      <img id="mf_imgPrev" class="preview-img" style="display:none">
-      <div><button id="btn_submit" onclick="submitMine()">提交（等待审核）</button><button class="ghost" onclick="togglePublish(true)">取消</button></div>
+      <button class="btn-primary" onclick="togglePublish()" id="togglePubBtn">+ 发布兼职</button>
+    </div>
+    
+    <div id="pubForm" class="pub-form" style="display:none">
+      <div class="form-section">
+        <div class="form-group">
+          <label id="lb_title">标题 <span class="required">*</span></label>
+          <input id="mf_title" placeholder="请输入兼职标题">
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label id="lb_cat">类别</label>
+            <select id="mf_cat" onchange="fillSub2('mf_cat','mf_sub','mf_sub2')"></select>
+          </div>
+          <div class="form-group">
+            <label id="lb_sub">城市</label>
+            <select id="mf_sub" onchange="fillSub3('mf_cat','mf_sub','mf_sub2')"></select>
+          </div>
+          <div class="form-group">
+            <label id="lb_sub2">区县</label>
+            <select id="mf_sub2"></select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label id="lb_desc">描述</label>
+          <div class="rte-wrap">
+            <div class="rte-toolbar" id="mf_rte_tb"></div>
+            <div class="rte-editor" id="mf_desc" contenteditable="true" data-placeholder="工作内容、要求等"></div>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label id="lb_salary">薪资</label>
+            <input id="mf_salary" placeholder="如：150元/天">
+          </div>
+          <div class="form-group">
+            <label id="lb_loc">地点</label>
+            <input id="mf_loc" placeholder="如：海口市美兰区">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label id="lb_contact">个人联系方式</label>
+            <input id="mf_contact" placeholder="@username">
+          </div>
+          <div class="form-group">
+            <label id="lb_contact2">双向联系</label>
+            <input id="mf_contact2" placeholder="@username_bot">
+          </div>
+          <div class="form-group">
+            <label id="lb_contact3">个人频道</label>
+            <input id="mf_contact3" placeholder="@channel">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label id="lb_tags">自定义标签（逗号分隔）</label>
+          <input id="mf_tags" placeholder="如：嫩妹,丝袜,制服">
+        </div>
+        
+        <div class="form-group">
+          <label id="lb_img">封面图片</label>
+          <div class="upload-area">
+            <input id="mf_img" type="file" accept="image/*" class="hidden-file">
+            <label for="mf_img" class="upload-btn" id="mf_imgBtn">选择图片上传</label>
+            <span id="mf_imgStatus" class="upload-status"></span>
+          </div>
+          <img id="mf_imgPrev" class="preview-img" style="display:none">
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button class="btn-primary" id="btn_submit" onclick="submitMine()">提交（等待审核）</button>
+        <button class="btn-ghost" onclick="togglePublish(true)">取消</button>
+      </div>
     </div>
   </div>
-  <div class="card" id="adminPanel" style="display:none"><h2>审核管理</h2><p style="color:var(--muted);font-size:13px">管理员权限：审核待发布的兼职信息。</p><button onclick="loadPending()">刷新待审核</button><div id="pendingList" style="margin-top:10px"></div></div>
-  <div class="card"><h2>我发布的兼职</h2><div id="myJobs"></div></div>
+  
+  <div class="user-card" id="adminPanel" style="display:none">
+    <div class="user-card-header">
+      <div>
+        <h2>审核管理</h2>
+        <p class="card-subtitle">管理员权限：审核待发布的兼职信息</p>
+      </div>
+      <button class="btn-ghost" onclick="loadPending()">刷新待审核</button>
+    </div>
+    <div id="pendingList" style="margin-top:16px"></div>
+  </div>
+  
+  <div class="user-card">
+    <div class="user-card-header">
+      <h2>我发布的兼职</h2>
+    </div>
+    <div id="myJobs"></div>
+  </div>
 </div>
 </main>
   <section class="about" id="aboutSection" style="margin-top:30px"><div><h2 id="aboutTitle">让校园信息更容易找到</h2></div><div><p id="aboutText">海南大学兼职公开榜致力于为海南大学学子提供安全、可靠的兼职信息平台。所有信息均经审核，确保真实有效。</p></div></section>
