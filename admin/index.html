@@ -314,12 +314,11 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <div class="ops"><button class="ghost" onclick="addTgChannel()">+ 添加频道</button><button onclick="saveTelegram()">保存所有设置</button><button class="ghost" onclick="manualFetchTelegram()">立即抓取全部</button><span id="tgFetchResult" class="muted" style="margin-left:10px"></span></div>
     </div>
 
-    <div class="card"><h3>今日在岗老师</h3>
-      <p class="muted">监控频道最新消息中的按钮，自动显示在主页「今日在岗老师」区域。</p>
-      <div class="row"><div><label>启用</label><select id="od_enabled"><option value="false">关闭</option><option value="true">开启</option></select></div>
-      <div><label>监控频道</label><input id="od_channel" placeholder="@hnwdhldh"></div></div>
-      <label>Bot Token（留空则用上面的Telegram Bot Token）</label><input id="od_bot_token" placeholder="123456:ABC-DEF...">
-      <div class="ops"><button onclick="saveOnDuty()">保存设置</button><button class="ghost" onclick="fetchOnDutyNow()">立即抓取</button><span id="odResult" class="muted" style="margin-left:10px"></span></div>
+    <div class="card"><h3>今日在岗老师（多频道）</h3>
+      <p class="muted">监控多个频道最新消息中的按钮，自动显示在主页「今日在岗老师」区域。Bot需设为对应频道管理员。</p>
+      <div class="row"><div><label>启用</label><select id="od_enabled"><option value="false">关闭</option><option value="true">开启</option></select></div></div>
+      <div id="odChannelsList" style="margin:16px 0"></div>
+      <div class="ops"><button class="ghost" onclick="addOdChannel()">+ 添加频道</button><button onclick="saveOnDuty()">保存所有设置</button><button class="ghost" onclick="fetchOnDutyNow()">立即抓取全部</button><span id="odResult" class="muted" style="margin-left:10px"></span></div>
     </div>
 
     <div class="card"><h3>抓取指定链接</h3>
@@ -950,8 +949,11 @@ function renderTelegram(){
   renderTgChannels();
   var od=CONFIG.on_duty||{};
   $('od_enabled').value=od.enabled?'true':'false';
-  $('od_channel').value=od.channel||'';
-  $('od_bot_token').value=od.bot_token||'';
+  // 多频道：兼容旧配置
+  if(!od.channels&&od.channel){
+    od.channels=[{channel:od.channel,bot_token:od.bot_token||'',enabled:true}];
+  }
+  renderOdChannels();
 }
 // 多频道管理
 window._tgChannels=[];
@@ -1035,16 +1037,22 @@ window.addTgMap=function(){
   renderTgMap();
   var od=CONFIG.on_duty||{};
   $('od_enabled').value=od.enabled?'true':'false';
-  $('od_channel').value=od.channel||'';
-  $('od_bot_token').value=od.bot_token||'';
+  // 多频道：兼容旧配置
+  if(!od.channels&&od.channel){
+    od.channels=[{channel:od.channel,bot_token:od.bot_token||'',enabled:true}];
+  }
+  renderOdChannels();
 }
 window.delTgMap=function(i){
   CONFIG.telegram.tag_maps.splice(i,1);
   renderTgMap();
   var od=CONFIG.on_duty||{};
   $('od_enabled').value=od.enabled?'true':'false';
-  $('od_channel').value=od.channel||'';
-  $('od_bot_token').value=od.bot_token||'';
+  // 多频道：兼容旧配置
+  if(!od.channels&&od.channel){
+    od.channels=[{channel:od.channel,bot_token:od.bot_token||'',enabled:true}];
+  }
+  renderOdChannels();
 }
 window.saveTelegram=function(){
   CONFIG.telegram=CONFIG.telegram||{};
@@ -1073,19 +1081,75 @@ window.saveTelegram=function(){
   writeFile('data/config.json',CONFIG,cfgSha,'保存Telegram多频道配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderTelegram();stat('配置已保存（'+channels.length+'个频道）','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')});
 }
 var _tgPreview=null;
+// 在岗老师多频道管理
+window._odChannels=[];
+function renderOdChannels(){
+  var od=CONFIG.on_duty||{};
+  window._odChannels=JSON.parse(JSON.stringify(od.channels||[]));
+  var list=$('odChannelsList');
+  if(!window._odChannels.length){
+    list.innerHTML='<p class="muted">暂无频道，点击「添加频道」配置</p>';
+    return;
+  }
+  list.innerHTML=window._odChannels.map(function(ch,i){
+    return '<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:12px;background:#f8fafc">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'+
+        '<strong style="color:#1e293b">频道 '+(i+1)+(ch.channel?'：'+esc(ch.channel):'（未配置）')+'</strong>'+
+        '<button class="danger small" onclick="delOdChannel('+i+')" style="background:#b3261e">删除</button>'+
+      '</div>'+
+      '<div class="row">'+
+        '<div style="flex:1"><label>监控频道</label><input id="odc_channel_'+i+'" value="'+esc(ch.channel||'')+'" placeholder="@hnwdhldh"></div>'+
+        '<div style="flex:1"><label>Bot Token（留空用默认）</label><input id="odc_token_'+i+'" value="'+esc(ch.bot_token||'')+'" placeholder="123456:ABC-DEF..."></div>'+
+        '<div style="width:100px"><label>启用</label><select id="odc_enabled_'+i+'">'+
+          '<option value="true"'+(ch.enabled!==false?' selected':'')+'>开启</option>'+
+          '<option value="false"'+(ch.enabled===false?' selected':'')+'>关闭</option>'+
+        '</select></div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+window.addOdChannel=function(){
+  window._odChannels.push({channel:'',bot_token:'',enabled:true});
+  renderOdChannels();
+}
+window.delOdChannel=function(i){
+  if(!confirm('确定删除此频道配置？'))return;
+  window._odChannels.splice(i,1);
+  renderOdChannels();
+}
 window.saveOnDuty=function(){
   CONFIG.on_duty=CONFIG.on_duty||{};
   CONFIG.on_duty.enabled=$('od_enabled').value==='true';
-  CONFIG.on_duty.channel=$('od_channel').value.trim();
-  CONFIG.on_duty.bot_token=$('od_bot_token').value.trim();
+  // 收集多频道配置
+  var channels=[];
+  window._odChannels.forEach(function(ch,i){
+    var chEl=$('odc_channel_'+i);if(!chEl)return;
+    channels.push({
+      channel:chEl.value.trim(),
+      bot_token:$('odc_token_'+i).value.trim(),
+      enabled:$('odc_enabled_'+i).value==='true'
+    });
+  });
+  CONFIG.on_duty.channels=channels;
+  // 清理旧字段
+  delete CONFIG.on_duty.channel;
+  delete CONFIG.on_duty.bot_token;
   stat('正在保存…','wait');
-  writeFile('data/config.json',CONFIG,cfgSha,'保存今日在岗老师配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderTelegram();stat('配置已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')});
+  writeFile('data/config.json',CONFIG,cfgSha,'保存今日在岗老师多频道配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderTelegram();stat('配置已保存（'+channels.length+'个频道）','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')});
 }
 window.fetchOnDutyNow=function(){
   if(!CONFIG.worker_url){alert('请先在站点配置填写Worker URL');return}
   $('odResult').textContent='抓取中…';
   fetch(CONFIG.worker_url+'/api/fetch-on-duty',{method:'POST'}).then(function(r){return r.json()}).then(function(d){
-    $('odResult').textContent=d.ok?('成功：'+d.count+'个按钮'):('失败：'+(d.message||d.error));
+    if(d.ok){
+      var detailStr='';
+      if(d.details&&d.details.length){
+        detailStr=d.details.map(function(r){return (r.channel||'?')+':'+(r.count||0)+'个'}).join(', ');
+      }
+      $('odResult').textContent='成功：'+(d.channels||1)+'个频道，共'+d.count+'个按钮'+(detailStr?'（'+detailStr+'）':'');
+    }else{
+      $('odResult').textContent='失败：'+(d.message||d.error);
+    }
   }).catch(function(e){$('odResult').textContent='请求失败：'+e.message});
 }
 window.fetchByLink=function(){
