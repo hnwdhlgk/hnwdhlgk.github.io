@@ -489,12 +489,13 @@ function renderJobs(){
   if(activeTags.length)title+=" · #"+activeTags.join(" #");
   document.getElementById("listTitle").textContent=title;
   document.getElementById("resultCnt").textContent=list.length+" 条";
-  var totalPages=Math.max(1,Math.ceil(list.length/PAGE_SIZE));
+  var pageSize=getPageSize();
+  var totalPages=Math.max(1,Math.ceil(list.length/pageSize));
   if(currentPage>totalPages)currentPage=totalPages;
-  var start=(currentPage-1)*PAGE_SIZE;
-  var pageList=list.slice(start,start+PAGE_SIZE);
+  var start=(currentPage-1)*pageSize;
+  var pageList=list.slice(start,start+pageSize);
   var pagHtml="";
-  if(list.length>PAGE_SIZE){pagHtml='<div class="pagination"><button onclick="changePage('+(currentPage-1)+')" '+(currentPage<=1?'disabled':'')+'>上一页</button><span class="page-info">第 '+currentPage+' / '+totalPages+' 页</span><button onclick="changePage('+(currentPage+1)+')" '+(currentPage>=totalPages?'disabled':'')+'>下一页</button></div>';}
+  if(list.length>pageSize){pagHtml='<div class="pagination"><button onclick="changePage('+(currentPage-1)+')" '+(currentPage<=1?'disabled':'')+'>上一页</button><span class="page-info">第 '+currentPage+' / '+totalPages+' 页</span><button onclick="changePage('+(currentPage+1)+')" '+(currentPage>=totalPages?'disabled':'')+'>下一页</button></div>';}
   document.getElementById("jobs").innerHTML=(pageList.length?pageList.map(j=>`<article class="job" onclick="viewJob('${esc(j.id)}')">${j.image?(function(){var il=j.image_link;if(!il&&j.telegram_channel&&j.telegram_msg_id){il="https://t.me/"+j.telegram_channel+"/"+j.telegram_msg_id+"?single"}return il?`<a href="${esc(il)}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy"></a>`:`<img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy">`})():""}<div class="cats"><span class="tag">${esc(catName(j.category)||"兼职")}</span>${j.subcategory?`<span class="tag sub">${esc(subName(j.category,j.subcategory))}</span>`:""}${j.subcategory2?`<span class="tag sub2">${esc(sub2Name(j.category,j.subcategory,j.subcategory2))}</span>`:""}</div><h3>${esc(j.title)}</h3><div class="meta">${esc(j.location||"")}${j.time?" · "+esc(j.time):""}</div>${j.salary?`<div class="salary">${esc(j.salary)}</div>`:""}<p>${linkify(j.description||"")}</p>${renderContacts(j)}<div class="views">👁 ${j.views||0}</div></article>`).join(""):'<div class="empty">暂无兼职信息</div>')+pagHtml;
 }
 
