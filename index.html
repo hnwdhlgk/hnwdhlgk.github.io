@@ -747,6 +747,7 @@ async function renderAdminJobs(){
       <td><span class="status-${j.status||'pending'}">${j.status==='approved'?'已通过':j.status==='rejected'?'已拒绝':'待审核'}</span></td>
       <td>${j.views||0}</td>
       <td>
+        <button class="small" onclick="adminEditJob('${j.id}')">编辑</button>
         ${j.status!=='approved'?`<button class="small" onclick="adminApproveJob('${j.id}')">通过</button>`:''}
         ${j.status!=='rejected'?`<button class="small" onclick="adminRejectJob('${j.id}')">拒绝</button>`:''}
         <button class="danger small" onclick="adminDeleteJob('${j.id}')">删除</button>
@@ -785,6 +786,97 @@ window.adminDeleteJob=async function(id){
   if(!confirm('确定删除？'))return;
   await wApi("/api/admin/delete-job",{username:me,id:id});
   showAdminPanel('jobs');
+};
+let _editingJob=null;
+window.adminEditJob=async function(id){
+  try{
+    const d=await wApi("/api/admin/jobs",{username:me});
+    const jobs=d.jobs||[];
+    const j=jobs.find(x=>x.id===id);
+    if(!j)return alert('兼职不存在');
+    _editingJob=JSON.parse(JSON.stringify(j));
+    // 加载已认证用户列表
+    let verifiedList=[];
+    try{
+      const vd=await fetch(WORKER_URL+"/api/verified-users").then(r=>r.json());
+      verifiedList=(vd.users||[]).map(u=>u.username);
+    }catch(e){}
+    const isVerified=verifiedList.includes(j.author);
+    const showIcon=j.show_verified!==false;
+    const catOpts=categories.filter(c=>c.enabled!==false).map(c=>`<option value="${esc(c.slug)}"${c.slug===j.category?' selected':''}>${esc(c.name)}</option>`).join("");
+    const html=`<div style="max-width:600px;max-height:80vh;overflow-y:auto">
+      <h3 style="margin-top:0">编辑兼职</h3>
+      <label>标题</label><input id="ej_title" value="${esc(j.title||'')}" style="width:100%;padding:8px;margin-bottom:10px;border:1px solid #cbd5e1;border-radius:6px">
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <div style="flex:1"><label>一级分类</label><select id="ej_category" onchange="adminEditFillSub()" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px">${catOpts}</select></div>
+        <div style="flex:1"><label>二级分类</label><select id="ej_subcategory" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px"></select></div>
+        <div style="flex:1"><label>三级分类</label><select id="ej_subcategory2" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px"></select></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <div style="flex:1"><label>薪资</label><input id="ej_salary" value="${esc(j.salary||'')}" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px"></div>
+        <div style="flex:1"><label>地点</label><input id="ej_location" value="${esc(j.location||'')}" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px"></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <div style="flex:1"><label>个人联系</label><input id="ej_contact" value="${esc(j.contact||'')}" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px"></div>
+        <div style="flex:1"><label>双向联系</label><input id="ej_contact2" value="${esc(j.contact2||'')}" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px"></div>
+        <div style="flex:1"><label>个人频道</label><input id="ej_contact3" value="${esc(j.contact3||'')}" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px"></div>
+      </div>
+      <label>描述</label><textarea id="ej_description" rows="4" style="width:100%;padding:8px;margin-bottom:10px;border:1px solid #cbd5e1;border-radius:6px">${esc(j.description||'')}</textarea>
+      <label>标签（逗号分隔）</label><input id="ej_tags" value="${esc((j.tags||[]).join(','))}" style="width:100%;padding:8px;margin-bottom:10px;border:1px solid #cbd5e1;border-radius:6px">
+      <div style="background:#f0f9ff;padding:12px;border-radius:8px;margin-bottom:10px;border:1px solid #bae6fd">
+        <div style="font-weight:600;margin-bottom:8px;color:#0369a1">认证设置</div>
+        <div style="margin-bottom:8px">发布者：<b>${esc(j.author||'')}</b> ${isVerified?'<span style="color:#16a34a">✓ 已认证</span>':'<span style="color:#dc2626">✗ 未认证</span>'}</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="ej_show_verified" ${showIcon?'checked':''}>
+          显示认证图标（${isVerified?'发布者已认证，可显示图标':'发布者未认证，勾选也不会显示'}）
+        </label>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn-ghost" onclick="closeModal()">取消</button>
+        <button class="btn-primary" onclick="adminSaveEditJob()">保存修改</button>
+      </div>
+    </div>`;
+    document.getElementById("modalBody").innerHTML=html;
+    document.getElementById("modalMask").style.display="flex";
+    // 填充二级三级分类
+    setTimeout(()=>adminEditFillSub(),50);
+  }catch(e){alert('加载失败：'+e.message)}
+};
+window.adminEditFillSub=function(){
+  const cat=document.getElementById("ej_category").value;
+  const subSel=document.getElementById("ej_subcategory");
+  const sub2Sel=document.getElementById("ej_subcategory2");
+  const c=catObj(cat);
+  subSel.innerHTML='<option value="">（不选）</option>'+(c.subcategories||[]).map(s=>`<option value="${esc(s.slug)}"${s.slug===_editingJob.subcategory?' selected':''}>${esc(s.name)}</option>`).join("");
+  const sub=(c.subcategories||[]).find(s=>s.slug===subSel.value);
+  sub2Sel.innerHTML='<option value="">（不选）</option>'+((sub&&sub.subcategories)||[]).map(t=>`<option value="${esc(t.slug)}"${t.slug===_editingJob.subcategory2?' selected':''}>${esc(t.name)}</option>`).join("");
+  subSel.onchange=function(){
+    const sub2=(c.subcategories||[]).find(s=>s.slug===subSel.value);
+    sub2Sel.innerHTML='<option value="">（不选）</option>'+((sub2&&sub2.subcategories)||[]).map(t=>`<option value="${esc(t.slug)}">${esc(t.name)}</option>`).join("");
+  };
+};
+window.adminSaveEditJob=async function(){
+  if(!_editingJob)return;
+  const j={
+    title:document.getElementById("ej_title").value.trim(),
+    category:document.getElementById("ej_category").value,
+    subcategory:document.getElementById("ej_subcategory").value,
+    subcategory2:document.getElementById("ej_subcategory2").value,
+    salary:document.getElementById("ej_salary").value.trim(),
+    location:document.getElementById("ej_location").value.trim(),
+    contact:document.getElementById("ej_contact").value.trim(),
+    contact2:document.getElementById("ej_contact2").value.trim(),
+    contact3:document.getElementById("ej_contact3").value.trim(),
+    description:document.getElementById("ej_description").value,
+    tags:document.getElementById("ej_tags").value.split(",").map(t=>t.trim()).filter(t=>t),
+    show_verified:document.getElementById("ej_show_verified").checked
+  };
+  if(!j.title)return alert('标题不能为空');
+  try{
+    await wApi("/api/admin/update-job",{username:me,id:_editingJob.id,job:j});
+    closeModal();
+    showAdminPanel('jobs');
+  }catch(e){alert('保存失败：'+e.message)}
 };
 async function renderAdminUsers(){
   try{
