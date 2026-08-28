@@ -480,7 +480,7 @@ function toggleTag(t){
 function clearTags(){activeTags=[];renderAll()}
 function renderRatios(){document.getElementById("ratioWrap").innerHTML=""}
 let currentPage=1;
-const PAGE_SIZE=18;
+function getPageSize(){return window.innerWidth<=768?6:12;}
 window.changePage=function(p){currentPage=p;renderJobs();var el=document.getElementById('listTitle');if(el)window.scrollTo({top:el.offsetTop-20,behavior:'smooth'});}
 function renderJobs(){
   const list=filteredJobs();
@@ -640,6 +640,9 @@ async function submitMine(){const title=document.getElementById("mf_title").valu
 async function saveMineEdit(id){try{let image=undefined;if(window._rmMineImg){image=""}else if(_mj_imgUrl){image=_mj_imgUrl}await wApi("/api/update-job",{username:me,id:id,job:{title:document.getElementById("mj_title").value.trim(),description:getRTE("mj_desc"),category:document.getElementById("mj_cat").value,subcategory:document.getElementById("mj_sub").value,subcategory2:document.getElementById("mj_sub2").value,salary:document.getElementById("mj_salary").value,location:document.getElementById("mj_loc").value,contact:document.getElementById("mj_contact").value,contact2:document.getElementById("mj_contact2").value,contact3:document.getElementById("mj_contact3").value,tags:parseTags(document.getElementById("mj_tags").value),image:image,}});editingMineId=null;window._rmMineImg=false;_mj_imgUrl="";loadMine();alert("修改已提交，等待管理员重新审核")}catch(e){alert("保存失败："+e.message)}}
 async function delMine(id){if(!confirm("确定删除？"))return;try{await wApi("/api/delete-job",{username:me,id});loadMine()}catch(e){alert("删除失败："+e.message)}}
 
+window.addEventListener('resize',function(){
+  if(currentPage!==1){currentPage=1;renderJobs()}
+});
 init().catch(e=>{document.querySelector("#jobs").innerHTML='<div class="empty">数据加载失败，请刷新</div>';console.error(e)});
 </script>
 </body></html>
