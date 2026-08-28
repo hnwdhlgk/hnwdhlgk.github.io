@@ -234,6 +234,15 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <div id="socialList"></div>
       <button type="button" class="small ghost" onclick="addSocial()">+ 新增渠道</button>
     </div>
+    <div class="card" id="sec-telegram"><h3>Telegram 频道自动抓取</h3>
+      <p class="muted">绑定Telegram频道后，系统定时自动抓取频道新消息并发布为兼职。Bot需设为频道管理员。</p>
+      <div class="row"><div><label>启用自动抓取</label><select id="tg_enabled"><option value="false">关闭</option><option value="true">开启</option></select></div>
+      <div><label>默认发布状态</label><select id="tg_status"><option value="pending">待审核</option><option value="approved">直接通过</option></select></div></div>
+      <label>Bot Token</label><input id="tg_token" placeholder="123456:ABC-DEF..." value="7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs">
+      <label>频道用户名</label><input id="tg_channel" placeholder="@hainanguanli" value="@hnwdhlgk">
+      <label>默认一级分类（Slug）</label><input id="tg_category" placeholder="如：personal">
+      <div class="ops"><button onclick="saveConfig()">保存配置</button><button class="ghost" onclick="manualFetchTelegram()">立即抓取一次</button><span id="tgFetchResult" class="muted" style="margin-left:10px"></span></div>
+    </div>
     <div class="card" id="sec-safety"><h3>安全提醒</h3>
       <label>安全提醒文案</label><textarea id="cfg_safety_notice"></textarea>
       <div class="ops"><button onclick="saveConfig()">保存站点配置</button></div>
@@ -756,7 +765,17 @@ window.saveConfig=function(){
   var lr=CONFIG.link_rules||[];
   lr.forEach(function(r,i){r.char=$('lr_char_'+i).value.trim();r.prefix=$('lr_prefix_'+i).value.trim()});
   CONFIG.link_rules=lr.filter(function(r){return r.char&&r.prefix});
+  CONFIG.telegram={enabled:$('tg_enabled').value==='true',default_status:$('tg_status').value,bot_token:$('tg_token').value.trim(),channel:$('tg_channel').value.trim(),default_category:$('tg_category').value.trim()};
   stat('正在保存…','wait');writeFile('data/config.json',CONFIG,cfgSha,'更新站点配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderAll();stat('配置已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
+}
+
+window.manualFetchTelegram=function(){
+  if(!CONFIG.worker_url){alert('请先在站点配置填写Worker URL');return}
+  $('tgFetchResult').textContent='抓取中…';
+  fetch(CONFIG.worker_url+'/api/telegram-fetch',{method:'POST'}).then(function(r){return r.json()}).then(function(d){
+    $('tgFetchResult').textContent=d.ok?('成功：抓取'+d.fetched+'条，新增'+d.new+'条'):('失败：'+d.message);
+    if(d.ok&&d.new>0)loadAll();
+  }).catch(function(e){$('tgFetchResult').textContent='请求失败：'+e.message});
 }
 
 /* ====== 用户管理 ====== */
