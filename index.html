@@ -222,6 +222,11 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:32px 0 40px;b
 .preview-img{max-width:200px;max-height:200px;border-radius:12px;margin-top:10px;object-fit:cover;border:1px solid var(--line)}
 .form-actions{display:flex;gap:12px;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
 .form-actions .btn-primary,.form-actions .btn-ghost{min-width:140px}
+.admin-shortcuts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.shortcut-item{display:flex;align-items:center;gap:8px;padding:12px;background:var(--sea-bg);border-radius:10px;text-decoration:none;color:var(--sea);font-size:13px;font-weight:600;transition:.2s;border:1px solid transparent}
+.shortcut-item:hover{background:var(--sea);color:#fff;transform:translateY(-2px);box-shadow:0 4px 12px rgba(12,74,110,.2)}
+.shortcut-ic{font-size:18px}
+@media(max-width:700px){.admin-shortcuts{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:700px){
   .form-row{grid-template-columns:1fr}
   .user-card{padding:16px}
@@ -380,12 +385,26 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:32px 0 40px;b
   <div class="user-card" id="adminPanel" style="display:none">
     <div class="user-card-header">
       <div>
-        <h2>审核管理</h2>
-        <p class="card-subtitle">管理员权限：审核待发布的兼职信息</p>
+        <h2>管理后台</h2>
+        <p class="card-subtitle">管理员权限：审核兼职、管理分类、站点配置等</p>
       </div>
-      <button class="btn-ghost" onclick="loadPending()">刷新待审核</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a class="btn-primary" href="admin/" target="_blank" style="text-decoration:none;display:inline-block">进入完整管理后台</a>
+        <button class="btn-ghost" onclick="loadPending()">刷新待审核</button>
+      </div>
     </div>
-    <div id="pendingList" style="margin-top:16px"></div>
+    <div class="admin-shortcuts">
+      <a href="admin/" target="_blank" class="shortcut-item"><span class="shortcut-ic">📊</span><span>概览统计</span></a>
+      <a href="admin/" target="_blank" class="shortcut-item"><span class="shortcut-ic">📁</span><span>分类管理</span></a>
+      <a href="admin/" target="_blank" class="shortcut-item"><span class="shortcut-ic">📋</span><span>兼职管理</span></a>
+      <a href="admin/" target="_blank" class="shortcut-item"><span class="shortcut-ic">⚙️</span><span>站点配置</span></a>
+      <a href="admin/" target="_blank" class="shortcut-item"><span class="shortcut-ic">✏️</span><span>字段标签</span></a>
+      <a href="admin/" target="_blank" class="shortcut-item"><span class="shortcut-ic">📝</span><span>表单设置</span></a>
+      <a href="admin/" target="_blank" class="shortcut-item"><span class="shortcut-ic">✈️</span><span>Telegram抓取</span></a>
+      <a href="admin/" target="_blank" class="shortcut-item"><span class="shortcut-ic">📜</span><span>抓取日志</span></a>
+    </div>
+    <h3 style="margin:20px 0 12px;font-size:16px;color:var(--sea)">待审核兼职</h3>
+    <div id="pendingList"></div>
   </div>
   
   <div class="user-card">
