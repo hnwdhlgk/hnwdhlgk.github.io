@@ -33,6 +33,7 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
 .badge{font-size:11px;padding:2px 8px;border-radius:999px;margin-left:6px}.badge.pending{background:#fef7e0;color:#8a5a00}.badge.approved{background:#e6f4ea;color:#137333}.badge.rejected{background:#fce8e6;color:#b3261e}
 .filter-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}.filter-tabs button{background:#fff;border:1px solid #d6e2ed;color:#4a6080;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px;margin:0}.filter-tabs button.active{background:#0d47a1;color:#fff;border-color:#0d47a1}.filter-label{font-size:13px;color:#71859a;margin-top:10px;margin-bottom:4px}
 .form-table{width:100%;border-collapse:collapse;margin:10px 0}.form-table th,.form-table td{border:1px solid #e2e8f0;padding:8px 10px;text-align:left;font-size:13px}.form-table th{background:#f6f8fa;color:#4a6080;font-weight:600}.form-table input{width:100%;padding:7px;border:1px solid #d6e2ed;border-radius:6px;font:inherit;font-size:13px}
+.data-table{width:100%;border-collapse:collapse;margin:10px 0}.data-table th,.data-table td{border:1px solid #e2e8f0;padding:10px;text-align:left;font-size:13px;vertical-align:top}.data-table th{background:#f6f8fa;color:#4a6080;font-weight:600;white-space:nowrap}.data-table tr:hover{background:#fafcfe}
 .preview-img{max-width:200px;max-height:130px;object-fit:cover;border-radius:8px;display:block;margin:5px 0}
 .upload-row{display:flex;gap:8px;align-items:center}.upload-row input{flex:1;margin:0}.upload-row button{white-space:nowrap;margin:0}
 .user-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #edf2f6}.user-row:first-child{border-top:0}.user-row .uname{flex:1;font-weight:500}.user-row .role{font-size:12px;color:#71859a}
@@ -109,6 +110,13 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <div class="stat-card green"><div class="num" id="stApproved">0</div><div class="lbl">已通过</div></div>
       <div class="stat-card purple"><div class="num" id="stCats">0</div><div class="lbl">分类总数</div></div>
     </div>
+    <div class="stats">
+      <div class="stat-card"><div class="num" id="stTodayViews">0</div><div class="lbl">今日访问次数</div></div>
+      <div class="stat-card green"><div class="num" id="stTodayVisitors">0</div><div class="lbl">今日访客数</div></div>
+      <div class="stat-card orange"><div class="num" id="stTotalViews">0</div><div class="lbl">累计访问次数</div></div>
+      <div class="stat-card purple"><div class="num" id="stTotalVisitors">0</div><div class="lbl">累计访客数</div></div>
+    </div>
+    <div class="card"><h3>最近7天访问趋势</h3><div id="visitChart" class="muted">加载中…</div></div>
     <div class="quick-actions">
       <button onclick="showView('jobs','pending')">审核待处理</button>
       <button class="ghost" onclick="showView('cat1')">管理分类</button>
@@ -401,6 +409,25 @@ function renderDashboard(){
   $('stCats').textContent=cnt;
   var recent=JOBS.slice().sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at)}).slice(0,5);
   $('recentJobs').innerHTML=recent.length?recent.map(function(j){return '<div class="job-item"><h4>'+esc(j.title)+'<span class="badge '+esc(j.status)+'">'+esc(j.status)+'</span></h4><div class="meta">'+esc(catName(j.category))+(j.subcategory?' / '+esc(subName(j.category,j.subcategory)):'')+(j.subcategory2?' / '+esc(sub2Name(j.category,j.subcategory,j.subcategory2)):'')+' · '+fmtDate(j.created_at)+'</div></div>'}).join(''):'<p class="muted">暂无兼职</p>';
+  loadVisitStats();
+}
+function loadVisitStats(){
+  if(!CONFIG.worker_url){$('visitChart').innerHTML='<span class="muted">请先在站点配置填写 Worker URL</span>';return}
+  fetch(CONFIG.worker_url+'/api/stats').then(function(r){return r.json()}).then(function(d){
+    var today=new Date().toISOString().slice(0,10);
+    var todayData=(d.daily&&d.daily[today])||{};
+    $('stTodayViews').textContent=todayData.views||0;
+    $('stTodayVisitors').textContent=todayData.visitors||0;
+    $('stTotalViews').textContent=d.total_views||0;
+    $('stTotalVisitors').textContent=d.total_visitors||0;
+    var days=Object.keys(d.daily||{}).sort().reverse().slice(0,7).reverse();
+    if(!days.length){$('visitChart').innerHTML='<span class="muted">暂无访问数据</span>';return}
+    var maxV=Math.max.apply(null,days.map(function(k){return (d.daily[k].views||0)}))||1;
+    $('visitChart').innerHTML='<div style="display:flex;align-items:flex-end;gap:12px;height:120px;padding:10px 0">'+days.map(function(k){
+      var v=d.daily[k].views||0;var h=Math.round(v/maxV*100);
+      return '<div style="flex:1;text-align:center"><div style="background:#0d47a1;height:'+h+'%;min-height:4px;border-radius:4px 4px 0 0" title="'+v+'次"></div><div style="font-size:11px;color:#71859a;margin-top:4px">'+k.slice(5)+'</div><div style="font-size:11px;color:#183b60;font-weight:bold">'+v+'</div></div>';
+    }).join('')+'</div>';
+  }).catch(function(){$('visitChart').innerHTML='<span class="muted">统计数据加载失败</span>'});
 }
 
 /* ====== 一级分类 ====== */
@@ -558,18 +585,23 @@ function renderJobs(){
   if(jobFilterCat)list=list.filter(function(j){return j.category===jobFilterCat});
   if(jobFilterSub)list=list.filter(function(j){return j.subcategory===jobFilterSub});
   if(jobFilterSub2)list=list.filter(function(j){return j.subcategory2===jobFilterSub2});
-  $('jobs').innerHTML=list.length?list.map(function(j){
-    if(j.editing)return renderJobEdit(j);
+  var editingOne=list.find(function(j){return j.editing});
+  if(editingOne){$('jobs').innerHTML=renderJobEdit(editingOne);return}
+  $('jobs').innerHTML=list.length?'<table class="data-table"><thead><tr><th>标题</th><th>分类</th><th>薪资</th><th>地点</th><th>发布者</th><th>状态</th><th>发布时间</th><th>点击</th><th>操作</th></tr></thead><tbody>'+list.map(function(j){
     var b='<span class="badge '+esc(j.status)+'">'+(j.status==='approved'?'已通过':j.status==='rejected'?'已拒绝':'待审核')+'</span>';
-    return '<div class="job-item"><h4>'+esc(j.title)+b+'</h4>'+
-      '<div class="meta">'+esc(catName(j.category)||'未分类')+(j.subcategory?' / '+esc(subName(j.category,j.subcategory)):'')+(j.subcategory2?' / '+esc(sub2Name(j.category,j.subcategory,j.subcategory2)):'')+(j.location?' · '+esc(j.location):'')+(j.salary?' · '+esc(j.salary):'')+' · '+fmtDate(j.created_at)+(j.author?' · 发布者:'+esc(j.author):'')+'</div>'+
-      (j.image?'<img src="'+esc(j.image)+'" class="preview-img">':'')+
-      (j.description?'<div class="desc">'+esc(j.description)+'</div>':'')+
-      (j.contact?'<div class="meta">联系方式：'+esc(j.contact)+'</div>':'')+
-      (j.tags&&j.tags.length?'<div class="meta">标签：'+j.tags.map(function(t){return '#'+esc(t)}).join(' ')+'</div>':'')+
-      '<div class="ops">'+(j.status==='pending'?'<button class="green small" onclick="approveJob(\''+j.id+'\')">通过</button><button class="danger small" onclick="rejectJob(\''+j.id+'\')">拒绝</button>':'')+
-      '<button class="ghost small" onclick="editJob(\''+j.id+'\')">编辑</button><button class="danger small" onclick="delJob(\''+j.id+'\')">删除</button></div></div>';
-  }).join(''):'<p class="muted">暂无'+(titles[currentFilter]||'')+'数据</p>';
+    var cat=esc(catName(j.category)||'-')+(j.subcategory?'<br><span style="color:#71859a;font-size:11px">'+esc(subName(j.category,j.subcategory))+'</span>':'')+(j.subcategory2?'<br><span style="color:#71859a;font-size:11px">'+esc(sub2Name(j.category,j.subcategory,j.subcategory2))+'</span>':'');
+    return '<tr>'+
+      '<td><b>'+esc(j.title)+'</b>'+(j.image?'<br><img src="'+esc(j.image)+'" style="width:50px;height:38px;object-fit:cover;border-radius:4px;margin-top:4px">':'')+'</td>'+
+      '<td>'+cat+'</td>'+
+      '<td>'+esc(j.salary||'-')+'</td>'+
+      '<td>'+esc(j.location||'-')+'</td>'+
+      '<td>'+esc(j.author||'-')+'</td>'+
+      '<td>'+b+'</td>'+
+      '<td style="font-size:12px;color:#71859a">'+fmtDate(j.created_at)+'</td>'+
+      '<td>'+(j.views||0)+'</td>'+
+      '<td>'+(j.status==='pending'?'<button class="green small" onclick="approveJob(\''+j.id+'\')">通过</button> <button class="danger small" onclick="rejectJob(\''+j.id+'\')">拒绝</button><br>':'')+'<button class="ghost small" onclick="editJob(\''+j.id+'\')">编辑</button> <button class="danger small" onclick="delJob(\''+j.id+'\')">删除</button></td>'+
+      '</tr>';
+  }).join('')+'</tbody></table>':'<p class="muted">暂无'+(titles[currentFilter]||'')+'数据</p>';
 }
 function renderJobEdit(j){
   return '<div class="job-item"><h4>编辑兼职</h4>'+
