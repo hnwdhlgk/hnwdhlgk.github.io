@@ -1,1 +1,77 @@
-undefined
+[
+  {
+    "name": "个人",
+    "slug": "personal",
+    "description": "个人发布",
+    "image": "",
+    "image_link": "",
+    "enabled": true,
+    "sort_order": 1,
+    "subcategories": [
+      {
+        "name": "海口市",
+        "slug": "haikou",
+        "subcategories": [
+          {
+            "name": "龙华区",
+            "slug": "longhua"
+          },
+          {
+            "name": "美兰区",
+            "slug": "meilan"
+          },
+          {
+            "name": "琼山区",
+            "slug": "qiongshan"
+          },
+          {
+            "name": "秀英区",
+            "slug": "xiuying"
+          }
+        ]
+      },
+      {
+        "name": "三亚市",
+        "slug": "sanya",
+        "subcategories": [
+          {
+            "name": "吉阳区",
+            "slug": "jiyang"
+          },
+          {
+            "name": "天涯区",
+            "slug": "tianya"
+          },
+          {
+            "name": "海棠区",
+            "slug": "haitang"
+          },
+          {
+            "name": "崖州区",
+            "slug": "yazhou"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "商家",
+    "slug": "business",
+    "description": "商家发布",
+    "image": "",
+    "image_link": "",
+    "enabled": true,
+    "sort_order": 2,
+    "subcategories": []
+  },
+  {
+    "name": "中介",
+    "slug": "agency",
+    "description": "中介发布",
+    "image": "",
+    "image_link": "",
+    "enabled": true,
+    "sort_order": 3,
+    "subcategories": []
+  }
+]
