@@ -78,5 +78,10 @@
       "char": "@",
       "prefix": "https://t.me/"
     }
-  ]
+  ],
+  "on_duty": {
+    "enabled": false,
+    "channel": "@hnwdhldh",
+    "bot_token": "7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs"
+  }
 }
