@@ -1,28 +1,6 @@
 {
-  "processed_map": {
-    "hnwdhlgk": [
-      "link-hnwdhlgk-10409",
-      10427,
-      10428,
-      10429,
-      10430,
-      10431,
-      10432,
-      10433,
-      10434,
-      10435,
-      10436,
-      "link-hnczbd02-8072",
-      "link-hnwdhlgk-9067",
-      "link-hnwdhlgk-10316",
-      "link-hnwdhlgk-10344",
-      "link-hnwdhlgk-9928",
-      "link-hnwdhlgk-10269",
-      "link-hnwdhlgk-786",
-      "link-hnwdhlgk-10381",
-      "link-hnwdhlgk-9406",
-      10438
-    ]
-  },
-  "last_fetch": "2026-08-28T23:00:31.477Z"
+  "processed": [
+    "link-hnwdhlgk-10390"
+  ],
+  "last_fetch": "2026-08-28T23:06:54.553Z"
 }
