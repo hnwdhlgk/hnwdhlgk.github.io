@@ -903,6 +903,10 @@ function renderTgPreview(d){
     '<div style="width:280px"><h4 style="margin:0 0 8px">图片预览</h4>'+
     (d.image?'<img src="'+esc(d.image)+'" style="width:100%;border-radius:8px">':'<p class="muted">无图片</p>')+
     '<h4 style="margin:14px 0 8px">原始消息</h4><pre style="background:#f6f8fa;padding:10px;border-radius:8px;font-size:12px;white-space:pre-wrap;max-height:200px;overflow:auto">'+esc(d.original_text||'')+'</pre></div></div>'+
+    '<h4 style="margin:14px 0 8px">提取的超链接</h4>'+
+    ((d.links&&d.links.length)?'<table class="form-table"><thead><tr><th>链接文字</th><th>URL</th></tr></thead><tbody>'+
+      d.links.map(function(l){return '<tr><td>'+esc(l.text||l.url)+'</td><td><a href="'+esc(l.url)+'" target="_blank" style="color:#1565c0">'+esc(l.url)+'</a></td></tr>'}).join('')+
+      '</tbody></table>':'<p class="muted">无超链接</p>')+
     '<h4 style="margin:14px 0 8px">标签映射规则匹配</h4><table class="form-table"><thead><tr><th>抓取标签</th><th>映射类型</th><th>映射值</th></tr></thead><tbody>'+maps+'</tbody></table>';
   $('tgPreviewContent').innerHTML=html;
   $('tgPreviewCard').style.display='block';
