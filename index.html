@@ -460,11 +460,17 @@ function renderCat3Chips(){
 }
 function setCat3(slug){activeSub2=slug;activeTags=[];renderAll()}
 function renderTagChips(){
-  const allTags={};jobs.forEach(j=>(j.tags||[]).forEach(t=>allTags[t]=(allTags[t]||0)+1));
+  // 只统计当前分类筛选下的兼职标签
+  let filtered = jobs.filter(j=>j.status==="approved");
+  if(activeCat)filtered=filtered.filter(j=>j.category===activeCat);
+  if(activeSub)filtered=filtered.filter(j=>j.subcategory===activeSub);
+  if(activeSub2)filtered=filtered.filter(j=>j.subcategory2===activeSub2);
+  const allTags={};
+  filtered.forEach(j=>(j.tags||[]).forEach(t=>allTags[t]=(allTags[t]||0)+1));
   const tags=Object.entries(allTags).sort((a,b)=>b[1]-a[1]);
   let html=`<button class="chip ${!activeTags.length?"active":""}" onclick="clearTags()">全部标签</button>`;
   html+=tags.map(([t,n])=>`<button class="chip ${activeTags.includes(t)?"active":""}" onclick="toggleTag('${esc(t)}')">${esc(t)} <span class="cnt">${n}</span></button>`).join("");
-  document.getElementById("tagChips").innerHTML=tags.length?html:'<span style="color:var(--muted);font-size:13px">暂无标签</span>';
+  document.getElementById("tagChips").innerHTML=tags.length?html:'<span style="color:var(--muted);font-size:13px">该分类下暂无标签</span>';
 }
 function toggleTag(t){
   if(activeTags.includes(t))activeTags=activeTags.filter(x=>x!==t);
