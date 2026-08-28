@@ -13,7 +13,7 @@
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}.brand .logo{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px}.brand b{font-size:15px}
 .topauth button{border:0;background:var(--blue);color:#fff;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;margin-left:6px}.topauth button.ghost{background:#e6ecf3;color:var(--text)}.topauth .who{color:var(--muted);font-size:13px;margin-right:6px}
 /* Hero */
-.hero{padding:50px 0 40px;display:grid;grid-template-columns:1.3fr 1fr;gap:30px;align-items:center}.hero h1{font-size:clamp(30px,5vw,48px);margin:0 0 8px;line-height:1.15}.hero .sub{color:var(--blue2);font-size:13px;letter-spacing:2px;margin-bottom:14px}.hero p{color:var(--muted);line-height:1.7}.hero .btns{margin-top:18px}.hero .btns button{border:0;padding:12px 22px;border-radius:10px;cursor:pointer;font-size:15px;margin-right:8px}.hero .btns .primary{background:var(--blue);color:#fff}.hero .btns .outline{background:#fff;color:var(--blue);border:1px solid var(--blue)}
+.hero{padding:50px 0 40px;display:grid;grid-template-columns:1.3fr 1fr;gap:30px;align-items:center}.hero h1{font-size:clamp(30px,5vw,48px);margin:0 0 8px;line-height:1.15}.hero .sub{color:var(--blue2);font-size:13px;letter-spacing:2px;margin-bottom:14px}.hero p{color:var(--muted);line-height:1.7}.hero .btns{margin-top:18px}.hero .btns button,.hero .btns a{border:0;padding:12px 22px;border-radius:10px;cursor:pointer;font-size:15px;margin-right:8px;display:inline-block}.hero .btns .primary{background:var(--blue);color:#fff}.hero .btns .outline{background:#fff;color:var(--blue);border:1px solid var(--blue)}
 .hero-logo{width:200px;height:200px;border-radius:50%;border:4px solid var(--blue);background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:auto;box-shadow:0 8px 30px #0d47a122}.hero-logo .hu{font-size:48px;font-weight:bold;color:var(--blue)}.hero-logo span{font-size:12px;color:var(--muted);margin-top:4px;text-align:center;padding:0 20px}
 /* About */
 .about{background:#fff;border-radius:16px;padding:30px;margin:20px 0;display:grid;grid-template-columns:1fr 1fr;gap:30px}.about h2{margin-top:0;color:var(--blue)}.about p{color:var(--muted);line-height:1.8}
@@ -161,7 +161,7 @@ footer{text-align:center;color:#8a99a9;font-size:12px;padding:30px 0 45px}
 <main class="wrap">
 <div id="publicView">
   <section class="hero">
-    <div><div class="sub" id="heroSub">HAINAN UNIVERSITY PART-TIME BOARD</div><h1 id="heroTitle">海南大学兼职公开榜</h1><p id="heroDesc">最全面的校园兼职信息平台，实时更新优质岗位。</p><div class="btns"><button class="primary" onclick="document.getElementById('jobSection').scrollIntoView({behavior:'smooth'})">浏览兼职</button><button class="outline" onclick="document.getElementById('aboutSection').scrollIntoView({behavior:'smooth'})">了解平台</button></div></div>
+    <div><div class="sub" id="heroSub">HAINAN UNIVERSITY PART-TIME BOARD</div><h1 id="heroTitle">海南大学兼职公开榜</h1><p id="heroDesc">最全面的校园兼职信息平台，实时更新优质岗位。</p><div class="btns" id="heroBtns"></div></div>
     <div class="hero-logo"><div class="hu">HU</div><span>海南大学兼职公开榜</span></div>
   </section>
 
@@ -229,7 +229,7 @@ const pad=n=>n<10?"0"+n:""+n;
 function fmt(iso){const d=new Date(iso);if(isNaN(d))return iso||"";return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
 function parseTags(s){return String(s||"").split(/[,，、;；\s]+/).map(x=>x.trim()).filter(Boolean)}
 function fileToBase64(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const r=fr.result,i=r.indexOf(",");res(i>=0?r.slice(i+1):r)};fr.onerror=rej;fr.readAsDataURL(file)})}
-const DEFAULTS={site_title:"海南大学兼职公开榜",site_subtitle:"HAINAN UNIVERSITY PART-TIME BOARD",hero_title:"海南大学兼职公开榜",hero_description:"最全面的校园兼职信息平台，实时更新优质岗位。",about_title:"让校园信息更容易找到",about_text:"海南大学兼职公开榜致力于为海南大学学子提供安全、可靠的兼职信息平台。所有信息均经审核，确保真实有效。",safety_notice:"任何要求先交押金、培训费的兼职均为诈骗，请提高警惕。如遇可疑信息，请立即举报。",link_rules:[{char:"@",prefix:"https://t.me/"}]};
+const DEFAULTS={site_title:"海南大学兼职公开榜",site_subtitle:"HAINAN UNIVERSITY PART-TIME BOARD",hero_title:"海南大学兼职公开榜",hero_description:"最全面的校园兼职信息平台，实时更新优质岗位。",about_title:"让校园信息更容易找到",about_text:"海南大学兼职公开榜致力于为海南大学学子提供安全、可靠的兼职信息平台。所有信息均经审核，确保真实有效。",safety_notice:"任何要求先交押金、培训费的兼职均为诈骗，请提高警惕。如遇可疑信息，请立即举报。",link_rules:[{char:"@",prefix:"https://t.me/"}],hero_buttons:[{text:"浏览兼职",url:"#jobSection",type:"primary"},{text:"了解平台",url:"#aboutSection",type:"outline"}]};
 let categories=[],jobs=[],cfg=DEFAULTS,activeCat="all",activeSub="all",activeSub2="all",activeTags=[],me=sessionStorage.getItem("gh_me")||null,editingMineId=null,WORKER_URL="";
 
 function contactHTML(c){
@@ -288,6 +288,7 @@ async function loadConfig(){try{const c=await getJson("config.json");cfg=Object.
   document.getElementById("aboutTitle").textContent=cfg.about_title||DEFAULTS.about_title;
   document.getElementById("aboutText").textContent=cfg.about_text||DEFAULTS.about_text;
   document.getElementById("safetyText").textContent=cfg.safety_notice||DEFAULTS.safety_notice;
+  renderHeroBtns(cfg.hero_buttons||DEFAULTS.hero_buttons);
   if(cfg.background_image)document.body.style.backgroundImage='url("'+cfg.background_image+'")';
   renderSocial();applyFormLabels('mf');
 }
@@ -340,6 +341,21 @@ async function loadOnDuty(){
   }catch(e){document.getElementById("onDutyGrid").innerHTML='<span class="on-duty-empty">加载失败</span>'}
 }
 async function init(){renderAuth();await loadConfig();if(WORKER_URL&&!sessionStorage.getItem("tracked_"+Date.now().toString().slice(0,10))){sessionStorage.setItem("tracked_"+Date.now().toString().slice(0,10),"1");wApi("/api/track-view",{}).catch(()=>{})}try{[categories,jobs]=await Promise.all([getJson("categories.json"),getJson("jobs.json")])}catch(e){categories=[];jobs=[]}jobs=jobs.filter(j=>j.status==="approved");renderAll();loadOnDuty()}
+function renderHeroBtns(btns){
+  var container=document.getElementById("heroBtns");
+  if(!container)return;
+  container.innerHTML=(btns||[]).map(function(b){
+    var cls=b.type==="primary"?"primary":"outline";
+    var url=b.url||"#";
+    var onclick="";
+    if(url.charAt(0)==="#"){
+      onclick='onclick="document.getElementById(\''+url.slice(1)+'\')?.scrollIntoView({behavior:\'smooth\'})"';
+      return '<button class="'+cls+'" '+onclick+'>'+esc(b.text)+'</button>';
+    }else{
+      return '<a class="'+cls+'" href="'+esc(url)+'" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">'+esc(b.text)+'</a>';
+    }
+  }).join("");
+}
 function renderAll(){renderCat1Chips();renderCat2Chips();renderCat3Chips();renderTagChips();renderRatios();renderJobs()}
 function filteredJobs(){
   let list=jobs;
