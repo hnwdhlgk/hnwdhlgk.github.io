@@ -123,6 +123,7 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
     <div class="menu-item" data-view="labels" onclick="showView('labels')"><span class="mi-ic">🏷️</span>字段标签</div>
     <div class="menu-item" data-view="formlabels" onclick="showView('formlabels')"><span class="mi-ic">📝</span>表单设置</div>
     <div class="menu-item" data-view="telegram" onclick="showView('telegram')"><span class="mi-ic">✈️</span>Telegram抓取</div>
+    <div class="menu-item" data-view="fetchlogs" onclick="showView('fetchlogs')"><span class="mi-ic">📋</span>抓取日志</div>
     <div class="menu-item" data-view="users" onclick="showView('users')"><span class="mi-ic">👥</span>用户管理</div>
   </nav>
   <div class="sidebar-footer"><div class="who" id="whoami">—</div><button onclick="logoutGithub()">退出登录</button></div>
@@ -343,6 +344,18 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
     </div>
   </div>
 
+  <!-- 抓取日志 -->
+  <div id="view-fetchlogs" class="view">
+    <div class="card">
+      <div class="ops" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h2 style="margin:0">频道抓取日志</h2>
+        <button class="ghost" onclick="loadFetchLogs()">刷新</button>
+      </div>
+      <p class="muted" style="margin-bottom:16px">显示最近100条频道抓取记录，包括Telegram兼职抓取和今日在岗老师按钮抓取。</p>
+      <div id="fetchLogsList"><p class="muted">加载中…</p></div>
+    </div>
+  </div>
+
   <!-- 用户管理 -->
   <div id="view-users" class="view">
     <div class="card"><h3>普通用户管理</h3>
@@ -404,7 +417,7 @@ function showView(name,param){
   var v=$('view-'+name);if(v)v.classList.add('active');
   document.querySelectorAll('.menu-item[data-view]').forEach(function(m){m.classList.remove('active')});
   document.querySelectorAll('.menu-item[data-view="'+name+'"]').forEach(function(m){if(!param||m.dataset.filter===param||m.dataset.section===param)m.classList.add('active')});
-  var titles={dashboard:'概览',cat1:'一级分类',cat2:'二级分类',cat3:'三级分类',jobs:'兼职管理',config:'站点配置',labels:'字段标签',formlabels:'表单设置',telegram:'Telegram抓取',users:'用户管理'};
+  var titles={dashboard:'概览',cat1:'一级分类',cat2:'二级分类',cat3:'三级分类',jobs:'兼职管理',config:'站点配置',labels:'字段标签',formlabels:'表单设置',telegram:'Telegram抓取',fetchlogs:'抓取日志',users:'用户管理'};
   $('pageTitle').textContent=titles[name]||name;
   if(name==='cat1')renderCat1();
   if(name==='cat2'){fillCat2Parent();renderCat2()}
@@ -412,6 +425,7 @@ function showView(name,param){
   if(name==='jobs'){initJobFilterCats();renderJobs()}
   if(name==='formlabels'){renderLinkRules()}
   if(name==='telegram')renderTelegram();
+  if(name==='fetchlogs')loadFetchLogs();
   if(name==='config')renderConfig();
   if(name==='labels')renderConfig();
   if(name==='formlabels')renderConfig();
@@ -897,6 +911,23 @@ window.saveConfig=function(){
   }catch(e){stat('保存出错：'+e.message,'err');console.error(e)}
 }
 
+window.loadFetchLogs=function(){
+  if(!CONFIG.worker_url){$('fetchLogsList').innerHTML='<p class="muted">请先在站点配置填写 Worker URL</p>';return}
+  $('fetchLogsList').innerHTML='<p class="muted">加载中…</p>';
+  fetch(CONFIG.worker_url+'/api/fetch-logs').then(function(r){return r.json()}).then(function(d){
+    var logs=d.logs||[];
+    if(!logs.length){$('fetchLogsList').innerHTML='<p class="muted">暂无抓取日志</p>';return}
+    $('fetchLogsList').innerHTML='<table class="data-table"><thead><tr><th>时间</th><th>类型</th><th>频道</th><th>数量</th><th>状态</th><th>详情</th></tr></thead><tbody>'+
+      logs.map(function(l){
+        var time=new Date(l.time).toLocaleString('zh-CN',{hour12:false});
+        var typeLabel=l.type==='telegram'?'兼职抓取':'在岗按钮';
+        var statusCls=l.status==='success'?'badge approved':(l.status==='error'?'badge rejected':'badge pending');
+        var statusText=l.status==='success'?'成功':(l.status==='error'?'失败':'无新数据');
+        return '<tr><td>'+time+'</td><td>'+typeLabel+'</td><td>'+(l.channel||'-')+'</td><td>'+(l.count||0)+'</td><td><span class="badge '+statusCls+'">'+statusText+'</span></td><td>'+(l.message||'-')+'</td></tr>';
+      }).join('')+
+      '</tbody></table>';
+  }).catch(function(e){$('fetchLogsList').innerHTML='<p class="muted" style="color:#b3261e">加载失败：'+e.message+'</p>'});
+}
 function renderTelegram(){
     renderTgMap();
   var tg=CONFIG.telegram||{};
