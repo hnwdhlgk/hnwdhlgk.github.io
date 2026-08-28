@@ -277,7 +277,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:32px 0 40px;b
     <div class="hero-logo"><div class="hu">HU</div><span>海南大学兼职公开榜</span></div>
   </section>
 
-  <section class="section" style="padding-top:0">
+  <section class="section" style="padding-top:0" id="onDutySection">
     <div class="on-duty-section">
   <h2>🔥 今日在岗老师</h2>
   <div class="on-duty-grid" id="onDutyGrid"><span class="on-duty-empty">加载中…</span></div>
@@ -537,18 +537,20 @@ async function wApi(path,body){if(!WORKER_URL)throw new Error("站点暂未开�
 
 /* ====== 公开视图 ====== */
 async function loadOnDuty(){
-  if(!WORKER_URL){document.getElementById("onDutyGrid").innerHTML='<span class="on-duty-empty">暂未配置</span>';return}
+  const section=document.getElementById("onDutySection");
+  if(!WORKER_URL){if(section)section.style.display="none";return}
   try{
     const d=await fetch(WORKER_URL+"/api/on-duty").then(r=>r.json());
     const btns=d.buttons||[];
-    if(!btns.length){document.getElementById("onDutyGrid").innerHTML='<span class="on-duty-empty">暂无在岗老师</span>';return}
+    if(!btns.length){if(section)section.style.display="none";return}
+    if(section)section.style.display="";
     document.getElementById("onDutyGrid").innerHTML=btns.map(b=>{
       let cls="on-duty-btn";
       if(/以下为|可约老师|在岗老师/.test(b.text))cls+=" title-btn";
       else if(/点击查看|查看所有|更多/.test(b.text))cls+=" more-btn";
       return '<a class="'+cls+'" href="'+esc(b.url)+'" target="_blank" rel="noopener">'+esc(b.text)+'</a>';
     }).join("");
-  }catch(e){document.getElementById("onDutyGrid").innerHTML='<span class="on-duty-empty">加载失败</span>'}
+  }catch(e){if(section)section.style.display="none"}
 }
 async function init(){renderAuth();await loadConfig();if(WORKER_URL&&!sessionStorage.getItem("tracked_"+Date.now().toString().slice(0,10))){sessionStorage.setItem("tracked_"+Date.now().toString().slice(0,10),"1");wApi("/api/track-view",{}).catch(()=>{})}try{[categories,jobs]=await Promise.all([getJson("categories.json"),getJson("jobs.json")])}catch(e){categories=[];jobs=[]}jobs=jobs.filter(j=>j.status==="approved");renderAll();loadOnDuty()}
 function renderHeroBtns(btns){
