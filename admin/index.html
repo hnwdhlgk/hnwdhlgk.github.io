@@ -321,9 +321,9 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <div class="ops"><button class="ghost" onclick="addOdChannel()">+ 添加频道</button><button onclick="saveOnDuty()">保存所有设置</button><button class="ghost" onclick="fetchOnDutyNow()">立即抓取全部</button><span id="odResult" class="muted" style="margin-left:10px"></span></div>
     </div>
 
-    <div class="card"><h3>抓取指定链接</h3>
-      <p class="muted">输入Telegram消息链接（如 https://t.me/hnwdhlgk/123），可抓取单条历史消息。频道需为公开频道。</p>
-      <label>消息链接</label><input id="tg_link" placeholder="https://t.me/频道名/消息ID">
+    <div class="card"><h3>抓取指定链接 / 监控指定频道</h3>
+      <p class="muted">支持两种输入：①具体消息链接（如 https://t.me/hnwdhlgk/123）抓取单条消息；②频道主页链接（如 https://t.me/hnwdhlgk）自动抓取该频道最新消息。频道需为公开频道。</p>
+      <label>消息链接或频道链接</label><input id="tg_link" placeholder="https://t.me/频道名/消息ID 或 https://t.me/频道名">
       <div class="ops"><button onclick="fetchByLink()">抓取此消息</button><span id="tgLinkResult" class="muted" style="margin-left:10px"></span></div>
     </div>
 
