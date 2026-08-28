@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-28T22:53:03.206Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "历史消息抓取未找到按钮（扫描0条消息，页面大小:11061字节）"
+  },
+  {
     "time": "2026-08-28T22:50:47.276Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
