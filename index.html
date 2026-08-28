@@ -204,6 +204,8 @@ let categories=[],jobs=[],cfg=DEFAULTS,activeCat="all",activeSub="all",activeSub
 
 function contactHTML(c){
   if(!c)return"";c=String(c).trim();
+  // 如果已经是HTML<a>标签，直接返回
+  if(/^<a\s/i.test(c))return c;
   var rules=(cfg&&cfg.link_rules)||[];
   for(var i=0;i<rules.length;i++){
     var r=rules[i];
@@ -334,7 +336,7 @@ function renderJobs(){
   if(activeTags.length)title+=" · #"+activeTags.join(" #");
   document.getElementById("listTitle").textContent=title;
   document.getElementById("resultCnt").textContent=list.length+" 条";
-  document.getElementById("jobs").innerHTML=list.length?list.map(j=>`<article class="job" onclick="viewJob('${esc(j.id)}')">${j.image?(j.image_link?`<a href="${esc(j.image_link)}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy"></a>`:`<img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy">`):""}<div class="cats"><span class="tag">${esc(catName(j.category)||"兼职")}</span>${j.subcategory?`<span class="tag sub">${esc(subName(j.category,j.subcategory))}</span>`:""}${j.subcategory2?`<span class="tag sub2">${esc(sub2Name(j.category,j.subcategory,j.subcategory2))}</span>`:""}</div><h3>${esc(j.title)}</h3><div class="meta">${esc(j.location||"")}${j.time?" · "+esc(j.time):""}</div>${j.salary?`<div class="salary">${esc(j.salary)}</div>`:""}<p>${linkify(j.description||"")}</p>${renderContacts(j)}<div class="views">👁 ${j.views||0}</div></article>`).join(""):'<div class="empty">暂无兼职信息</div>';
+  document.getElementById("jobs").innerHTML=list.length?list.map(j=>`<article class="job" onclick="viewJob('${esc(j.id)}')">${j.image?(function(){var il=j.image_link;if(!il&&j.telegram_channel&&j.telegram_msg_id){il="https://t.me/"+j.telegram_channel+"/"+j.telegram_msg_id+"?single"}return il?`<a href="${esc(il)}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy"></a>`:`<img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy">`})():""}<div class="cats"><span class="tag">${esc(catName(j.category)||"兼职")}</span>${j.subcategory?`<span class="tag sub">${esc(subName(j.category,j.subcategory))}</span>`:""}${j.subcategory2?`<span class="tag sub2">${esc(sub2Name(j.category,j.subcategory,j.subcategory2))}</span>`:""}</div><h3>${esc(j.title)}</h3><div class="meta">${esc(j.location||"")}${j.time?" · "+esc(j.time):""}</div>${j.salary?`<div class="salary">${esc(j.salary)}</div>`:""}<p>${linkify(j.description||"")}</p>${renderContacts(j)}<div class="views">👁 ${j.views||0}</div></article>`).join(""):'<div class="empty">暂无兼职信息</div>';
 }
 
 function renderContacts(j){
@@ -458,14 +460,16 @@ function setRTE(id,html){var e=document.getElementById(id);if(e)e.innerHTML=html
 // URL转可点击链接
 function linkify(text){
   if(!text)return "";
-  // 如果已经是HTML，直接返回（确保a标签可点击）
+  // 如果已经是HTML，把\n转成<br>后返回
   var isHTML=/<[a-z][\s\S]*>/i.test(text);
   if(isHTML){
-    return text;
+    return text.replace(/\n/g,"<br>");
   }
   // 纯文本：先转义
   var escaped=text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  // 支持 文字(url) 格式：给青青写评价(https://t.me/xxx) → <a href="url">文字</a>
+  // 换行转<br>
+  escaped=escaped.replace(/\n/g,"<br>");
+  // 支持 文字(url) 格式
   escaped=escaped.replace(/([^\s(]+)\((https?:\/\/[^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
   // 普通URL转链接
   escaped=escaped.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
