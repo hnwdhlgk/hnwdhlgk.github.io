@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-28T22:00:37.912Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "未收到@hnwdhldh的消息。Bot(@hainanguanlibot)收到的频道：无"
+  },
+  {
     "time": "2026-08-28T22:00:35.776Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
