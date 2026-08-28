@@ -131,6 +131,13 @@ footer{text-align:center;color:#8a99a9;font-size:12px;padding:30px 0 45px}
 .rte-editor{min-height:90px;padding:10px;outline:none;font:inherit;line-height:1.6}
 .rte-editor:empty:before{content:attr(data-placeholder);color:#aaa}
 .rte-editor a{color:#1565c0;text-decoration:underline}
+
+.on-duty-section{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
+.on-duty-section h2{margin:0 0 12px;font-size:18px;display:flex;align-items:center;gap:8px}
+.on-duty-grid{display:flex;flex-wrap:wrap;gap:10px}
+.on-duty-btn{display:inline-block;padding:10px 18px;background:linear-gradient(135deg,#1565c0,#1976d2);color:#fff;border-radius:25px;text-decoration:none;font-size:14px;font-weight:500;transition:.2s;border:0;cursor:pointer}
+.on-duty-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(21,101,192,.4)}
+.on-duty-empty{color:var(--muted);font-size:14px;padding:10px 0}
 </style>
 </head>
 <body>
@@ -145,7 +152,11 @@ footer{text-align:center;color:#8a99a9;font-size:12px;padding:30px 0 45px}
   <section class="about" id="aboutSection"><div><h2 id="aboutTitle">让校园信息更容易找到</h2></div><div><p id="aboutText">海南大学兼职公开榜致力于为海南大学学子提供安全、可靠的兼职信息平台。所有信息均经审核，确保真实有效。</p></div></section>
 
   <section class="section" id="jobSection">
-    <div class="section-head"><h2>兼职信息筛选</h2><span class="more" id="totalCnt">加载中…</span></div>
+    <div class="on-duty-section">
+  <h2>🔥 今日在岗老师</h2>
+  <div class="on-duty-grid" id="onDutyGrid"><span class="on-duty-empty">加载中…</span></div>
+</div>
+<div class="section-head"><h2>兼职信息筛选</h2><span class="more" id="totalCnt">加载中…</span></div>
     <div class="sub-label">类别</div>
     <div class="chips" id="cat1Chips"></div>
     <div id="cat2Wrap" style="display:none"><div class="sub-label" id="cat2Label">城市</div><div class="chips" id="cat2Chips"></div></div>
@@ -295,7 +306,18 @@ function renderSocial(){
 async function wApi(path,body){if(!WORKER_URL)throw new Error("站点暂未开放普通用户功能（管理员尚未配置后端）");const r=await fetch(WORKER_URL.replace(/\/+$/,"")+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});let d={};try{d=await r.json()}catch(e){}if(!r.ok||d.error)throw new Error(d.error||("HTTP "+r.status));return d}
 
 /* ====== 公开视图 ====== */
-async function init(){renderAuth();await loadConfig();if(WORKER_URL&&!sessionStorage.getItem("tracked_"+Date.now().toString().slice(0,10))){sessionStorage.setItem("tracked_"+Date.now().toString().slice(0,10),"1");wApi("/api/track-view",{}).catch(()=>{})}try{[categories,jobs]=await Promise.all([getJson("categories.json"),getJson("jobs.json")])}catch(e){categories=[];jobs=[]}jobs=jobs.filter(j=>j.status==="approved");renderAll()}
+async function loadOnDuty(){
+  if(!WORKER_URL){document.getElementById("onDutyGrid").innerHTML='<span class="on-duty-empty">暂未配置</span>';return}
+  try{
+    const d=await fetch(WORKER_URL+"/api/on-duty").then(r=>r.json());
+    const btns=d.buttons||[];
+    if(!btns.length){document.getElementById("onDutyGrid").innerHTML='<span class="on-duty-empty">暂无在岗老师</span>';return}
+    document.getElementById("onDutyGrid").innerHTML=btns.map(b=>
+      '<a class="on-duty-btn" href="'+esc(b.url)+'" target="_blank" rel="noopener">'+esc(b.text)+'</a>'
+    ).join("");
+  }catch(e){document.getElementById("onDutyGrid").innerHTML='<span class="on-duty-empty">加载失败</span>'}
+}
+async function init(){renderAuth();await loadConfig();if(WORKER_URL&&!sessionStorage.getItem("tracked_"+Date.now().toString().slice(0,10))){sessionStorage.setItem("tracked_"+Date.now().toString().slice(0,10),"1");wApi("/api/track-view",{}).catch(()=>{})}try{[categories,jobs]=await Promise.all([getJson("categories.json"),getJson("jobs.json")])}catch(e){categories=[];jobs=[]}jobs=jobs.filter(j=>j.status==="approved");renderAll();loadOnDuty()}
 function renderAll(){renderCat1Chips();renderCat2Chips();renderCat3Chips();renderTagChips();renderRatios();renderJobs()}
 function filteredJobs(){
   let list=jobs;
