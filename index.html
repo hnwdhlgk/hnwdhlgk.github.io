@@ -233,25 +233,28 @@ async function loadConfig(){try{const c=await getJson("config.json");cfg=Object.
   document.getElementById("aboutText").textContent=cfg.about_text||DEFAULTS.about_text;
   document.getElementById("safetyText").textContent=cfg.safety_notice||DEFAULTS.safety_notice;
   if(cfg.background_image)document.body.style.backgroundImage='url("'+cfg.background_image+'")';
-  renderSocial();applyFormLabels();
+  renderSocial();applyFormLabels('mf');
 }
-function applyFormLabels(){
+function applyFormLabels(prefix){
   const fl=cfg.form_labels||{},fp=cfg.form_placeholders||{};
   const setL=(id,txt)=>{const el=document.getElementById(id);if(el&&txt)el.textContent=txt};
   const setP=(id,txt)=>{const el=document.getElementById(id);if(el&&txt)el.placeholder=txt};
-  setL('lb_title',fl.title);setL('lb_cat',fl.cat);setL('lb_sub',fl.sub);setL('lb_sub2',fl.sub2);
-  setL('lb_desc',fl.desc);setL('lb_salary',fl.salary);setL('lb_loc',fl.loc);
-  setL('lb_contact',fl.contact);setL('lb_contactlink',fl.contactlink);setL('lb_contact2',fl.contact2);setL('lb_contact2link',fl.contact2link);setL('lb_contact3',fl.contact3);setL('lb_contact3link',fl.contact3link);setL('lb_tags',fl.tags);setL('lb_img',fl.img);setL('lb_imagelink',fl.imagelink);
-  setL('btn_submit',fl.submit);
-  setP('mf_title',fp.title);setP('mf_desc',fp.desc);setP('mf_salary',fp.salary);
-  setP('mf_loc',fp.loc);setP('mf_contact',fp.contact);setP('mf_contactlink',fp.contactlink);setP('mf_contact2',fp.contact2);setP('mf_contact2link',fp.contact2link);setP('mf_contact3',fp.contact3);setP('mf_contact3link',fp.contact3link);setP('mf_tags',fp.tags);
-  applyFormLabels('mf');
-}
-function applyFormLabels(prefix){
-  const map={title:'lb_'+prefix+'_title',cat:'lb_'+prefix+'_cat',sub:'lb_'+prefix+'_sub',sub2:'lb_'+prefix+'_sub2',desc:'lb_'+prefix+'_desc',salary:'lb_'+prefix+'_salary',loc:'lb_'+prefix+'_loc',contact:'lb_'+prefix+'_contact',contact2:'lb_'+prefix+'_contact2',contact3:'lb_'+prefix+'_contact3',tags:'lb_'+prefix+'_tags',img:'lb_'+prefix+'_img'};
-  Object.keys(map).forEach(function(k){if(fl[k])setL(map[k],fl[k])});
-  const pmap={title:prefix+'_title',desc:prefix+'_desc',salary:prefix+'_salary',loc:prefix+'_loc',contact:prefix+'_contact',contact2:prefix+'_contact2',contact3:prefix+'_contact3',tags:prefix+'_tags'};
-  Object.keys(pmap).forEach(function(k){if(fp[k])setP(pmap[k],fp[k])});
+  if(!prefix||prefix==='mf'){
+    // 发布表单（默认标签）
+    setL('lb_title',fl.title);setL('lb_cat',fl.cat);setL('lb_sub',fl.sub);setL('lb_sub2',fl.sub2);
+    setL('lb_desc',fl.desc);setL('lb_salary',fl.salary);setL('lb_loc',fl.loc);
+    setL('lb_contact',fl.contact);setL('lb_contact2',fl.contact2);setL('lb_contact3',fl.contact3);
+    setL('lb_tags',fl.tags);setL('lb_img',fl.img);setL('btn_submit',fl.submit);
+    setP('mf_title',fp.title);setP('mf_salary',fp.salary);setP('mf_loc',fp.loc);
+    setP('mf_contact',fp.contact);setP('mf_contact2',fp.contact2);setP('mf_contact3',fp.contact3);setP('mf_tags',fp.tags);
+  }
+  if(prefix){
+    // 编辑表单（带前缀的标签）
+    const map={title:'lb_'+prefix+'_title',cat:'lb_'+prefix+'_cat',sub:'lb_'+prefix+'_sub',sub2:'lb_'+prefix+'_sub2',desc:'lb_'+prefix+'_desc',salary:'lb_'+prefix+'_salary',loc:'lb_'+prefix+'_loc',contact:'lb_'+prefix+'_contact',contact2:'lb_'+prefix+'_contact2',contact3:'lb_'+prefix+'_contact3',tags:'lb_'+prefix+'_tags',img:'lb_'+prefix+'_img'};
+    Object.keys(map).forEach(function(k){if(fl[k])setL(map[k],fl[k])});
+    const pmap={title:prefix+'_title',salary:prefix+'_salary',loc:prefix+'_loc',contact:prefix+'_contact',contact2:prefix+'_contact2',contact3:prefix+'_contact3',tags:prefix+'_tags'};
+    Object.keys(pmap).forEach(function(k){if(fp[k])setP(pmap[k],fp[k])});
+  }
 }
 function renderSocial(){
   const links=cfg.social_links||[];
