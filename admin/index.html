@@ -349,7 +349,10 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
     <div class="card">
       <div class="ops" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <h2 style="margin:0">频道抓取日志</h2>
-        <button class="ghost" onclick="loadFetchLogs()">刷新</button>
+        <div>
+          <button class="ghost" onclick="loadFetchLogs()">刷新</button>
+          <button class="danger" onclick="clearFetchLogs()" style="background:#b3261e;margin-left:8px">清空日志</button>
+        </div>
       </div>
       <p class="muted" style="margin-bottom:16px">显示最近100条频道抓取记录，包括Telegram兼职抓取和今日在岗老师按钮抓取。</p>
       <div id="fetchLogsList"><p class="muted">加载中…</p></div>
@@ -911,6 +914,14 @@ window.saveConfig=function(){
   }catch(e){stat('保存出错：'+e.message,'err');console.error(e)}
 }
 
+window.clearFetchLogs=function(){
+  if(!confirm("确定要清空所有抓取日志吗？此操作不可恢复。"))return;
+  if(!CONFIG.worker_url){alert("请先配置Worker URL");return}
+  fetch(CONFIG.worker_url+'/api/clear-fetch-logs',{method:'POST'}).then(function(r){return r.json()}).then(function(d){
+    if(d.ok){loadFetchLogs();alert("日志已清空")}
+    else alert("清空失败："+(d.error||"未知错误"))
+  }).catch(function(e){alert("清空失败："+e.message)})
+}
 window.loadFetchLogs=function(){
   if(!CONFIG.worker_url){$('fetchLogsList').innerHTML='<p class="muted">请先在站点配置填写 Worker URL</p>';return}
   $('fetchLogsList').innerHTML='<p class="muted">加载中…</p>';
