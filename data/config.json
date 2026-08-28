@@ -32,21 +32,7 @@
   "social_links": [
     {
       "name": "Telegram",
-      "url": {
-        "enabled": true,
-        "tag_maps": [],
-        "channels": [
-          {
-            "bot_token": "7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs",
-            "channel": "@hnwdhlgk",
-            "default_category": "personal",
-            "default_status": "pending",
-            "enabled": true,
-            "tag_maps": []
-          }
-        ],
-        "ocr_api_key": "K84664811188957"
-      },
+      "url": "[object Object]",
       "icon": "",
       "color": "#0088cc"
     }
@@ -67,6 +53,24 @@
       "text": "了解平台",
       "url": "#aboutSection",
       "type": "outline"
+    },
+    {
+      "text": "加入我们",
+      "url": "https://t.me/hainanxueyuan",
+      "type": "outline"
+    },
+    {
+      "text": "联系我们",
+      "url": "https://t.me/hainanguanlibot",
+      "type": "outline"
     }
-  ]
+  ],
+  "hero_title": "",
+  "hero_description": "",
+  "about_title": "",
+  "about_text": "",
+  "safety_notice": "",
+  "labels": {},
+  "form_labels": {},
+  "form_placeholders": {}
 }
