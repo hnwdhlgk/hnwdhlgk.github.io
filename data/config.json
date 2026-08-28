@@ -83,5 +83,27 @@
     "enabled": true,
     "channel": "@hnwdhldh",
     "bot_token": ""
-  }
+  },
+  "hero_buttons": [
+    {
+      "text": "浏览兼职",
+      "url": "#jobSection",
+      "type": "primary"
+    },
+    {
+      "text": "了解平台",
+      "url": "#aboutSection",
+      "type": "outline"
+    },
+    {
+      "text": "加入我们",
+      "url": "https://t.me/hainanxueyuan",
+      "type": "outline"
+    },
+    {
+      "text": "联系我们",
+      "url": "https://t.me/hainanguanlibot",
+      "type": "outline"
+    }
+  ]
 }
