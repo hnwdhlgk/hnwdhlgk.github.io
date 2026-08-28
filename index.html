@@ -574,7 +574,7 @@ function filteredJobs(){
   if(activeCat!=="all")list=list.filter(j=>j.category===activeCat);
   if(activeSub!=="all")list=list.filter(j=>j.subcategory===activeSub);
   if(activeSub2!=="all")list=list.filter(j=>j.subcategory2===activeSub2);
-  if(activeTags.length)list=list.filter(j=>(j.tags||[]).some(t=>activeTags.includes(t)));
+  if(activeTags.length)list=list.filter(j=>(j.tags||[]).some(t=>{const norm=String(t||"").trim().replace(/\s+/g," ").replace(/[.。·•]/g,"");return activeTags.includes(norm)}));
   return list.slice().sort((a,b)=>(b.views||0)-(a.views||0));
 }
 function renderCat1Chips(){
@@ -617,16 +617,28 @@ function renderTagChips(){
   if(activeCat && activeCat!=="all")filtered=filtered.filter(j=>j.category===activeCat);
   if(activeSub && activeSub!=="all")filtered=filtered.filter(j=>j.subcategory===activeSub);
   if(activeSub2 && activeSub2!=="all")filtered=filtered.filter(j=>j.subcategory2===activeSub2);
+  // 收集所有分类名称，用于过滤
+  const catNames=new Set();
+  categories.forEach(c=>{catNames.add(c.name);catNames.add(c.slug);(c.subcategories||[]).forEach(sub=>{catNames.add(sub.name);catNames.add(sub.slug);(sub.subcategories||[]).forEach(sub2=>{catNames.add(sub2.name);catNames.add(sub2.slug)})})});
   const allTags={};
-  filtered.forEach(j=>(j.tags||[]).forEach(t=>allTags[t]=(allTags[t]||0)+1));
+  filtered.forEach(j=>(j.tags||[]).forEach(t=>{
+    // 标签标准化：去首尾空格、合并连续空格、去除特殊字符
+    const norm=String(t||"").trim().replace(/\s+/g," ").replace(/[.。·•]/g,"");
+    if(!norm)return;
+    // 过滤掉分类名称和地点名称
+    if(catNames.has(norm))return;
+    if(/[市县区镇村乡州盟]$/.test(norm))return;
+    allTags[norm]=(allTags[norm]||0)+1;
+  }));
   const tags=Object.entries(allTags).sort((a,b)=>b[1]-a[1]);
   let html=`<button class="chip ${!activeTags.length?"active":""}" onclick="clearTags()">全部标签</button>`;
   html+=tags.map(([t,n])=>`<button class="chip ${activeTags.includes(t)?"active":""}" onclick="toggleTag('${esc(t)}')">${esc(t)} <span class="cnt">${n}</span></button>`).join("");
   document.getElementById("tagChips").innerHTML=tags.length?html:'<span style="color:var(--muted);font-size:13px">该分类下暂无标签</span>';
 }
 function toggleTag(t){
-  if(activeTags.includes(t))activeTags=activeTags.filter(x=>x!==t);
-  else activeTags.push(t);
+  const norm=String(t||"").trim().replace(/\s+/g," ").replace(/[.。·•]/g,"");
+  if(activeTags.includes(norm))activeTags=activeTags.filter(x=>x!==norm);
+  else activeTags.push(norm);
   renderAll();
 }
 function clearTags(){activeTags=[];renderAll()}
