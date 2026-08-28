@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-28T17:22:16.480Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 24,
+    "status": "success",
+    "message": "抓取24个按钮"
+  },
+  {
     "time": "2026-08-28T17:21:30.283Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
