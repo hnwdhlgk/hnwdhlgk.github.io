@@ -376,7 +376,7 @@ async function bindUpload(inputId,btnId,prevId,statusId,urlKey){
     try{
       const b64=await fileToBase64(f);
       const r=await wApi("/api/upload-image",{username:me,filename:f.name,content:b64});
-      window[urlKey]=r.path;
+      if(urlKey==="_mf_imgUrl")_mf_imgUrl=r.path;else if(urlKey==="_mj_imgUrl")_mj_imgUrl=r.path;
       prev.src=r.path;prev.style.display="block";
       status.textContent="上传成功";status.className="upload-status ok";
       btn.textContent="重新选择";btn.classList.add("has-file");btn.disabled=false;
