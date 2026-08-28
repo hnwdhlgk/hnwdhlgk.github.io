@@ -306,16 +306,12 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
 
   <!-- Telegram抓取 -->
   <div id="view-telegram" class="view">
-    <div class="card"><h3>基本设置</h3>
-      <p class="muted">绑定Telegram频道后，系统定时自动抓取频道新消息并发布为兼职。Bot需设为频道管理员。</p>
+    <div class="card"><h3>多频道抓取设置</h3>
+      <p class="muted">支持配置多个Telegram频道，每个频道使用独立的Bot Token。Bot需设为对应频道的管理员。</p>
       <div class="row"><div><label>启用自动抓取</label><select id="tg_enabled"><option value="false">关闭</option><option value="true">开启</option></select></div>
-      <div><label>默认发布状态</label><select id="tg_status"><option value="pending">待审核</option><option value="approved">直接通过</option></select></div></div>
-      <label>Bot Token</label><input id="tg_token" placeholder="123456:ABC-DEF...">
-      <label>频道用户名</label><input id="tg_channel" placeholder="@hainanguanli">
-      <label>默认一级分类（Slug）</label><input id="tg_category" placeholder="如：personal">
-      <div class="row"><div><label>OCR API Key（ocr.space，可选）</label><input id="tg_ocr_key" placeholder="K812345678（用于识别图片文字）"></div>
-      <div><label>OCR语言</label><select id="tg_ocr_lang"><option value="chs">中文</option><option value="eng">英文</option><option value="jpn">日文</option><option value="kor">韩文</option></select></div></div>
-      <div class="ops"><button onclick="saveTelegram()">保存设置</button><button class="ghost" onclick="testTelegram()">测试连接</button><button class="ghost" onclick="manualFetchTelegram()">立即抓取</button><span id="tgFetchResult" class="muted" style="margin-left:10px"></span></div>
+      <div><label>OCR API Key（ocr.space，可选）</label><input id="tg_ocr_key" placeholder="K812345678（用于识别图片文字）" style="width:200px"></div></div>
+      <div id="tgChannelsList" style="margin:16px 0"></div>
+      <div class="ops"><button class="ghost" onclick="addTgChannel()">+ 添加频道</button><button onclick="saveTelegram()">保存所有设置</button><button class="ghost" onclick="manualFetchTelegram()">立即抓取全部</button><span id="tgFetchResult" class="muted" style="margin-left:10px"></span></div>
     </div>
 
     <div class="card"><h3>今日在岗老师</h3>
@@ -946,16 +942,59 @@ function renderTelegram(){
     renderTgMap();
   var tg=CONFIG.telegram||{};
   $('tg_enabled').value=tg.enabled?'true':'false';
-  $('tg_status').value=tg.default_status||'pending';
-  $('tg_token').value=tg.bot_token||'';
-  $('tg_channel').value=tg.channel||'';
-  $('tg_category').value=tg.default_category||'';
   $('tg_ocr_key').value=tg.ocr_api_key||'';
-  $('tg_ocr_lang').value=tg.ocr_language||'chs';
+  // 多频道：兼容旧配置
+  if(!tg.channels&&tg.bot_token){
+    tg.channels=[{bot_token:tg.bot_token,channel:tg.channel,default_category:tg.default_category||'personal',default_status:tg.default_status||'pending',tag_maps:tg.tag_maps||[],enabled:true}];
+  }
+  renderTgChannels();
   var od=CONFIG.on_duty||{};
   $('od_enabled').value=od.enabled?'true':'false';
   $('od_channel').value=od.channel||'';
   $('od_bot_token').value=od.bot_token||'';
+}
+// 多频道管理
+window._tgChannels=[];
+function renderTgChannels(){
+  var tg=CONFIG.telegram||{};
+  window._tgChannels=JSON.parse(JSON.stringify(tg.channels||[]));
+  var list=$('tgChannelsList');
+  if(!window._tgChannels.length){
+    list.innerHTML='<p class="muted">暂无频道，点击「添加频道」配置</p>';
+    return;
+  }
+  list.innerHTML=window._tgChannels.map(function(ch,i){
+    return '<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:12px;background:#f8fafc">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'+
+        '<strong style="color:#1e293b">频道 '+(i+1)+(ch.channel?'：'+esc(ch.channel):'（未配置）')+'</strong>'+
+        '<button class="danger small" onclick="delTgChannel('+i+')" style="background:#b3261e">删除</button>'+
+      '</div>'+
+      '<div class="row">'+
+        '<div style="flex:1"><label>Bot Token</label><input id="tgc_token_'+i+'" value="'+esc(ch.bot_token||'')+'" placeholder="123456:ABC-DEF..."></div>'+
+        '<div style="width:180px"><label>频道用户名</label><input id="tgc_channel_'+i+'" value="'+esc(ch.channel||'')+'" placeholder="@hainanguanli"></div>'+
+      '</div>'+
+      '<div class="row">'+
+        '<div style="width:180px"><label>默认分类</label><input id="tgc_category_'+i+'" value="'+esc(ch.default_category||'personal')+'" placeholder="personal"></div>'+
+        '<div style="width:140px"><label>发布状态</label><select id="tgc_status_'+i+'">'+
+          '<option value="pending"'+(ch.default_status==='pending'?' selected':'')+'>待审核</option>'+
+          '<option value="approved"'+(ch.default_status==='approved'?' selected':'')+'>直接通过</option>'+
+        '</select></div>'+
+        '<div style="width:100px"><label>启用</label><select id="tgc_enabled_'+i+'">'+
+          '<option value="true"'+(ch.enabled!==false?' selected':'')+'>开启</option>'+
+          '<option value="false"'+(ch.enabled===false?' selected':'')+'>关闭</option>'+
+        '</select></div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+window.addTgChannel=function(){
+  window._tgChannels.push({bot_token:'',channel:'',default_category:'personal',default_status:'pending',tag_maps:[],enabled:true});
+  renderTgChannels();
+}
+window.delTgChannel=function(i){
+  if(!confirm('确定删除此频道配置？'))return;
+  window._tgChannels.splice(i,1);
+  renderTgChannels();
 }
 function renderTgMap(){
   var maps=(CONFIG.telegram&&CONFIG.telegram.tag_maps)||[];
@@ -1010,26 +1049,28 @@ window.delTgMap=function(i){
 window.saveTelegram=function(){
   CONFIG.telegram=CONFIG.telegram||{};
   CONFIG.telegram.enabled=$('tg_enabled').value==='true';
-  CONFIG.telegram.default_status=$('tg_status').value;
-  CONFIG.telegram.bot_token=$('tg_token').value.trim();
-  CONFIG.telegram.channel=$('tg_channel').value.trim();
-  CONFIG.telegram.default_category=$('tg_category').value.trim();
   CONFIG.telegram.ocr_api_key=$('tg_ocr_key').value.trim();
-  CONFIG.telegram.ocr_language=$('tg_ocr_lang').value;
-  var maps=[];
-  (CONFIG.telegram.tag_maps||[]).forEach(function(m,i){
-    var tag=$('tgm_tag_'+i);if(!tag)return;
-    var typeVal=$('tgm_type_'+i).value;
-    var type=typeVal,value='';
-    if(typeVal.indexOf('cat:')===0){type='category';value=typeVal.slice(4)}
-    else if(typeVal.indexOf('sub2:')===0){type='subcategory2';value=typeVal.slice(5)}
-    else if(typeVal.indexOf('sub:')===0){type='subcategory';value=typeVal.slice(4)}
-    else{value=$('tgm_val_'+i).value.trim()}
-    maps.push({tag:tag.value.trim().replace(/^#/,''),type:type,value:value});
+  // 收集多频道配置
+  var channels=[];
+  window._tgChannels.forEach(function(ch,i){
+    var tokenEl=$('tgc_token_'+i);if(!tokenEl)return;
+    channels.push({
+      bot_token:tokenEl.value.trim(),
+      channel:$('tgc_channel_'+i).value.trim(),
+      default_category:$('tgc_category_'+i).value.trim(),
+      default_status:$('tgc_status_'+i).value,
+      enabled:$('tgc_enabled_'+i).value==='true',
+      tag_maps:ch.tag_maps||[]
+    });
   });
-  CONFIG.telegram.tag_maps=maps;
+  CONFIG.telegram.channels=channels;
+  // 清理旧的单频道字段（保留全局tag_maps供所有频道共享）
+  delete CONFIG.telegram.bot_token;
+  delete CONFIG.telegram.channel;
+  delete CONFIG.telegram.default_category;
+  delete CONFIG.telegram.default_status;
   stat('正在保存…','wait');
-  writeFile('data/config.json',CONFIG,cfgSha,'保存Telegram配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderTelegram();stat('配置已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')});
+  writeFile('data/config.json',CONFIG,cfgSha,'保存Telegram多频道配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderTelegram();stat('配置已保存（'+channels.length+'个频道）','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')});
 }
 var _tgPreview=null;
 window.saveOnDuty=function(){
@@ -1149,7 +1190,15 @@ window.manualFetchTelegram=function(){
   if(!CONFIG.worker_url){alert('请先在站点配置填写Worker URL');return}
   $('tgFetchResult').textContent='抓取中…';
   fetch(CONFIG.worker_url+'/api/telegram-fetch',{method:'POST'}).then(function(r){return r.json()}).then(function(d){
-    $('tgFetchResult').textContent=d.ok?('成功：抓取'+d.fetched+'条，新增'+d.new+'条'):('失败：'+d.message);
+    if(d.ok){
+      var detailStr='';
+      if(d.details&&d.details.length){
+        detailStr=d.details.map(function(r){return (r.channel||'?')+':'+(r.new||0)+'条'}).join(', ');
+      }
+      $('tgFetchResult').textContent='成功：'+d.channels+'个频道，新增'+d.new+'条'+(detailStr?'（'+detailStr+'）':'');
+    }else{
+      $('tgFetchResult').textContent='失败：'+d.message;
+    }
     if(d.ok&&d.new>0)loadAll();
   }).catch(function(e){$('tgFetchResult').textContent='请求失败：'+e.message});
 }
