@@ -574,7 +574,10 @@ function filteredJobs(){
   if(activeCat!=="all")list=list.filter(j=>j.category===activeCat);
   if(activeSub!=="all")list=list.filter(j=>j.subcategory===activeSub);
   if(activeSub2!=="all")list=list.filter(j=>j.subcategory2===activeSub2);
-  if(activeTags.length)list=list.filter(j=>(j.tags||[]).some(t=>{const norm=String(t||"").trim().replace(/\s+/g," ").replace(/[.。·•]/g,"");return activeTags.includes(norm)}));
+  if(activeTags.length)list=list.filter(j=>{
+    const jobTags=(j.tags||[]).map(t=>String(t||"").trim().replace(/\s+/g," ").replace(/[.。·•]/g,""));
+    return activeTags.every(tag=>jobTags.includes(tag));
+  });
   return list.slice().sort((a,b)=>(b.views||0)-(a.views||0));
 }
 function renderCat1Chips(){
