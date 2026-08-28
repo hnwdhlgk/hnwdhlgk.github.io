@@ -227,6 +227,19 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:32px 0 40px;b
 .shortcut-item:hover{background:var(--sea);color:#fff;transform:translateY(-2px);box-shadow:0 4px 12px rgba(12,74,110,.2)}
 .shortcut-ic{font-size:18px}
 @media(max-width:700px){.admin-shortcuts{grid-template-columns:repeat(2,1fr)}}
+.stat-card{background:var(--sea-bg);border-radius:12px;padding:20px;text-align:center}
+.stat-num{font-size:28px;font-weight:700;color:var(--sea)}
+.stat-label{font-size:13px;color:var(--muted);margin-top:4px}
+.cat-admin-item{background:#f8fafc;border-radius:10px;padding:14px;margin-bottom:10px}
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table th{background:var(--sea-bg);padding:10px;text-align:left;color:var(--sea);font-weight:600;border-bottom:2px solid var(--line)}
+.data-table td{padding:10px;border-bottom:1px solid var(--line)}
+.data-table tr:hover{background:#f8fafc}
+.status-approved{color:#137333;font-weight:600}
+.status-pending{color:#8a5a00;font-weight:600}
+.status-rejected{color:#b3261e;font-weight:600}
+.shortcut-item{border:0;cursor:pointer;font-family:inherit;text-align:left;width:100%}
+@media(max-width:700px){.stat-card{padding:14px}.stat-num{font-size:22px}}
 @media(max-width:700px){
   .form-row{grid-template-columns:1fr}
   .user-card{padding:16px}
@@ -394,15 +407,16 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:32px 0 40px;b
       </div>
     </div>
     <div class="admin-shortcuts">
-      <a href="admin/" target="_blank" class="shortcut-item"><span class="shortcut-ic">📊</span><span>概览统计</span></a>
-      <a href="admin/" target="_blank" class="shortcut-item"><span class="shortcut-ic">📁</span><span>分类管理</span></a>
-      <a href="admin/" target="_blank" class="shortcut-item"><span class="shortcut-ic">📋</span><span>兼职管理</span></a>
-      <a href="admin/" target="_blank" class="shortcut-item"><span class="shortcut-ic">⚙️</span><span>站点配置</span></a>
-      <a href="admin/" target="_blank" class="shortcut-item"><span class="shortcut-ic">✏️</span><span>字段标签</span></a>
-      <a href="admin/" target="_blank" class="shortcut-item"><span class="shortcut-ic">📝</span><span>表单设置</span></a>
-      <a href="admin/" target="_blank" class="shortcut-item"><span class="shortcut-ic">✈️</span><span>Telegram抓取</span></a>
-      <a href="admin/" target="_blank" class="shortcut-item"><span class="shortcut-ic">📜</span><span>抓取日志</span></a>
+      <button class="shortcut-item" onclick="showAdminPanel('dashboard')"><span class="shortcut-ic">📊</span><span>概览统计</span></button>
+      <button class="shortcut-item" onclick="showAdminPanel('categories')"><span class="shortcut-ic">📁</span><span>分类管理</span></button>
+      <button class="shortcut-item" onclick="showAdminPanel('jobs')"><span class="shortcut-ic">📋</span><span>兼职管理</span></button>
+      <button class="shortcut-item" onclick="showAdminPanel('config')"><span class="shortcut-ic">⚙️</span><span>站点配置</span></button>
+      <button class="shortcut-item" onclick="showAdminPanel('users')"><span class="shortcut-ic">👥</span><span>用户管理</span></button>
+      <button class="shortcut-item" onclick="showAdminPanel('telegram')"><span class="shortcut-ic">✈️</span><span>Telegram抓取</span></button>
+      <button class="shortcut-item" onclick="showAdminPanel('logs')"><span class="shortcut-ic">📜</span><span>抓取日志</span></button>
+      <a href="admin/" target="_blank" class="shortcut-item"><span class="shortcut-ic">🔗</span><span>完整后台</span></a>
     </div>
+    <div id="adminPanels" style="margin-top:20px"></div>
     <h3 style="margin:20px 0 12px;font-size:16px;color:var(--sea)">待审核兼职</h3>
     <div id="pendingList"></div>
   </div>
@@ -673,6 +687,223 @@ async function checkAdmin(){
   try{await wApi("/api/pending-jobs",{username:me});isAdmin=true;document.getElementById("adminPanel").style.display="";loadPending()}
   catch(e){isAdmin=false;document.getElementById("adminPanel").style.display="none"}
 }
+let currentAdminPanel='';
+window.showAdminPanel=function(type){
+  currentAdminPanel=type;
+  const el=document.getElementById("adminPanels");
+  el.innerHTML='<div style="padding:20px;text-align:center;color:var(--muted)">加载中...</div>';
+  if(type==='dashboard')renderAdminDashboard();
+  else if(type==='categories')renderAdminCategories();
+  else if(type==='jobs')renderAdminJobs();
+  else if(type==='config')renderAdminConfig();
+  else if(type==='users')renderAdminUsers();
+  else if(type==='telegram')renderAdminTelegram();
+  else if(type==='logs')renderAdminLogs();
+};
+async function renderAdminDashboard(){
+  try{
+    const [stats,jobs]=await Promise.all([
+      fetch(WORKER_URL+"/api/stats").then(r=>r.json()).catch(()=>({daily:{},total_views:0,total_visitors:0})),
+      wApi("/api/admin/jobs",{username:me})
+    ]);
+    const allJobs=jobs.jobs||[];
+    const approved=allJobs.filter(j=>j.status==='approved').length;
+    const pending=allJobs.filter(j=>j.status==='pending').length;
+    const today=new Date().toISOString().slice(0,10);
+    const todayStats=(stats.daily&&stats.daily[today])||{views:0,visitors:0};
+    document.getElementById("adminPanels").innerHTML=`
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px">
+        <div class="stat-card"><div class="stat-num">${allJobs.length}</div><div class="stat-label">总兼职数</div></div>
+        <div class="stat-card"><div class="stat-num">${approved}</div><div class="stat-label">已通过</div></div>
+        <div class="stat-card"><div class="stat-num">${pending}</div><div class="stat-label">待审核</div></div>
+        <div class="stat-card"><div class="stat-num">${stats.total_views||0}</div><div class="stat-label">总访问量</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px">
+        <div class="stat-card"><div class="stat-num">${todayStats.views||0}</div><div class="stat-label">今日访问量</div></div>
+        <div class="stat-card"><div class="stat-num">${todayStats.visitors||0}</div><div class="stat-label">今日访客数</div></div>
+      </div>`;
+  }catch(e){document.getElementById("adminPanels").innerHTML='<div class="empty">加载失败：'+esc(e.message)+'</div>'}
+}
+async function renderAdminJobs(){
+  try{
+    const d=await wApi("/api/admin/jobs",{username:me});
+    const jobs=d.jobs||[];
+    let html='<div style="margin-bottom:12px"><input placeholder="搜索标题..." style="padding:8px 12px;border:1px solid var(--line);border-radius:8px;width:200px" oninput="filterAdminJobs(this.value)"></div>';
+    html+='<div id="adminJobsList"><table class="data-table"><thead><tr><th>标题</th><th>分类</th><th>状态</th><th>点击</th><th>操作</th></tr></thead><tbody>';
+    html+=jobs.map(j=>`<tr data-title="${esc(j.title||'').toLowerCase()}">
+      <td>${esc(j.title||'')}</td>
+      <td>${esc(j.category||'')}${j.subcategory?'/'+esc(j.subcategory):''}</td>
+      <td><span class="status-${j.status||'pending'}">${j.status==='approved'?'已通过':j.status==='rejected'?'已拒绝':'待审核'}</span></td>
+      <td>${j.views||0}</td>
+      <td>
+        ${j.status!=='approved'?`<button class="small" onclick="adminApproveJob('${j.id}')">通过</button>`:''}
+        ${j.status!=='rejected'?`<button class="small" onclick="adminRejectJob('${j.id}')">拒绝</button>`:''}
+        <button class="danger small" onclick="adminDeleteJob('${j.id}')">删除</button>
+      </td></tr>`).join('');
+    html+='</tbody></table></div>';
+    document.getElementById("adminPanels").innerHTML=html;
+  }catch(e){document.getElementById("adminPanels").innerHTML='<div class="empty">加载失败：'+esc(e.message)+'</div>'}
+}
+window.filterAdminJobs=function(kw){
+  kw=kw.toLowerCase();
+  document.querySelectorAll('#adminJobsList tr[data-title]').forEach(tr=>{
+    tr.style.display=tr.dataset.title.includes(kw)?'':'none';
+  });
+};
+window.adminApproveJob=async function(id){
+  await wApi("/api/approve-job",{username:me,id:id});
+  showAdminPanel('jobs');
+};
+window.adminRejectJob=async function(id){
+  await wApi("/api/reject-job",{username:me,id:id});
+  showAdminPanel('jobs');
+};
+window.adminDeleteJob=async function(id){
+  if(!confirm('确定删除？'))return;
+  await wApi("/api/admin/delete-job",{username:me,id:id});
+  showAdminPanel('jobs');
+};
+async function renderAdminUsers(){
+  try{
+    const d=await wApi("/api/admin/users",{username:me});
+    const users=d.users||[];
+    let html='<table class="data-table"><thead><tr><th>用户名</th><th>角色</th><th>注册时间</th><th>操作</th></tr></thead><tbody>';
+    html+=users.map((u,i)=>{
+      const roleLabel=u.role==='superadmin'?'超级管理员':u.role==='admin'?'管理员':'普通用户';
+      return `<tr><td>${esc(u.username)}</td><td>${roleLabel}</td><td>${esc((u.created_at||'').slice(0,10))}</td>
+      <td>
+        ${u.role!=='superadmin'?`<button class="small" onclick="adminSetRole('${esc(u.username)}','superadmin')">设为超管</button>`:''}
+        ${u.role!=='admin'?`<button class="small" onclick="adminSetRole('${esc(u.username)}','admin')">设为管理员</button>`:''}
+        ${u.role!=='user'?`<button class="small" onclick="adminSetRole('${esc(u.username)}','user')">设为普通</button>`:''}
+        <button class="small" onclick="adminResetPwd('${esc(u.username)}')">重置密码</button>
+      </td></tr>`;
+    }).join('');
+    html+='</tbody></table>';
+    document.getElementById("adminPanels").innerHTML=html;
+  }catch(e){document.getElementById("adminPanels").innerHTML='<div class="empty">加载失败：'+esc(e.message)+'</div>'}
+}
+window.adminSetRole=async function(username,role){
+  await wApi("/api/admin/update-user",{username:me,targetUser:username,updates:{role:role}});
+  showAdminPanel('users');
+};
+window.adminResetPwd=async function(username){
+  const pwd=prompt('请输入新密码（至少6位）');
+  if(!pwd||pwd.length<6)return alert('密码至少6位');
+  await wApi("/api/admin/update-user",{username:me,targetUser:username,updates:{password:pwd}});
+  alert('密码已重置');
+};
+async function renderAdminCategories(){
+  try{
+    const d=await wApi("/api/admin/categories",{username:me});
+    const cats=d.categories||[];
+    let html='<div style="margin-bottom:12px"><button class="btn-primary" onclick="adminAddCategory()">新增一级分类</button></div>';
+    cats.forEach((c,i)=>{
+      html+=`<div class="cat-admin-item">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+          <input value="${esc(c.name||'')}" id="catname${i}" style="flex:1;padding:8px;border:1px solid var(--line);border-radius:8px">
+          <input value="${esc(c.slug||'')}" id="catslug${i}" style="width:120px;padding:8px;border:1px solid var(--line);border-radius:8px" placeholder="slug">
+          <button class="small" onclick="adminSaveCategory(${i})">保存</button>
+          <button class="danger small" onclick="adminDelCategory(${i})">删除</button>
+        </div>
+        <div style="padding-left:20px;color:var(--muted);font-size:13px">二级分类：${(c.subcategories||[]).length}个</div>
+      </div>`;
+    });
+    html+='<p style="color:var(--muted);font-size:13px;margin-top:16px">提示：完整的二级、三级分类编辑请使用完整后台 admin/</p>';
+    document.getElementById("adminPanels").innerHTML=html;
+    window._adminCats=cats;
+  }catch(e){document.getElementById("adminPanels").innerHTML='<div class="empty">加载失败：'+esc(e.message)+'</div>'}
+}
+window.adminAddCategory=function(){
+  const name=prompt('分类名称');
+  if(!name)return;
+  const slug=prompt('Slug','cat-'+Date.now());
+  if(!slug)return;
+  window._adminCats.push({name:name,slug:slug,subcategories:[],enabled:true});
+  adminSaveAllCategories();
+};
+window.adminSaveCategory=function(i){
+  window._adminCats[i].name=document.getElementById('catname'+i).value;
+  window._adminCats[i].slug=document.getElementById('catslug'+i).value;
+  adminSaveAllCategories();
+};
+window.adminDelCategory=function(i){
+  if(!confirm('确定删除？'))return;
+  window._adminCats.splice(i,1);
+  adminSaveAllCategories();
+};
+async function adminSaveAllCategories(){
+  await wApi("/api/admin/categories",{username:me,categories:window._adminCats});
+  showAdminPanel('categories');
+}
+async function renderAdminConfig(){
+  try{
+    const d=await wApi("/api/admin/config",{username:me});
+    const cfg=d.config||{};
+    document.getElementById("adminPanels").innerHTML=`
+      <div class="form-group"><label>网站标题</label><input id="cfg_title" value="${esc(cfg.site_title||'')}"></div>
+      <div class="form-group"><label>网站副标题</label><input id="cfg_subtitle" value="${esc(cfg.site_subtitle||'')}"></div>
+      <div class="form-group"><label>Worker URL</label><input id="cfg_worker" value="${esc(cfg.worker_url||'')}"></div>
+      <div style="margin-top:16px"><button class="btn-primary" onclick="adminSaveConfig()">保存配置</button></div>
+      <p style="color:var(--muted);font-size:13px;margin-top:16px">提示：完整配置（背景图、字段标签、表单设置等）请使用完整后台 admin/</p>`;
+    window._adminCfg=cfg;
+  }catch(e){document.getElementById("adminPanels").innerHTML='<div class="empty">加载失败：'+esc(e.message)+'</div>'}
+}
+window.adminSaveConfig=async function(){
+  const cfg=window._adminCfg||{};
+  cfg.site_title=document.getElementById('cfg_title').value;
+  cfg.site_subtitle=document.getElementById('cfg_subtitle').value;
+  cfg.worker_url=document.getElementById('cfg_worker').value;
+  await wApi("/api/admin/config",{username:me,config:cfg});
+  alert('配置已保存');
+};
+async function renderAdminTelegram(){
+  document.getElementById("adminPanels").innerHTML=`
+    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+      <button class="btn-primary" onclick="adminTgFetch()">立即抓取兼职</button>
+      <button class="btn-ghost" onclick="adminTgFetchOnDuty()">抓取在岗老师</button>
+      <button class="btn-ghost" onclick="adminTgTest()">测试连接</button>
+    </div>
+    <div id="tgResult" class="notice" style="display:none"></div>
+    <p style="color:var(--muted);font-size:13px">提示：Telegram配置（Bot Token、频道、标签映射等）请使用完整后台 admin/</p>`;
+}
+window.adminTgFetch=async function(){
+  const r=await wApi("/api/telegram-fetch",{});
+  document.getElementById('tgResult').style.display='';
+  document.getElementById('tgResult').textContent=JSON.stringify(r);
+};
+window.adminTgFetchOnDuty=async function(){
+  const r=await wApi("/api/fetch-on-duty",{});
+  document.getElementById('tgResult').style.display='';
+  document.getElementById('tgResult').textContent=JSON.stringify(r);
+};
+window.adminTgTest=async function(){
+  const r=await wApi("/api/telegram-test",{});
+  document.getElementById('tgResult').style.display='';
+  document.getElementById('tgResult').textContent=JSON.stringify(r);
+};
+async function renderAdminLogs(){
+  try{
+    const r=await fetch(WORKER_URL+"/api/fetch-logs").then(r=>r.json());
+    const logs=r.logs||[];
+    let html='<div style="margin-bottom:12px"><button class="danger small" onclick="adminClearLogs()">清空日志</button></div>';
+    html+='<table class="data-table"><thead><tr><th>时间</th><th>类型</th><th>频道</th><th>数量</th><th>状态</th><th>详情</th></tr></thead><tbody>';
+    html+=logs.map(l=>`<tr>
+      <td>${esc((l.time||'').replace('T',' ').slice(0,19))}</td>
+      <td>${l.type==='telegram'?'兼职抓取':'在岗按钮'}</td>
+      <td>${esc(l.channel||'')}</td>
+      <td>${l.count||0}</td>
+      <td>${l.status==='success'?'<span class="ok">成功</span>':l.status==='error'?'<span class="err">失败</span>':'<span class="wait">无数据</span>'}</td>
+      <td style="font-size:12px;color:var(--muted);max-width:300px">${esc(l.message||'')}</td>
+    </tr>`).join('');
+    html+='</tbody></table>';
+    document.getElementById("adminPanels").innerHTML=html;
+  }catch(e){document.getElementById("adminPanels").innerHTML='<div class="empty">加载失败：'+esc(e.message)+'</div>'}
+}
+window.adminClearLogs=async function(){
+  if(!confirm('确定清空所有日志？'))return;
+  await wApi("/api/clear-fetch-logs",{});
+  showAdminPanel('logs');
+};
 async function loadPending(){
   try{
     const d=await wApi("/api/pending-jobs",{username:me});
