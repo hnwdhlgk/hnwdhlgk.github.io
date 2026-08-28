@@ -241,7 +241,7 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <label>Bot Token</label><input id="tg_token" placeholder="123456:ABC-DEF..." value="7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs">
       <label>频道用户名</label><input id="tg_channel" placeholder="@hainanguanli" value="@hnwdhlgk">
       <label>默认一级分类（Slug）</label><input id="tg_category" placeholder="如：personal">
-      <div class="ops"><button onclick="saveConfig()">保存配置</button><button class="ghost" onclick="manualFetchTelegram()">立即抓取一次</button><span id="tgFetchResult" class="muted" style="margin-left:10px"></span></div>
+      <div class="ops"><button onclick="saveConfig()">保存配置</button><button class="ghost" onclick="testTelegram()">测试连接</button><button class="ghost" onclick="manualFetchTelegram()">立即抓取一次</button><span id="tgFetchResult" class="muted" style="margin-left:10px"></span></div>
     </div>
     <div class="card" id="sec-safety"><h3>安全提醒</h3>
       <label>安全提醒文案</label><textarea id="cfg_safety_notice"></textarea>
@@ -769,6 +769,16 @@ window.saveConfig=function(){
   stat('正在保存…','wait');writeFile('data/config.json',CONFIG,cfgSha,'更新站点配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderAll();stat('配置已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
 }
 
+window.testTelegram=function(){
+  if(!CONFIG.worker_url){alert('请先在站点配置填写Worker URL');return}
+  $('tgFetchResult').textContent='测试中…';
+  fetch(CONFIG.worker_url+'/api/telegram-test',{method:'POST'}).then(function(r){return r.json()}).then(function(d){
+    var msg='';
+    if(d.error){msg='错误：'+d.error}
+    else{msg='Bot:'+(d.bot_ok?'@'+d.bot_username:'失败')+' | 频道:'+(d.channel_ok?d.channel_title+'('+d.channel_type+')':'失败'+(d.error?':'+d.error:''))}
+    $('tgFetchResult').textContent=msg;
+  }).catch(function(e){$('tgFetchResult').textContent='请求失败：'+e.message});
+}
 window.manualFetchTelegram=function(){
   if(!CONFIG.worker_url){alert('请先在站点配置填写Worker URL');return}
   $('tgFetchResult').textContent='抓取中…';
