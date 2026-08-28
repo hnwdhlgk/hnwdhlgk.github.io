@@ -440,7 +440,7 @@ function fmt(iso){const d=new Date(iso);if(isNaN(d))return iso||"";return d.getF
 function parseTags(s){return String(s||"").split(/[,，、;；\s]+/).map(x=>x.trim()).filter(Boolean)}
 function fileToBase64(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const r=fr.result,i=r.indexOf(",");res(i>=0?r.slice(i+1):r)};fr.onerror=rej;fr.readAsDataURL(file)})}
 const DEFAULTS={site_title:"海南大学兼职公开榜",site_subtitle:"HAINAN UNIVERSITY PART-TIME BOARD",hero_title:"海南大学兼职公开榜",hero_description:"最全面的校园兼职信息平台，实时更新优质岗位。",about_title:"让校园信息更容易找到",about_text:"海南大学兼职公开榜致力于为海南大学学子提供安全、可靠的兼职信息平台。所有信息均经审核，确保真实有效。",safety_notice:"任何要求先交押金、培训费的兼职均为诈骗，请提高警惕。如遇可疑信息，请立即举报。",link_rules:[{char:"@",prefix:"https://t.me/"}],hero_buttons:[{text:"浏览兼职",url:"#jobSection",type:"primary"},{text:"了解平台",url:"#aboutSection",type:"outline"}]};
-let categories=[],jobs=[],cfg=DEFAULTS,activeCat="all",activeSub="all",activeSub2="all",activeTags=[],me=sessionStorage.getItem("gh_me")||null,editingMineId=null,WORKER_URL="";
+let categories=[],jobs=[],cfg=DEFAULTS,activeCat="all",activeSub="all",activeSub2="all",activeTags=[],me=sessionStorage.getItem("gh_me")||null,editingMineId=null,WORKER_URL="",verifiedUsers=[];
 
 function contactHTML(c){
   if(!c)return"";c=String(c).trim();
@@ -646,7 +646,7 @@ function renderJobs(){
   var pageList=list.slice(start,start+pageSize);
   var pagHtml="";
   if(list.length>pageSize){pagHtml='<div class="pagination"><button onclick="changePage('+(currentPage-1)+')" '+(currentPage<=1?'disabled':'')+'>上一页</button><span class="page-info">第 '+currentPage+' / '+totalPages+' 页</span><button onclick="changePage('+(currentPage+1)+')" '+(currentPage>=totalPages?'disabled':'')+'>下一页</button></div>';}
-  document.getElementById("jobs").innerHTML=(pageList.length?pageList.map(j=>`<article class="job" onclick="viewJob('${esc(j.id)}')">${j.image?(function(){var il=j.image_link;if(!il&&j.telegram_channel&&j.telegram_msg_id){il="https://t.me/"+j.telegram_channel+"/"+j.telegram_msg_id+"?single"}return il?`<a href="${esc(il)}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy"></a>`:`<img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy">`})():""}<div class="cats"><span class="tag">${esc(catName(j.category)||"兼职")}</span>${j.subcategory?`<span class="tag sub">${esc(subName(j.category,j.subcategory))}</span>`:""}${j.subcategory2?`<span class="tag sub2">${esc(sub2Name(j.category,j.subcategory,j.subcategory2))}</span>`:""}</div><h3>${esc(j.title)}</h3><div class="meta">${esc(j.location||"")}${j.time?" · "+esc(j.time):""}</div>${j.salary?`<div class="salary">${esc(j.salary)}</div>`:""}<p>${linkify(j.description||"")}</p>${renderContacts(j)}<div class="views">👁 ${j.views||0}</div></article>`).join(""):'<div class="empty">暂无兼职信息</div>')+pagHtml;
+  document.getElementById("jobs").innerHTML=(pageList.length?pageList.map(j=>`<article class="job" onclick="viewJob('${esc(j.id)}')">${j.image?(function(){var il=j.image_link;if(!il&&j.telegram_channel&&j.telegram_msg_id){il="https://t.me/"+j.telegram_channel+"/"+j.telegram_msg_id+"?single"}return il?`<a href="${esc(il)}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy"></a>`:`<img class="job-img" src="${esc(j.image)}" alt="${esc(j.title)}" loading="lazy">`})():""}<div class="cats"><span class="tag">${esc(catName(j.category)||"兼职")}</span>${j.subcategory?`<span class="tag sub">${esc(subName(j.category,j.subcategory))}</span>`:""}${j.subcategory2?`<span class="tag sub2">${esc(sub2Name(j.category,j.subcategory,j.subcategory2))}</span>`:""}</div><h3>${esc(j.title)} ${verifiedUsers.includes(j.author)?'<img src="assets/verified_badge.png" alt="已认证" title="海南大学已认证用户" style="width:18px;height:18px;vertical-align:middle;margin-left:4px;display:inline-block">':''}</h3><div class="meta">${esc(j.location||"")}${j.time?" · "+esc(j.time):""}</div>${j.salary?`<div class="salary">${esc(j.salary)}</div>`:""}<p>${linkify(j.description||"")}</p>${renderContacts(j)}<div class="views">👁 ${j.views||0}</div></article>`).join(""):'<div class="empty">暂无兼职信息</div>')+pagHtml;
 }
 
 function renderContacts(j){
@@ -766,11 +766,13 @@ async function renderAdminUsers(){
   try{
     const d=await wApi("/api/admin/users",{username:me});
     const users=d.users||[];
-    let html='<table class="data-table"><thead><tr><th>用户名</th><th>角色</th><th>注册时间</th><th>操作</th></tr></thead><tbody>';
+    let html='<table class="data-table"><thead><tr><th>用户名</th><th>角色</th><th>认证</th><th>注册时间</th><th>操作</th></tr></thead><tbody>';
     html+=users.map((u,i)=>{
       const roleLabel=u.role==='superadmin'?'超级管理员':u.role==='admin'?'管理员':'普通用户';
-      return `<tr><td>${esc(u.username)}</td><td>${roleLabel}</td><td>${esc((u.created_at||'').slice(0,10))}</td>
+      const verifiedBadge=u.verified?'<span style="color:#16a34a;font-weight:600">✓ 已认证</span>':'<span style="color:#94a3b8">未认证</span>';
+      return `<tr><td>${esc(u.username)}</td><td>${roleLabel}</td><td>${verifiedBadge}</td><td>${esc((u.created_at||'').slice(0,10))}</td>
       <td>
+        ${u.verified?`<button class="small" onclick="adminSetVerified('${esc(u.username)}',false)">取消认证</button>`:`<button class="small" style="background:#16a34a;color:#fff" onclick="adminSetVerified('${esc(u.username)}',true)">设为已认证</button>`}
         ${u.role!=='superadmin'?`<button class="small" onclick="adminSetRole('${esc(u.username)}','superadmin')">设为超管</button>`:''}
         ${u.role!=='admin'?`<button class="small" onclick="adminSetRole('${esc(u.username)}','admin')">设为管理员</button>`:''}
         ${u.role!=='user'?`<button class="small" onclick="adminSetRole('${esc(u.username)}','user')">设为普通</button>`:''}
@@ -781,6 +783,12 @@ async function renderAdminUsers(){
     document.getElementById("adminPanels").innerHTML=html;
   }catch(e){document.getElementById("adminPanels").innerHTML='<div class="empty">加载失败：'+esc(e.message)+'</div>'}
 }
+window.adminSetVerified=async function(username,verified){
+  if(verified&&!confirm('确定将该用户设为已认证？'))return;
+  if(!verified&&!confirm('确定取消该用户的认证？'))return;
+  await wApi("/api/admin/update-user",{username:me,targetUser:username,updates:{verified:verified,verified_at:verified?new Date().toISOString():""}});
+  showAdminPanel('users');
+};
 window.adminSetRole=async function(username,role){
   await wApi("/api/admin/update-user",{username:me,targetUser:username,updates:{role:role}});
   showAdminPanel('users');
