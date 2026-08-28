@@ -1,15 +1,16 @@
 {
   "daily": {
     "2026-08-28": {
-      "views": 6,
-      "visitors": 3,
+      "views": 7,
+      "visitors": 4,
       "ips": [
         "112.120.49.117",
         "154.92.134.168",
-        "138.19.36.28"
+        "138.19.36.28",
+        "188.253.113.101"
       ]
     }
   },
-  "total_views": 6,
-  "total_visitors": 3
+  "total_views": 7,
+  "total_visitors": 4
 }
