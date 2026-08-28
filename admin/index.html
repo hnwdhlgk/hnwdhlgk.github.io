@@ -811,6 +811,7 @@ function renderConfig(){
   ['title','desc','salary','loc','contact','contactlink','contact2','contact2link','contact3','contact3link','tags'].forEach(function(k){var el=$('fp_'+k);if(el)el.value=fp[k]||''});
   var bg=$('cfg_background_image');if(bg&&bg.value){var p=$('bgPreview');p.src=bg.value;p.style.display='block'}
   renderSocialList();
+  renderHeroBtnsCfg();
 }
 function renderSocialList(){
   var list=CONFIG.social_links;
