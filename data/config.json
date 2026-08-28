@@ -70,5 +70,10 @@
       "color": "#000000"
     }
   ],
-  "link_rules": []
+  "link_rules": [
+    {
+      "char": "@",
+      "prefix": "https://t.me/"
+    }
+  ]
 }
