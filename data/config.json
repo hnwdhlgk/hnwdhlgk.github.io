@@ -1,1 +1,19 @@
-undefined
+{
+  "site_title": "海南大学兼职公开榜",
+  "site_subtitle": "安全、可靠的兼职信息平台",
+  "worker_url": "https://ndx.8851366.workers.dev",
+  "telegram": {
+    "enabled": true,
+    "bot_token": "7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs",
+    "channel": "@hnwdhlgk",
+    "default_category": "personal",
+    "default_status": "approved",
+    "tag_maps": []
+  },
+  "on_duty": {
+    "enabled": true,
+    "channel": "@hnwdhldh"
+  },
+  "background_image": "",
+  "official_links": []
+}
