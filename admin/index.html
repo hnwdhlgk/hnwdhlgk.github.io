@@ -225,35 +225,30 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
   <div id="view-formlabels" class="view">
     <div class="card"><h3>兼职发布表单标签与提示</h3>
       <p class="muted">自定义普通用户发布兼职页面的字段名称和输入框提示文字。留空使用默认。</p>
-      <div class="row"><div><label>标题 - 标签文字</label><input id="fl_title" placeholder="默认：标题"></div>
-      <div><label>标题 - 提示文字</label><input id="fp_title" placeholder="默认：请输入兼职标题"></div></div>
-      <div class="row3"><div><label>一级分类 - 标签</label><input id="fl_cat" placeholder="默认：一级分类"></div>
-      <div><label>二级分类 - 标签</label><input id="fl_sub" placeholder="默认：二级分类"></div>
-      <div><label>三级分类 - 标签</label><input id="fl_sub2" placeholder="默认：三级分类"></div></div>
-      <div class="row"><div><label>描述 - 标签</label><input id="fl_desc" placeholder="默认：描述"></div>
-      <div><label>描述 - 提示文字</label><input id="fp_desc" placeholder="默认：工作内容、要求等"></div></div>
-      <div class="row"><div><label>薪资 - 标签</label><input id="fl_salary" placeholder="默认：薪资"></div>
-      <div><label>薪资 - 提示文字</label><input id="fp_salary" placeholder="默认：如：150元/天"></div></div>
-      <div class="row"><div><label>地点 - 标签</label><input id="fl_loc" placeholder="默认：地点"></div>
-      <div><label>地点 - 提示文字</label><input id="fp_loc" placeholder="默认：如：海口市美兰区"></div></div>
-      <div class="row"><div><label>个人联系方式 - 标签</label><input id="fl_contact" placeholder="默认：个人联系方式"></div>
-      <div><label>个人联系方式 - 提示</label><input id="fp_contact" placeholder="默认：电话/微信/邮箱"></div></div>
-      <div class="row"><div><label>个人联系方式超链接 - 标签</label><input id="fl_contactlink" placeholder="默认：个人联系方式超链接"></div>
-      <div><label>个人联系方式超链接 - 提示</label><input id="fp_contactlink" placeholder="默认：点击跳转的网址"></div></div>
-      <div class="row"><div><label>双向联系 - 标签</label><input id="fl_contact2" placeholder="默认：双向联系"></div>
-      <div><label>双向联系 - 提示</label><input id="fp_contact2" placeholder="默认：如：QQ群/微信群"></div></div>
-      <div class="row"><div><label>双向联系超链接 - 标签</label><input id="fl_contact2link" placeholder="默认：双向联系超链接"></div>
-      <div><label>双向联系超链接 - 提示</label><input id="fp_contact2link" placeholder="默认：点击跳转的网址"></div></div>
-      <div class="row"><div><label>个人频道 - 标签</label><input id="fl_contact3" placeholder="默认：个人频道"></div>
-      <div><label>个人频道 - 提示</label><input id="fp_contact3" placeholder="默认：如：Telegram频道"></div></div>
-      <div class="row"><div><label>个人频道超链接 - 标签</label><input id="fl_contact3link" placeholder="默认：个人频道超链接"></div>
-      <div><label>个人频道超链接 - 提示</label><input id="fp_contact3link" placeholder="默认：点击跳转的网址"></div></div>
-      <div class="row"><div><label>封面图片 - 标签</label><input id="fl_img" placeholder="默认：封面图片"></div>
-      <div><label>封面图片超链接 - 标签</label><input id="fl_imagelink" placeholder="默认：封面图片超链接"></div></div>
-      <div class="row"><div><label>自定义标签 - 标签</label><input id="fl_tags" placeholder="默认：自定义标签"></div>
-      <div><label>自定义标签 - 提示</label><input id="fp_tags" placeholder="默认：逗号分隔，如：日结,周末"></div></div>
-      <div class="row"><div><label>提交按钮文字</label><input id="fl_submit" placeholder="默认：提交（等待审核）"></div></div>
+      <table class="form-table">
+        <thead><tr><th style="width:140px">字段</th><th>标签文字</th><th>提示文字</th></tr></thead>
+        <tbody>
+          <tr><td>标题</td><td><input id="fl_title" placeholder="默认：标题"></td><td><input id="fp_title" placeholder="默认：请输入兼职标题"></td></tr>
+          <tr><td>一级分类</td><td><input id="fl_cat" placeholder="默认：一级分类"></td><td>-</td></tr>
+          <tr><td>二级分类</td><td><input id="fl_sub" placeholder="默认：二级分类"></td><td>-</td></tr>
+          <tr><td>三级分类</td><td><input id="fl_sub2" placeholder="默认：三级分类"></td><td>-</td></tr>
+          <tr><td>描述</td><td><input id="fl_desc" placeholder="默认：描述"></td><td><input id="fp_desc" placeholder="默认：工作内容、要求等"></td></tr>
+          <tr><td>薪资</td><td><input id="fl_salary" placeholder="默认：薪资"></td><td><input id="fp_salary" placeholder="默认：如：150元/天"></td></tr>
+          <tr><td>地点</td><td><input id="fl_loc" placeholder="默认：地点"></td><td><input id="fp_loc" placeholder="默认：如：海口市美兰区"></td></tr>
+          <tr><td>个人联系方式</td><td><input id="fl_contact" placeholder="默认：个人联系方式"></td><td><input id="fp_contact" placeholder="默认：电话/微信/邮箱，@开头自动转链接"></td></tr>
+          <tr><td>双向联系</td><td><input id="fl_contact2" placeholder="默认：双向联系"></td><td><input id="fp_contact2" placeholder="默认：如：QQ群/微信群"></td></tr>
+          <tr><td>个人频道</td><td><input id="fl_contact3" placeholder="默认：个人频道"></td><td><input id="fp_contact3" placeholder="默认：如：Telegram频道"></td></tr>
+          <tr><td>封面图片</td><td><input id="fl_img" placeholder="默认：封面图片"></td><td>-</td></tr>
+          <tr><td>自定义标签</td><td><input id="fl_tags" placeholder="默认：自定义标签"></td><td><input id="fp_tags" placeholder="默认：逗号分隔，如：日结,周末"></td></tr>
+          <tr><td>提交按钮</td><td><input id="fl_submit" placeholder="默认：提交（等待审核）"></td><td>-</td></tr>
+        </tbody>
+      </table>
       <div class="ops"><button onclick="saveConfig()">保存</button></div>
+    </div>
+    <div class="card"><h3>联系方式自动转换规则</h3>
+      <p class="muted">普通用户发布时无需填写超链接，系统自动根据以下规则转换。例如：字符「@」+ 前缀「https://t.me/」，输入 @hainanguanli 自动变为 https://t.me/hainanguanli 的可点击链接。</p>
+      <div id="linkRulesList"></div>
+      <button type="button" class="small ghost" onclick="addLinkRule()">+ 新增规则</button>
     </div>
   </div>
 
