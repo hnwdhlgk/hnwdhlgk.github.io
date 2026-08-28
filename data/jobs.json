@@ -1,7 +1,7 @@
 [
   {
     "title": "🧚‍♀️ 小不点",
-    "description": "<a href=\"https://t.me/hainanxiuche_bot?start=commentTeacher-TE178091013263\" target=\"_blank\" rel=\"noopener\">❣️     给小不点写评价</a>\n<a href=\"https://t.me/hainanxiuche_bot?start=teacherComment-TE178091013263\" target=\"_blank\" rel=\"noopener\">❣️  查看老师所有评价</a>",
+    "description": "<a href=\"https://t.me/hainanxiuche_bot?start=commentTeacher-TE178091013263\" target=\"_blank\" rel=\"noopener\">❣️     给小不点写评价</a>&nbsp;<div><a href=\"https://t.me/hainanxiuche_bot?start=teacherComment-TE178091013263\" target=\"_blank\" rel=\"noopener\">❣️  查看老师所有评价</a></div>",
     "salary": "7p 13pp",
     "location": "",
     "contact": "<a href=\"https://t.me/xiaobudian2028\" target=\"_blank\" rel=\"noopener\">@xiaobudian2028</a>",
@@ -21,7 +21,12 @@
     "created_at": "2026-08-28T23:09:49.415Z",
     "views": 0,
     "telegram_msg_id": 9727,
-    "telegram_channel": "hnwdhlgk"
+    "telegram_channel": "hnwdhlgk",
+    "contact_link": "",
+    "contact2_link": "",
+    "contact3_link": "",
+    "image_link": "",
+    "show_verified": true
   },
   {
     "title": "🧚‍♀️ 小果冻",
