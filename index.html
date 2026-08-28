@@ -796,44 +796,127 @@ async function renderAdminCategories(){
   try{
     const d=await wApi("/api/admin/categories",{username:me});
     const cats=d.categories||[];
-    let html='<div style="margin-bottom:12px"><button class="btn-primary" onclick="adminAddCategory()">新增一级分类</button></div>';
-    cats.forEach((c,i)=>{
-      html+=`<div class="cat-admin-item">
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-          <input value="${esc(c.name||'')}" id="catname${i}" style="flex:1;padding:8px;border:1px solid var(--line);border-radius:8px">
-          <input value="${esc(c.slug||'')}" id="catslug${i}" style="width:120px;padding:8px;border:1px solid var(--line);border-radius:8px" placeholder="slug">
-          <button class="small" onclick="adminSaveCategory(${i})">保存</button>
-          <button class="danger small" onclick="adminDelCategory(${i})">删除</button>
-        </div>
-        <div style="padding-left:20px;color:var(--muted);font-size:13px">二级分类：${(c.subcategories||[]).length}个</div>
-      </div>`;
-    });
-    html+='<p style="color:var(--muted);font-size:13px;margin-top:16px">提示：完整的二级、三级分类编辑请使用完整后台 admin/</p>';
-    document.getElementById("adminPanels").innerHTML=html;
-    window._adminCats=cats;
+    window._adminCats=JSON.parse(JSON.stringify(cats));
+    renderCatEditor();
   }catch(e){document.getElementById("adminPanels").innerHTML='<div class="empty">加载失败：'+esc(e.message)+'</div>'}
 }
-window.adminAddCategory=function(){
-  const name=prompt('分类名称');
+function renderCatEditor(){
+  const cats=window._adminCats||[];
+  let html='<div style="margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn-primary" onclick="adminAddCat1()">+ 新增一级分类</button><button class="btn-ghost" onclick="adminSaveAllCategories()">保存全部修改</button></div>';
+  cats.forEach((c,i)=>{
+    html+=`<div class="cat-admin-item">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+        <span style="font-weight:700;color:var(--sea);min-width:60px">一级</span>
+        <input value="${esc(c.name||'')}" id="c1name${i}" style="flex:1;min-width:120px;padding:8px;border:1px solid var(--line);border-radius:8px" placeholder="名称">
+        <input value="${esc(c.slug||'')}" id="c1slug${i}" style="width:120px;padding:8px;border:1px solid var(--line);border-radius:8px" placeholder="slug">
+        <button class="small" onclick="adminToggleCat(${i})" id="toggle${i}">展开二级</button>
+        <button class="danger small" onclick="adminDelCat1(${i})">删除</button>
+      </div>
+      <div id="subcat${i}" style="display:none;padding-left:20px">
+        <div style="margin:8px 0"><button class="small" onclick="adminAddCat2(${i})">+ 新增二级分类</button></div>
+        ${(c.subcategories||[]).map((s,j)=>`
+          <div style="background:#fff;border-radius:8px;padding:10px;margin-bottom:8px;border:1px solid var(--line)">
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
+              <span style="font-weight:600;color:var(--palm);min-width:60px">二级</span>
+              <input value="${esc(s.name||'')}" id="c2name${i}_${j}" style="flex:1;min-width:100px;padding:6px 10px;border:1px solid var(--line);border-radius:6px" placeholder="名称">
+              <input value="${esc(s.slug||'')}" id="c2slug${i}_${j}" style="width:100px;padding:6px 10px;border:1px solid var(--line);border-radius:6px" placeholder="slug">
+              <button class="small" onclick="adminToggleCat2(${i},${j})" id="toggle2${i}_${j}">展开三级</button>
+              <button class="danger small" onclick="adminDelCat2(${i},${j})">删除</button>
+            </div>
+            <div id="subcat2${i}_${j}" style="display:none;padding-left:16px">
+              <div style="margin:6px 0"><button class="small" onclick="adminAddCat3(${i},${j})">+ 新增三级分类</button></div>
+              ${(s.subcategories||[]).map((t,k)=>`
+                <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap">
+                  <span style="color:var(--muted);min-width:60px;font-size:12px">三级</span>
+                  <input value="${esc(t.name||'')}" id="c3name${i}_${j}_${k}" style="flex:1;min-width:80px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;font-size:13px" placeholder="名称">
+                  <input value="${esc(t.slug||'')}" id="c3slug${i}_${j}_${k}" style="width:90px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;font-size:13px" placeholder="slug">
+                  <button class="danger small" onclick="adminDelCat3(${i},${j},${k})" style="padding:4px 8px;font-size:12px">删除</button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  });
+  html+='<div style="margin-top:16px;padding:12px;background:var(--sea-bg);border-radius:8px;font-size:13px;color:var(--sea)">💡 编辑完成后点击"保存全部修改"按钮，所有修改才会生效</div>';
+  document.getElementById("adminPanels").innerHTML=html;
+}
+window.adminToggleCat=function(i){
+  const el=document.getElementById('subcat'+i);
+  const btn=document.getElementById('toggle'+i);
+  if(el.style.display==='none'){el.style.display='';btn.textContent='收起二级'}
+  else{el.style.display='none';btn.textContent='展开二级'}
+};
+window.adminToggleCat2=function(i,j){
+  const el=document.getElementById('subcat2'+i+'_'+j);
+  const btn=document.getElementById('toggle2'+i+'_'+j);
+  if(el.style.display==='none'){el.style.display='';btn.textContent='收起三级'}
+  else{el.style.display='none';btn.textContent='展开三级'}
+};
+window.adminAddCat1=function(){
+  const name=prompt('一级分类名称');
   if(!name)return;
-  const slug=prompt('Slug','cat-'+Date.now());
+  const slug=prompt('Slug（英文标识）','cat-'+Date.now());
   if(!slug)return;
   window._adminCats.push({name:name,slug:slug,subcategories:[],enabled:true});
-  adminSaveAllCategories();
+  renderCatEditor();
 };
-window.adminSaveCategory=function(i){
-  window._adminCats[i].name=document.getElementById('catname'+i).value;
-  window._adminCats[i].slug=document.getElementById('catslug'+i).value;
-  adminSaveAllCategories();
-};
-window.adminDelCategory=function(i){
-  if(!confirm('确定删除？'))return;
+window.adminDelCat1=function(i){
+  if(!confirm('确定删除此一级分类及其所有子分类？'))return;
   window._adminCats.splice(i,1);
-  adminSaveAllCategories();
+  renderCatEditor();
+};
+window.adminAddCat2=function(i){
+  const name=prompt('二级分类名称');
+  if(!name)return;
+  const slug=prompt('Slug','sub-'+Date.now());
+  if(!slug)return;
+  if(!window._adminCats[i].subcategories)window._adminCats[i].subcategories=[];
+  window._adminCats[i].subcategories.push({name:name,slug:slug,subcategories:[]});
+  renderCatEditor();
+  document.getElementById('subcat'+i).style.display='';
+  document.getElementById('toggle'+i).textContent='收起二级';
+};
+window.adminDelCat2=function(i,j){
+  if(!confirm('确定删除此二级分类及其三级分类？'))return;
+  window._adminCats[i].subcategories.splice(j,1);
+  renderCatEditor();
+};
+window.adminAddCat3=function(i,j){
+  const name=prompt('三级分类名称');
+  if(!name)return;
+  const slug=prompt('Slug','area-'+Date.now());
+  if(!slug)return;
+  if(!window._adminCats[i].subcategories[j].subcategories)window._adminCats[i].subcategories[j].subcategories=[];
+  window._adminCats[i].subcategories[j].subcategories.push({name:name,slug:slug});
+  renderCatEditor();
+  document.getElementById('subcat'+i).style.display='';
+  document.getElementById('subcat2'+i+'_'+j).style.display='';
+};
+window.adminDelCat3=function(i,j,k){
+  if(!confirm('确定删除此三级分类？'))return;
+  window._adminCats[i].subcategories[j].subcategories.splice(k,1);
+  renderCatEditor();
 };
 async function adminSaveAllCategories(){
-  await wApi("/api/admin/categories",{username:me,categories:window._adminCats});
-  showAdminPanel('categories');
+  // 先收集所有输入框的值
+  const cats=window._adminCats;
+  cats.forEach((c,i)=>{
+    c.name=document.getElementById('c1name'+i)?.value||c.name;
+    c.slug=document.getElementById('c1slug'+i)?.value||c.slug;
+    (c.subcategories||[]).forEach((s,j)=>{
+      s.name=document.getElementById('c2name'+i+'_'+j)?.value||s.name;
+      s.slug=document.getElementById('c2slug'+i+'_'+j)?.value||s.slug;
+      (s.subcategories||[]).forEach((t,k)=>{
+        t.name=document.getElementById('c3name'+i+'_'+j+'_'+k)?.value||t.name;
+        t.slug=document.getElementById('c3slug'+i+'_'+j+'_'+k)?.value||t.slug;
+      });
+    });
+  });
+  await wApi("/api/admin/categories",{username:me,categories:cats});
+  alert('分类已保存');
+  renderCatEditor();
 }
 async function renderAdminConfig(){
   try{
