@@ -318,7 +318,7 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <p class="muted">监控多个频道最新消息中的按钮，自动显示在主页「今日在岗老师」区域。Bot需设为对应频道管理员。</p>
       <div class="row"><div><label>启用</label><select id="od_enabled"><option value="false">关闭</option><option value="true">开启</option></select></div></div>
       <div id="odChannelsList" style="margin:16px 0"></div>
-      <div class="ops"><button class="ghost" onclick="addOdChannel()">+ 添加频道</button><button onclick="saveOnDuty()">保存所有设置</button><button class="ghost" onclick="fetchOnDutyNow()">立即抓取全部</button><span id="odResult" class="muted" style="margin-left:10px"></span></div>
+      <div class="ops"><button class="ghost" onclick="addOdChannel()">+ 添加频道</button><button onclick="saveOnDuty()">保存所有设置</button><button class="ghost" onclick="testOnDutyChannel()">测试频道连接</button><button class="ghost" onclick="fetchOnDutyNow()">立即抓取全部</button><span id="odResult" class="muted" style="margin-left:10px"></span></div>
     </div>
 
     <div class="card"><h3>抓取指定链接 / 监控指定频道</h3>
@@ -1158,6 +1158,29 @@ window.fetchOnDutyNow=function(){
       $('odResult').textContent='失败：'+(d.message||d.error);
     }
   }).catch(function(e){$('odResult').textContent='请求失败：'+e.message});
+}
+window.testOnDutyChannel=function(){
+  var channels=(CONFIG.on_duty&&CONFIG.on_duty.channels)||[];
+  if(!channels.length){alert('请先添加频道');return}
+  var ch=channels[0];
+  var botToken=ch.bot_token||'';
+  var channel=ch.channel||'';
+  if(!botToken){alert('请配置Bot Token');return}
+  $('odResult').textContent='测试中…';
+  // 测试getMe
+  fetch('https://api.telegram.org/bot'+botToken+'/getMe').then(function(r){return r.json()}).then(function(me){
+    if(!me.ok){$('odResult').textContent='Bot Token无效：'+me.description;return}
+    // 测试getChat
+    return fetch('https://api.telegram.org/bot'+botToken+'/getChat?chat_id='+encodeURIComponent(channel)).then(function(r){return r.json()}).then(function(chat){
+      if(chat.ok){
+        $('odResult').textContent='✓ 测试通过！Bot可访问频道：'+chat.result.title;
+        alert('测试通过！\n\nBot：@'+me.result.username+'\n频道：'+chat.result.title+'\n类型：'+chat.result.type+'\n\n如果还是抓不到按钮，请确认频道有带按钮的新消息，或点击「立即抓取全部」');
+      }else{
+        $('odResult').textContent='✗ Bot无法访问频道：'+chat.description;
+        alert('测试失败！\n\nBot：@'+me.result.username+'\n频道：'+channel+'\n错误：'+chat.description+'\n\n解决方案：\n1. 打开Telegram，进入'+channel+'频道\n2. 点击频道名称 → 管理 → 管理员 → 添加管理员\n3. 搜索 @'+me.result.username+' 并添加\n4. 至少开启「发布消息」权限\n5. 添加后再点击测试');
+      }
+    });
+  }).catch(function(e){$('odResult').textContent='测试失败：'+e.message});
 }
 window.fetchByLink=function(){
   if(!CONFIG.worker_url){alert('请先在站点配置填写Worker URL');return}
