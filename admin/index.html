@@ -258,6 +258,26 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <label>安全提醒文案</label><textarea id="cfg_safety_notice"></textarea>
       <div class="ops"><button onclick="saveConfig()">保存站点配置</button></div>
     </div>
+    <div class="card" id="sec-comments-monitor"><h3>Telegram评论监控</h3>
+      <p class="muted">监控Telegram讨论组中回复频道消息的评论，自动同步到网站对应兼职的评论区。需要频道关联讨论组，且Bot是讨论组成员。</p>
+      <div class="row">
+        <div><label>启用评论监控</label><select id="cfg_cm_enabled"><option value="true">启用</option><option value="false">禁用</option></select></div>
+        <div><label>Bot Token</label><input id="cfg_cm_bot_token" placeholder="用于获取讨论组消息的Bot Token"></div>
+      </div>
+      <div class="row">
+        <div><label>讨论组 Chat ID</label><input id="cfg_cm_chat_id" placeholder="如 -1001234567890"></div>
+        <div><label>监控频道</label><input id="cfg_cm_channel" placeholder="@hnwdhlgk"></div>
+      </div>
+      <div class="row">
+        <div><label>评论者显示名称</label><input id="cfg_cm_author_name" placeholder="海南大学修车部"></div>
+        <div><label>筛选作者用户名（可选）</label><input id="cfg_cm_author_username" placeholder="@username，留空则同步所有评论"></div>
+      </div>
+      <div class="ops">
+        <button onclick="saveConfig()">保存配置</button>
+        <button class="ghost" onclick="testCommentsMonitor()">手动抓取测试</button>
+      </div>
+      <div id="cmTestResult" class="muted" style="margin-top:10px"></div>
+    </div>
   </div>
 
   <!-- 字段标签 -->
@@ -921,10 +941,40 @@ window.addHeroBtn=function(){
   CONFIG.hero_buttons=CONFIG.hero_buttons||[];
   CONFIG.hero_buttons.push({text:"新按钮",url:"#",type:"outline"});
   renderHeroBtnsCfg();
+  // 评论监控配置
+  var cm=CONFIG.comments_monitor||{};
+  var cmEnabled=$('cfg_cm_enabled');if(cmEnabled)cmEnabled.value=cm.enabled?'true':'false';
+  ['bot_token','chat_id','channel','author_name','author_username'].forEach(function(k){
+    var el=$('cfg_cm_'+k);if(el)el.value=cm[k]||'';
+  });
+}
+// 测试评论监控
+window.testCommentsMonitor=async function(){
+  if(!CONFIG.worker_url){alert('请先配置Worker URL');return}
+  $('cmTestResult').textContent='正在抓取...';
+  try{
+    const r=await fetch(CONFIG.worker_url+'/api/fetch-comments',{method:'POST'}).then(r=>r.json());
+    $('cmTestResult').textContent=JSON.stringify(r);
+  }catch(e){$('cmTestResult').textContent='失败：'+e.message}
 }
 window.delHeroBtn=function(i){
   CONFIG.hero_buttons.splice(i,1);
   renderHeroBtnsCfg();
+  // 评论监控配置
+  var cm=CONFIG.comments_monitor||{};
+  var cmEnabled=$('cfg_cm_enabled');if(cmEnabled)cmEnabled.value=cm.enabled?'true':'false';
+  ['bot_token','chat_id','channel','author_name','author_username'].forEach(function(k){
+    var el=$('cfg_cm_'+k);if(el)el.value=cm[k]||'';
+  });
+}
+// 测试评论监控
+window.testCommentsMonitor=async function(){
+  if(!CONFIG.worker_url){alert('请先配置Worker URL');return}
+  $('cmTestResult').textContent='正在抓取...';
+  try{
+    const r=await fetch(CONFIG.worker_url+'/api/fetch-comments',{method:'POST'}).then(r=>r.json());
+    $('cmTestResult').textContent=JSON.stringify(r);
+  }catch(e){$('cmTestResult').textContent='失败：'+e.message}
 }
 function renderConfig(){
   var fields=['site_title','site_subtitle','hero_title','hero_description','about_title','about_text','worker_url','background_image','safety_notice'];
@@ -944,6 +994,21 @@ function renderConfig(){
     ];
   }
   renderHeroBtnsCfg();
+  // 评论监控配置
+  var cm=CONFIG.comments_monitor||{};
+  var cmEnabled=$('cfg_cm_enabled');if(cmEnabled)cmEnabled.value=cm.enabled?'true':'false';
+  ['bot_token','chat_id','channel','author_name','author_username'].forEach(function(k){
+    var el=$('cfg_cm_'+k);if(el)el.value=cm[k]||'';
+  });
+}
+// 测试评论监控
+window.testCommentsMonitor=async function(){
+  if(!CONFIG.worker_url){alert('请先配置Worker URL');return}
+  $('cmTestResult').textContent='正在抓取...';
+  try{
+    const r=await fetch(CONFIG.worker_url+'/api/fetch-comments',{method:'POST'}).then(r=>r.json());
+    $('cmTestResult').textContent=JSON.stringify(r);
+  }catch(e){$('cmTestResult').textContent='失败：'+e.message}
 }
 function renderSocialList(){
   var list=CONFIG.social_links;
@@ -986,6 +1051,13 @@ window.uploadSocialIcon=function(i){
 window.saveConfig=function(){
   try{
   ['site_title','site_subtitle','hero_title','hero_description','about_title','about_text','worker_url','background_image','safety_notice'].forEach(function(f){var el=$('cfg_'+f);if(el)CONFIG[f]=el.value.trim()});
+  // 保存评论监控配置
+  var cm={};
+  cm.enabled=$('cfg_cm_enabled').value==='true';
+  ['bot_token','chat_id','channel','author_name','author_username'].forEach(function(k){
+    var el=$('cfg_cm_'+k);if(el)cm[k]=el.value.trim();
+  });
+  CONFIG.comments_monitor=cm;
   // 保存横幅按钮
   var hbCount=document.querySelectorAll('[id^=hb_text_]').length;
   var hbList=[];
