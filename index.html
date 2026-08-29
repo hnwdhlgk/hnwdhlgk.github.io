@@ -265,6 +265,154 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:32px 0 40px;b
 .data-table{width:100%;border-collapse:collapse;font-size:13px}
 .data-table th,.data-table td{padding:10px;text-align:left;border-bottom:1px solid var(--line)}
 .data-table th{background:#f8fafc;font-weight:600;color:var(--sea)}
+
+/* 普通用户后台 - 编辑兼职卡片 */
+.mjob-edit-card{
+  background:#fff;
+  border-radius:16px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.08);
+  overflow:hidden;
+  margin-bottom:20px;
+  border:1px solid #e2e8f0;
+}
+.mjob-edit-header{
+  background:linear-gradient(135deg,#0ea5e9 0%,#06b6d4 100%);
+  padding:20px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.mjob-edit-header h3{
+  margin:0;
+  color:#fff;
+  font-size:18px;
+  font-weight:600;
+}
+.mjob-edit-hint{
+  color:rgba(255,255,255,0.85);
+  font-size:13px;
+  background:rgba(255,255,255,0.15);
+  padding:4px 12px;
+  border-radius:20px;
+}
+.mjob-edit-body{
+  padding:24px;
+}
+.mjob-field{
+  margin-bottom:18px;
+}
+.mjob-label{
+  display:block;
+  font-size:13px;
+  font-weight:600;
+  color:#475569;
+  margin-bottom:6px;
+}
+.mjob-input,.mjob-select{
+  width:100%;
+  padding:10px 14px;
+  border:1.5px solid #e2e8f0;
+  border-radius:10px;
+  font-size:14px;
+  color:#1e293b;
+  background:#f8fafc;
+  transition:all .2s;
+  box-sizing:border-box;
+}
+.mjob-input:focus,.mjob-select:focus{
+  outline:none;
+  border-color:#0ea5e9;
+  background:#fff;
+  box-shadow:0 0 0 3px rgba(14,165,233,0.1);
+}
+.mjob-row{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-bottom:18px;
+}
+.mjob-row .mjob-field{
+  margin-bottom:0;
+}
+.mjob-upload-area{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.mjob-upload-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 20px;
+  background:#f0f9ff;
+  border:2px dashed #0ea5e9;
+  border-radius:10px;
+  color:#0369a1;
+  font-size:14px;
+  cursor:pointer;
+  transition:all .2s;
+}
+.mjob-upload-btn:hover{
+  background:#e0f2fe;
+  border-color:#0284c7;
+}
+.mjob-upload-icon{
+  font-size:18px;
+}
+.mjob-preview-img{
+  max-width:200px;
+  max-height:200px;
+  border-radius:12px;
+  margin-top:12px;
+  border:2px solid #e2e8f0;
+  object-fit:cover;
+}
+.mjob-edit-footer{
+  padding:18px 24px;
+  background:#f8fafc;
+  border-top:1px solid #e2e8f0;
+  display:flex;
+  gap:12px;
+  justify-content:flex-end;
+}
+.mjob-btn{
+  padding:10px 24px;
+  border-radius:10px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  border:none;
+  transition:all .2s;
+}
+.mjob-btn-primary{
+  background:linear-gradient(135deg,#0ea5e9 0%,#06b6d4 100%);
+  color:#fff;
+}
+.mjob-btn-primary:hover{
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(14,165,233,0.3);
+}
+.mjob-btn-danger{
+  background:#fef2f2;
+  color:#dc2626;
+  border:1px solid #fecaca;
+}
+.mjob-btn-danger:hover{
+  background:#fee2e2;
+}
+.mjob-btn-ghost{
+  background:#fff;
+  color:#64748b;
+  border:1px solid #e2e8f0;
+}
+.mjob-btn-ghost:hover{
+  background:#f1f5f9;
+}
+@media(max-width:768px){
+  .mjob-row{grid-template-columns:1fr;}
+  .mjob-edit-footer{flex-direction:column;}
+  .mjob-btn{width:100%;}
+}
 </style>
 </head>
 <body>
@@ -1344,7 +1492,81 @@ async function bindUpload(inputId,btnId,prevId,statusId,urlKey){
 function togglePublish(forceHide){const w=document.getElementById("pubForm");if(forceHide||w.style.display!=="none"){w.style.display="none";return}fillCat("mf_cat","");fillSub2("mf_cat","mf_sub","mf_sub2");_mf_imgUrl="";bindUpload("mf_img","mf_imgBtn","mf_imgPrev","mf_imgStatus","_mf_imgUrl");initRTE("mf_desc","mf_rte_tb");w.style.display="block"}
 async function loadMine(){fillCat("mf_cat","");fillSub2("mf_cat","mf_sub","mf_sub2");_mf_imgUrl="";bindUpload("mf_img","mf_imgBtn","mf_imgPrev","mf_imgStatus","_mf_imgUrl");initRTE("mf_desc","mf_rte_tb");const el=document.getElementById("myJobs");if(!WORKER_URL){el.innerHTML='<p class="empty">站点暂未开放普通用户功能：管理员尚未配置后端。</p>';return}try{const d=await wApi("/api/my-jobs",{username:me});jobs=d.jobs||[];el.innerHTML=jobs.length?`<table class="data-table"><thead><tr><th>标题</th><th>分类</th><th>薪资</th><th>状态</th><th>发布时间</th><th>点击</th><th>操作</th></tr></thead><tbody>`+jobs.map(renderMine).join("")+"</tbody></table>":'<p class="empty">你还没有发布过兼职。</p>'}catch(e){el.innerHTML='<p class="empty">加载失败：'+esc(e.message)+'</p>'}}
 function renderMine(j){
-  if(j.id===editingMineId){return `<div class="mjob"><b>编辑兼职</b><label id="lb_mj_title">标题</label><input id="mj_title" value="${esc(j.title)}"><div class="row3"><div><label id="lb_mj_cat">类别</label><select id="mj_cat" onchange="fillSub2('mj_cat','mj_sub','mj_sub2')"></select></div><div><label id="lb_mj_sub">城市</label><select id="mj_sub" onchange="fillSub3('mj_cat','mj_sub','mj_sub2')"></select></div><div><label id="lb_mj_sub2">区县</label><select id="mj_sub2"></select></div></div><label id="lb_mj_desc">描述</label><div class="rte-wrap"><div class="rte-toolbar" id="mj_rte_tb"></div><div class="rte-editor" id="mj_desc" contenteditable="true" data-placeholder="工作内容、要求等">${j.description||""}</div></div><div class="row2"><div><label id="lb_mj_salary">薪资</label><input id="mj_salary" value="${esc(j.salary||"")}"></div><div><label id="lb_mj_loc">地点</label><input id="mj_loc" value="${esc(j.location||"")}"></div></div><label id="lb_mj_contact">个人联系方式</label><input id="mj_contact" value="${esc(j.contact||"")}"><label id="lb_mj_contact2">双向联系</label><input id="mj_contact2" value="${esc(j.contact2||"")}"><label id="lb_mj_contact3">个人频道</label><input id="mj_contact3" value="${esc(j.contact3||"")}"><label id="lb_mj_tags">标签</label><input id="mj_tags" value="${esc((j.tags||[]).join(","))}"><label id="lb_mj_img">封面图片</label><div class="upload-row"><input id="mj_img" type="file" accept="image/*" class="hidden-file"><label for="mj_img" class="upload-btn" id="mj_imgBtn">选择图片上传</label><span id="mj_imgStatus" class="upload-status"></span></div><img id="mj_imgPrev" class="preview-img"${j.image?` src="${esc(j.image)}"`:' style="display:none"'}><div class="ops"><button onclick="saveMineEdit('${j.id}')">保存</button><button class="danger" onclick="removeMineImg()">移除图片</button><button class="ghost" onclick="cancelMineEdit()">取消</button></div></div>`}
+  if(j.id===editingMineId){return `<div class="mjob-edit-card">
+    <div class="mjob-edit-header">
+      <h3>✏️ 编辑兼职</h3>
+      <span class="mjob-edit-hint">修改后需重新审核</span>
+    </div>
+    <div class="mjob-edit-body">
+      <div class="mjob-field">
+        <label class="mjob-label">标题</label>
+        <input class="mjob-input" id="mj_title" value="${esc(j.title)}" placeholder="请输入兼职标题">
+      </div>
+      <div class="mjob-row">
+        <div class="mjob-field">
+          <label class="mjob-label">类别</label>
+          <select class="mjob-select" id="mj_cat" onchange="fillSub2('mj_cat','mj_sub','mj_sub2')"></select>
+        </div>
+        <div class="mjob-field">
+          <label class="mjob-label">城市</label>
+          <select class="mjob-select" id="mj_sub" onchange="fillSub3('mj_cat','mj_sub','mj_sub2')"></select>
+        </div>
+        <div class="mjob-field">
+          <label class="mjob-label">区县</label>
+          <select class="mjob-select" id="mj_sub2"></select>
+        </div>
+      </div>
+      <div class="mjob-field">
+        <label class="mjob-label">描述</label>
+        <div class="rte-wrap"><div class="rte-toolbar" id="mj_rte_tb"></div><div class="rte-editor" id="mj_desc" contenteditable="true" data-placeholder="工作内容、要求等">${j.description||""}</div></div>
+      </div>
+      <div class="mjob-row">
+        <div class="mjob-field">
+          <label class="mjob-label">薪资</label>
+          <input class="mjob-input" id="mj_salary" value="${esc(j.salary||"")}" placeholder="如：100元/天">
+        </div>
+        <div class="mjob-field">
+          <label class="mjob-label">地点</label>
+          <input class="mjob-input" id="mj_loc" value="${esc(j.location||"")}" placeholder="工作地点">
+        </div>
+      </div>
+      <div class="mjob-row">
+        <div class="mjob-field">
+          <label class="mjob-label">个人联系方式</label>
+          <input class="mjob-input" id="mj_contact" value="${esc(j.contact||"")}" placeholder="@xxx">
+        </div>
+        <div class="mjob-field">
+          <label class="mjob-label">双向联系</label>
+          <input class="mjob-input" id="mj_contact2" value="${esc(j.contact2||"")}" placeholder="@xxx_bot">
+        </div>
+        <div class="mjob-field">
+          <label class="mjob-label">个人频道</label>
+          <input class="mjob-input" id="mj_contact3" value="${esc(j.contact3||"")}" placeholder="@xxx">
+        </div>
+      </div>
+      <div class="mjob-field">
+        <label class="mjob-label">标签</label>
+        <input class="mjob-input" id="mj_tags" value="${esc((j.tags||[]).join(","))}" placeholder="逗号分隔，如：日结,轻松,室内">
+      </div>
+      <div class="mjob-field">
+        <label class="mjob-label">封面图片</label>
+        <div class="mjob-upload-area">
+          <input id="mj_img" type="file" accept="image/*" class="hidden-file">
+          <label for="mj_img" class="mjob-upload-btn" id="mj_imgBtn">
+            <span class="mjob-upload-icon">📷</span>
+            <span>选择图片上传</span>
+          </label>
+          <span id="mj_imgStatus" class="upload-status"></span>
+        </div>
+        <img id="mj_imgPrev" class="mjob-preview-img"${j.image?` src="${esc(j.image)}"`:' style="display:none"'}>
+      </div>
+    </div>
+    <div class="mjob-edit-footer">
+      <button class="mjob-btn mjob-btn-primary" onclick="saveMineEdit('${j.id}')">💾 保存修改</button>
+      <button class="mjob-btn mjob-btn-danger" onclick="removeMineImg()">🗑️ 移除图片</button>
+      <button class="mjob-btn mjob-btn-ghost" onclick="cancelMineEdit()">取消</button>
+    </div>
+  </div>`}
   const b=j.status==="approved"?'<span class="badge approved">已通过·主页可见</span>':(j.status==="rejected"?'<span class="badge rejected">已拒绝</span>':'<span class="badge pending">待审核</span>');
   return `<tr><td><b>${esc(j.title)}</b>${j.image?`<br><img src="${esc(j.image)}" style="width:50px;height:38px;object-fit:cover;border-radius:4px;margin-top:4px">`:""}</td><td>${esc(catName(j.category)+(j.subcategory?(" / "+subName(j.category,j.subcategory)):""))}</td><td>${esc(j.salary||"-")}</td><td>${b}</td><td style="font-size:12px;color:var(--muted)">${fmt(j.created_at)}</td><td>${j.views||0}</td><td><button onclick="editMine('${j.id}')">编辑</button> <button class="danger" onclick="delMine('${j.id}')">删除</button></td></tr>`;
 }
