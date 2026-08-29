@@ -1140,15 +1140,38 @@ window.delOdChannel=function(i){
   renderOdChannels();
 }
 window.addOdMsgId=function(i){
-  if(!window._odChannels[i].message_ids)window._odChannels[i].message_ids=[];
-  window._odChannels[i].message_ids.push('');
+  // 先收集当前输入框的值，避免丢失
+  collectOdMsgIds();
+  if(!CONFIG.on_duty)CONFIG.on_duty={};
+  if(!CONFIG.on_duty.channels)CONFIG.on_duty.channels=[];
+  if(!CONFIG.on_duty.channels[i])CONFIG.on_duty.channels[i]={};
+  if(!CONFIG.on_duty.channels[i].message_ids)CONFIG.on_duty.channels[i].message_ids=[];
+  CONFIG.on_duty.channels[i].message_ids.push('');
+  window._odChannels=JSON.parse(JSON.stringify(CONFIG.on_duty.channels));
   renderOdChannels();
 }
 window.delOdMsgId=function(i,mi){
-  if(window._odChannels[i].message_ids){
-    window._odChannels[i].message_ids.splice(mi,1);
+  collectOdMsgIds();
+  if(CONFIG.on_duty&&CONFIG.on_duty.channels&&CONFIG.on_duty.channels[i]&&CONFIG.on_duty.channels[i].message_ids){
+    CONFIG.on_duty.channels[i].message_ids.splice(mi,1);
+    window._odChannels=JSON.parse(JSON.stringify(CONFIG.on_duty.channels));
     renderOdChannels();
   }
+}
+// 收集当前所有消息ID输入框的值到CONFIG
+function collectOdMsgIds(){
+  if(!CONFIG.on_duty)CONFIG.on_duty={};
+  if(!CONFIG.on_duty.channels)CONFIG.on_duty.channels=[];
+  window._odChannels.forEach(function(ch,i){
+    if(!CONFIG.on_duty.channels[i])CONFIG.on_duty.channels[i]={};
+    var msgIds=[];
+    var listEl=document.getElementById('odc_msgids_list_'+i);
+    if(listEl){
+      var inputs=listEl.querySelectorAll('input[id^="odc_msgid_'+i+'_"]');
+      inputs.forEach(function(inp){var v=inp.value.trim();if(v)msgIds.push(v);});
+    }
+    CONFIG.on_duty.channels[i].message_ids=msgIds;
+  });
 }
 window.saveOnDuty=function(){
   CONFIG.on_duty=CONFIG.on_duty||{};
