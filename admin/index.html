@@ -973,6 +973,7 @@ function renderTgChannels(){
     return;
   }
   list.innerHTML=window._tgChannels.map(function(ch,i){
+    var fetchMode=ch.fetch_mode||'auto';
     return '<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:12px;background:#f8fafc">'+
       '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'+
         '<strong style="color:#1e293b">频道 '+(i+1)+(ch.channel?'：'+esc(ch.channel):'（未配置）')+'</strong>'+
@@ -982,7 +983,20 @@ function renderTgChannels(){
         '<div style="flex:1"><label>Bot Token</label><input id="tgc_token_'+i+'" value="'+esc(ch.bot_token||'')+'" placeholder="123456:ABC-DEF..."></div>'+
         '<div style="width:180px"><label>频道用户名</label><input id="tgc_channel_'+i+'" value="'+esc(ch.channel||'')+'" placeholder="@hainanguanli"></div>'+
       '</div>'+
-      '<div class="row">'+
+      '<div class="row" style="margin-top:10px">'+
+        '<div style="width:160px"><label>抓取模式</label><select id="tgc_mode_'+i+'" onchange="toggleTgFetchMode('+i+')">'+
+          '<option value="auto"'+(fetchMode==='auto'?' selected':'')+'>自动监控新消息</option>'+
+          '<option value="link"'+(fetchMode==='link'?' selected':'')+'>抓取指定链接</option>'+
+          '<option value="msgid"'+(fetchMode==='msgid'?' selected':'')+'>抓取指定消息ID</option>'+
+        '</select></div>'+
+        '<div style="flex:1" id="tgc_link_wrap_'+i+'" style="display:'+(fetchMode==='link'?'block':'none')+'">'+
+          '<label>消息链接</label><input id="tgc_link_'+i+'" value="'+esc(ch.fetch_link||'')+'" placeholder="https://t.me/频道名/消息ID">'+
+        '</div>'+
+        '<div style="width:180px" id="tgc_msgid_wrap_'+i+'" style="display:'+(fetchMode==='msgid'?'block':'none')+'">'+
+          '<label>消息ID</label><input id="tgc_msgid_'+i+'" value="'+esc(ch.fetch_msgid||'')+'" placeholder="12345">'+
+        '</div>'+
+      '</div>'+
+      '<div class="row" style="margin-top:10px">'+
         '<div style="width:180px"><label>默认分类</label><input id="tgc_category_'+i+'" value="'+esc(ch.default_category||'personal')+'" placeholder="personal"></div>'+
         '<div style="width:140px"><label>发布状态</label><select id="tgc_status_'+i+'">'+
           '<option value="pending"'+(ch.default_status==='pending'?' selected':'')+'>待审核</option>'+
@@ -997,8 +1011,13 @@ function renderTgChannels(){
   }).join('');
 }
 window.addTgChannel=function(){
-  window._tgChannels.push({bot_token:'',channel:'',default_category:'personal',default_status:'pending',tag_maps:[],enabled:true});
+  window._tgChannels.push({bot_token:'',channel:'',default_category:'personal',default_status:'pending',tag_maps:[],enabled:true,fetch_mode:'auto'});
   renderTgChannels();
+}
+window.toggleTgFetchMode=function(i){
+  var mode=document.getElementById('tgc_mode_'+i).value;
+  document.getElementById('tgc_link_wrap_'+i).style.display=mode==='link'?'block':'none';
+  document.getElementById('tgc_msgid_wrap_'+i).style.display=mode==='msgid'?'block':'none';
 }
 window.delTgChannel=function(i){
   if(!confirm('确定删除此频道配置？'))return;
