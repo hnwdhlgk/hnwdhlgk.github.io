@@ -1112,6 +1112,7 @@ function renderOdChannels(){
           '<option value="false"'+(ch.enabled===false?' selected':'')+'>关闭</option>'+
         '</select></div>'+
       '</div>'+
+      '<div style="margin-top:10px"><label>指定消息ID（逗号分隔，可选）</label><input id="odc_msgids_'+i+'" value="'+esc((ch.message_ids||[]).join(','))+'" placeholder="16627,16628" style="width:100%"><p class="muted" style="font-size:12px;margin:4px 0 0">填写后直接抓取这些消息的按钮，例如：16627。消息链接：https://t.me/hnwdhldh/16627</p></div>'+
     '</div>';
   }).join('');
 }
@@ -1131,10 +1132,13 @@ window.saveOnDuty=function(){
   var channels=[];
   window._odChannels.forEach(function(ch,i){
     var chEl=$('odc_channel_'+i);if(!chEl)return;
+    var msgIdsStr=$('odc_msgids_'+i).value.trim();
+    var msgIds=msgIdsStr?msgIdsStr.split(',').map(function(x){return x.trim()}).filter(Boolean):[];
     channels.push({
       channel:chEl.value.trim(),
       bot_token:$('odc_token_'+i).value.trim(),
-      enabled:$('odc_enabled_'+i).value==='true'
+      enabled:$('odc_enabled_'+i).value==='true',
+      message_ids:msgIds
     });
   });
   CONFIG.on_duty.channels=channels;
