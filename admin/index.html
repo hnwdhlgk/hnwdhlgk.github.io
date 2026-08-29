@@ -382,7 +382,7 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
 
   <!-- 评论管理 -->
   <div id="view-comments" class="view">
-    <div class="card"><h3>一键导入评价</h3>
+    <div class="card"><h3>一键导入评价 <span style="font-size:11px;color:#94a3b8;font-weight:normal">v2.0 评论监控版</span></h3>
       <p class="muted">输入Telegram消息链接，自动抓取该消息下所有指定作者的评论，一键导入到对应兼职的评论区。</p>
       <div style="display:flex;gap:10px;margin:12px 0;flex-wrap:wrap">
         <input id="importLink" placeholder="Telegram消息链接，如 https://t.me/hnwdhlgk/51" style="flex:1;min-width:300px;padding:8px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px">
@@ -397,11 +397,13 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
         3. 导入的评论自动显示在主页评论区<br>
         4. 重复评论不会重复导入
       </div>
-    </div>
-    <div class="card"><h3>兼职评论监控状态</h3>
-      <p class="muted">显示每个兼职对应的Telegram消息链接和已同步的评论数量，可单独同步某个兼职的评论。</p>
-      <div style="margin:10px 0"><button onclick="loadJobCommentStatus()" class="ghost">刷新状态</button></div>
-      <div id="jobCommentStatus"><p class="muted">加载中...</p></div>
+      
+      <div style="margin-top:20px;padding-top:15px;border-top:2px solid #e2e8f0">
+        <h4 style="margin:0 0 10px;color:#1e293b">📋 兼职评论监控（每个兼职单独获取评论）</h4>
+        <p class="muted" style="margin-bottom:10px">每个兼职可自定义评论区链接，点击「获取评论」按钮单独导入。</p>
+        <div style="margin:10px 0"><button onclick="loadJobCommentStatus()" class="ghost" style="background:#2563eb;color:#fff;border-color:#2563eb">🔄 刷新兼职列表</button></div>
+        <div id="jobCommentStatus"><p class="muted" style="padding:15px;text-align:center;background:#f8fafc;border-radius:6px">点击上方「刷新兼职列表」按钮加载...</p></div>
+      </div>
     </div>
     <div class="card"><h3>评论管理</h3>
       <p class="muted">审核用户发表的兼职评论，通过后显示在主页。</p>
