@@ -1,5 +1,17 @@
 {
   "daily": {
+    "2026-08-29": {
+      "views": 1,
+      "visitors": 1,
+      "ips": [
+        "192.155.87.78"
+      ],
+      "hourly_ips": {
+        "2026-08-29 01": [
+          "192.155.87.78"
+        ]
+      }
+    },
     "2026-08-28": {
       "views": 499,
       "visitors": 15,
@@ -27,6 +39,6 @@
       }
     }
   },
-  "total_views": 499,
-  "total_visitors": 15
+  "total_views": 500,
+  "total_visitors": 16
 }
