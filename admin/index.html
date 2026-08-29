@@ -1112,7 +1112,21 @@ function renderOdChannels(){
           '<option value="false"'+(ch.enabled===false?' selected':'')+'>关闭</option>'+
         '</select></div>'+
       '</div>'+
-      '<div style="margin-top:10px"><label>指定消息ID（逗号分隔，可选）</label><input id="odc_msgids_'+i+'" value="'+esc((ch.message_ids||[]).join(','))+'" placeholder="16627,16628" style="width:100%"><p class="muted" style="font-size:12px;margin:4px 0 0">填写后直接抓取这些消息的按钮，例如：16627。消息链接：https://t.me/hnwdhldh/16627</p></div>'+
+      '<div style="margin-top:10px">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'+
+          '<label>指定消息ID（可选，多个可分别添加）</label>'+
+          '<button class="ghost small" onclick="addOdMsgId('+i+')" style="padding:4px 10px;font-size:12px">+ 添加ID</button>'+
+        '</div>'+
+        '<div id="odc_msgids_list_'+i+'">'+
+          (ch.message_ids||[]).map(function(mid,mi){
+            return '<div style="display:flex;gap:6px;margin-bottom:4px">'+
+              '<input id="odc_msgid_'+i+'_'+mi+'" value="'+esc(mid)+'" placeholder="消息ID，如16627" style="flex:1">'+
+              '<button class="danger small" onclick="delOdMsgId('+i+','+mi+')" style="padding:4px 10px;font-size:12px;background:#b3261e">删</button>'+
+            '</div>';
+          }).join('')+
+        '</div>'+
+        '<p class="muted" style="font-size:12px;margin:4px 0 0">填写后直接抓取这些消息的按钮。消息链接：https://t.me/hnwdhldh/16627，只填数字部分</p>'+
+      '</div>'+
     '</div>';
   }).join('');
 }
@@ -1125,6 +1139,17 @@ window.delOdChannel=function(i){
   window._odChannels.splice(i,1);
   renderOdChannels();
 }
+window.addOdMsgId=function(i){
+  if(!window._odChannels[i].message_ids)window._odChannels[i].message_ids=[];
+  window._odChannels[i].message_ids.push('');
+  renderOdChannels();
+}
+window.delOdMsgId=function(i,mi){
+  if(window._odChannels[i].message_ids){
+    window._odChannels[i].message_ids.splice(mi,1);
+    renderOdChannels();
+  }
+}
 window.saveOnDuty=function(){
   CONFIG.on_duty=CONFIG.on_duty||{};
   CONFIG.on_duty.enabled=$('od_enabled').value==='true';
@@ -1132,8 +1157,16 @@ window.saveOnDuty=function(){
   var channels=[];
   window._odChannels.forEach(function(ch,i){
     var chEl=$('odc_channel_'+i);if(!chEl)return;
-    var msgIdsStr=$('odc_msgids_'+i).value.trim();
-    var msgIds=msgIdsStr?msgIdsStr.split(',').map(function(x){return x.trim()}).filter(Boolean):[];
+    // 从动态输入框收集message_ids
+    var msgIds=[];
+    var listEl=$('odc_msgids_list_'+i);
+    if(listEl){
+      var inputs=listEl.querySelectorAll('input[id^="odc_msgid_'+i+'_"]');
+      inputs.forEach(function(inp){
+        var v=inp.value.trim();
+        if(v)msgIds.push(v);
+      });
+    }
     channels.push({
       channel:chEl.value.trim(),
       bot_token:$('odc_token_'+i).value.trim(),
