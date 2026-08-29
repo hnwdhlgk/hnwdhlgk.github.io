@@ -687,7 +687,7 @@ function renderJobs(){
   if(jobFilterSub2)list=list.filter(function(j){return j.subcategory2===jobFilterSub2});
   var editingOne=list.find(function(j){return j.editing});
   if(editingOne){$('jobs').innerHTML=renderJobEdit(editingOne);return}
-  $('jobs').innerHTML=list.length?'<table class="data-table"><thead><tr><th>标题</th><th>分类</th><th>薪资</th><th>地点</th><th>发布者</th><th>认证</th><th>状态</th><th>发布时间</th><th>点击</th><th>操作</th></tr></thead><tbody>'+list.map(function(j){
+  $('jobs').innerHTML=list.length?'<table class="data-table"><thead><tr><th style="width:22%">标题</th><th style="width:12%">分类</th><th style="width:10%">薪资</th><th style="width:10%">地点</th><th style="width:13%">发布者</th><th style="width:11%">认证</th><th style="width:8%">状态</th><th style="width:9%">发布时间</th><th style="width:5%">点击</th><th style="width:10%">操作</th></tr></thead><tbody>'+list.map(function(j){
     var b='<span class="badge '+esc(j.status)+'">'+(j.status==='approved'?'已通过':j.status==='rejected'?'已拒绝':'待审核')+'</span>';
     var vBadge=j.verified===true?'<span style="color:#16a34a;font-weight:600">✓ 已认证</span>':'<span style="color:#94a3b8">✗ 未认证</span>';
     var cat=esc(catName(j.category)||'-')+(j.subcategory?'<br><span style="color:#71859a;font-size:11px">'+esc(subName(j.category,j.subcategory))+'</span>':'')+(j.subcategory2?'<br><span style="color:#71859a;font-size:11px">'+esc(sub2Name(j.category,j.subcategory,j.subcategory2))+'</span>':'');
