@@ -72,6 +72,16 @@
   "about_text": "",
   "safety_notice": "",
   "labels": {},
-  "form_labels": {},
-  "form_placeholders": {}
+  "form_labels": {
+    "img": "老师照片"
+  },
+  "form_placeholders": {
+    "title": "请输入老师艺名",
+    "desc": "简单自我介绍",
+    "salary": "如:800p",
+    "loc": "如:月川北区",
+    "contact": "如@hainanguanlibot",
+    "contact2": "如@hainanguanlibot",
+    "contact3": "如@hainanguanlibot 切记要@开头"
+  }
 }
