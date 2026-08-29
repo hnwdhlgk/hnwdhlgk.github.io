@@ -936,7 +936,7 @@ async function submitComment(jobId){
     const r=await wApi("/api/add-comment",{username:me,job_id:jobId,content:content,anonymous:anonymous});
     if(r.ok){
       input.value='';
-      alert("评论已提交，等待审核后显示");
+      alert("评论发表成功");
       loadComments(jobId);
     }else{
       alert(r.error||"发表失败");
