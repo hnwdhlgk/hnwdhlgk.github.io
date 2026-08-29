@@ -835,9 +835,93 @@ function renderContacts(j){
 }
 function viewJob(id){
   if(!WORKER_URL||!id)return;
-  if(sessionStorage.getItem("viewed_"+id))return;
-  sessionStorage.setItem("viewed_"+id,"1");
-  wApi("/api/view",{id:id}).catch(()=>{});
+  if(!sessionStorage.getItem("viewed_"+id)){
+    sessionStorage.setItem("viewed_"+id,"1");
+    wApi("/api/view",{id:id}).catch(()=>{});
+  }
+  const j=jobs.find(x=>x.id===id);
+  if(!j)return;
+  showJobDetail(j);
+}
+// 显示兼职详情+评论区
+async function showJobDetail(j){
+  const isV=j.verified===true;
+  let html='<div style="max-height:80vh;overflow-y:auto">';
+  html+='<h3 style="margin:0 0 10px">'+esc(j.title)+(j.show_verified!==false?' <img src="assets/verified_badge.png" style="width:20px;height:20px;vertical-align:middle">':'')+'</h3>';
+  if(j.image){
+    if(j.image_link||(j.telegram_channel&&j.telegram_msg_id)){
+      const il=j.image_link||('https://t.me/'+j.telegram_channel+'/'+j.telegram_msg_id+'?single');
+      html+='<a href="'+esc(il)+'" target="_blank"><img src="'+esc(j.image)+'" style="width:100%;max-height:300px;object-fit:cover;border-radius:8px;margin-bottom:10px"></a>';
+    }else{
+      html+='<img src="'+esc(j.image)+'" style="width:100%;max-height:300px;object-fit:cover;border-radius:8px;margin-bottom:10px;cursor:zoom-in" onclick="openImagePreview(\''+esc(j.image)+'\',\''+esc(j.title)+'\')">';
+    }
+  }
+  html+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">';
+  html+='<span style="background:#eff6ff;color:#1d4ed8;padding:3px 10px;border-radius:4px;font-size:12px">'+esc(catName(j.category)||'兼职')+'</span>';
+  if(j.subcategory)html+='<span style="background:#f1f5f9;color:#64748b;padding:3px 10px;border-radius:4px;font-size:12px">'+esc(subName(j.category,j.subcategory))+'</span>';
+  if(j.subcategory2)html+='<span style="background:#f8fafc;color:#94a3b8;padding:3px 10px;border-radius:4px;font-size:12px">'+esc(sub2Name(j.category,j.subcategory,j.subcategory2))+'</span>';
+  if(j.salary)html+='<span style="background:#fff7ed;color:#ea580c;padding:3px 10px;border-radius:4px;font-size:12px;font-weight:600">'+esc(j.salary)+'</span>';
+  if(j.location)html+='<span style="background:#f0fdf4;color:#16a34a;padding:3px 10px;border-radius:4px;font-size:12px">'+esc(j.location)+'</span>';
+  html+='</div>';
+  if(j.description)html+='<div style="color:#334155;line-height:1.7;margin-bottom:15px;white-space:pre-wrap">'+linkify(j.description)+'</div>';
+  html+=renderContacts(j);
+  // 评论区
+  html+='<div style="border-top:1px solid #e2e8f0;margin-top:15px;padding-top:15px">';
+  html+='<h4 style="margin:0 0 10px;color:#1e293b">💬 评论区</h4>';
+  html+='<div id="commentList" style="margin-bottom:12px"><span style="color:#94a3b8;font-size:13px">加载评论中...</span></div>';
+  if(me){
+    html+='<div style="background:#f8fafc;padding:12px;border-radius:8px">';
+    html+='<textarea id="commentInput" placeholder="写下你的评论..." style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:6px;resize:vertical;min-height:60px;font-size:13px;box-sizing:border-box"></textarea>';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">';
+    html+='<label style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748b;cursor:pointer"><input type="checkbox" id="commentAnonymous"> 匿名评论</label>';
+    html+='<button onclick="submitComment(\''+j.id+'\')" style="padding:6px 16px;background:#2563eb;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px">发表评论</button>';
+    html+='</div></div>';
+  }else{
+    html+='<div style="background:#f8fafc;padding:12px;border-radius:8px;text-align:center;color:#64748b;font-size:13px">请先 <button onclick="openModal(loginForm)" style="background:none;border:none;color:#2563eb;cursor:pointer;text-decoration:underline">登录</button> 后发表评论</div>';
+  }
+  html+='</div></div>';
+  document.getElementById("modalBody").innerHTML=html;
+  document.getElementById("modalMask").style.display="flex";
+  loadComments(j.id);
+}
+// 加载评论
+async function loadComments(jobId){
+  try{
+    const r=await fetch(WORKER_URL+"/api/comments?job_id="+encodeURIComponent(jobId)).then(r=>r.json());
+    const comments=r.comments||[];
+    const el=document.getElementById("commentList");
+    if(!el)return;
+    if(!comments.length){
+      el.innerHTML='<div style="color:#94a3b8;font-size:13px;text-align:center;padding:15px">暂无评论，快来抢沙发~</div>';
+      return;
+    }
+    el.innerHTML=comments.map(c=>{
+      const name=c.anonymous?'匿名用户':esc(c.username);
+      const time=new Date(c.created_at).toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+      return '<div style="padding:10px 0;border-bottom:1px solid #f1f5f9"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-weight:600;color:#1e293b;font-size:13px">'+name+'</span><span style="color:#94a3b8;font-size:11px">'+time+'</span></div><div style="color:#475569;font-size:13px;line-height:1.6">'+esc(c.content)+'</div></div>';
+    }).join('');
+  }catch(e){
+    const el=document.getElementById("commentList");
+    if(el)el.innerHTML='<div style="color:#ef4444;font-size:13px">评论加载失败</div>';
+  }
+}
+// 提交评论
+async function submitComment(jobId){
+  const input=document.getElementById("commentInput");
+  const anonymous=document.getElementById("commentAnonymous").checked;
+  const content=input.value.trim();
+  if(!content){alert("请输入评论内容");return}
+  if(content.length>500){alert("评论不能超过500字");return}
+  try{
+    const r=await wApi("/api/add-comment",{username:me,job_id:jobId,content:content,anonymous:anonymous});
+    if(r.ok){
+      input.value='';
+      alert("评论已提交，等待审核后显示");
+      loadComments(jobId);
+    }else{
+      alert(r.error||"发表失败");
+    }
+  }catch(e){alert("发表失败："+e.message)}
 }
 /* ====== 认证 ====== */
 function renderAuth(){const a=document.getElementById("authArea");if(me){a.innerHTML='<span class="who">'+esc(me)+'</span><button class="ghost" onclick="showMyView()">我的后台</button><button onclick="doLogout()">退出</button>'}else{a.innerHTML='<button class="ghost" onclick="openModal(regForm)">注册</button><button onclick="openModal(loginForm)">登录</button>'}}
