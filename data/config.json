@@ -83,5 +83,12 @@
     "contact": "如@hainanguanlibot",
     "contact2": "如@hainanguanlibot",
     "contact3": "如@hainanguanlibot 切记要@开头"
+  },
+  "comments_monitor": {
+    "enabled": true,
+    "bot_token": "7574930619:AAG-PPRWPQY2xXFJfO0ZnowY9PjClg9LTEE",
+    "channel": "@hnwdhlgk",
+    "author_name": "海南大学修车部",
+    "author_username": ""
   }
 }
