@@ -979,8 +979,8 @@ window.loadJobCommentStatus=async function(){
   try{
     // 读取兼职列表和评论列表
     const [jobsData, commentsData] = await Promise.all([
-      api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/jobs.json'),
-      api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/comments.json').catch(()=>({content:btoa('[]')}))
+      api('/repos/'+encodeURIComponent(G.user)+'/'+encodeURIComponent(G.repo)+'/contents/data/jobs.json'),
+      api('/repos/'+encodeURIComponent(G.user)+'/'+encodeURIComponent(G.repo)+'/contents/data/comments.json').catch(()=>({content:btoa('[]')}))
     ]);
     const jobs=JSON.parse(decodeURIComponent(escape(atob(jobsData.content.replace(/\n/g,'')))));
     const comments=JSON.parse(decodeURIComponent(escape(atob(commentsData.content.replace(/\n/g,'')))));
@@ -1851,7 +1851,7 @@ window.loadComments=async function(filter){
   currentCommentFilter=filter||'pending';
   document.getElementById('commentsList').innerHTML='<p class="muted">加载中...</p>';
   try{
-    const d=await api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/comments.json');
+    const d=await api('/repos/'+encodeURIComponent(G.user)+'/'+encodeURIComponent(G.repo)+'/contents/data/comments.json');
     const comments=JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))));
     let filtered=comments;
     if(filter!=='all')filtered=comments.filter(c=>c.status===filter);
@@ -1876,11 +1876,11 @@ window.loadComments=async function(filter){
   }
 }
 async function saveCommentsData(comments,msg){
-  const d=await api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/comments.json');
-  await api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/comments.json','PUT',{message:msg||'更新评论',content:btoa(unescape(encodeURIComponent(JSON.stringify(comments,null,2)))),sha:d.sha,branch:BRANCH});
+  const d=await api('/repos/'+encodeURIComponent(G.user)+'/'+encodeURIComponent(G.repo)+'/contents/data/comments.json');
+  await api('/repos/'+encodeURIComponent(G.user)+'/'+encodeURIComponent(G.repo)+'/contents/data/comments.json','PUT',{message:msg||'更新评论',content:btoa(unescape(encodeURIComponent(JSON.stringify(comments,null,2)))),sha:d.sha,branch:'main'});
 }
 window.approveComment=async function(id){
-  const d=await api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/comments.json');
+  const d=await api('/repos/'+encodeURIComponent(G.user)+'/'+encodeURIComponent(G.repo)+'/contents/data/comments.json');
   const comments=JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))));
   const c=comments.find(x=>x.id===id);
   if(!c)return alert('评论不存在');
@@ -1890,7 +1890,7 @@ window.approveComment=async function(id){
   loadComments(currentCommentFilter);
 }
 window.rejectComment=async function(id){
-  const d=await api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/comments.json');
+  const d=await api('/repos/'+encodeURIComponent(G.user)+'/'+encodeURIComponent(G.repo)+'/contents/data/comments.json');
   const comments=JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))));
   const c=comments.find(x=>x.id===id);
   if(!c)return alert('评论不存在');
@@ -1901,7 +1901,7 @@ window.rejectComment=async function(id){
 }
 window.deleteComment=async function(id){
   if(!confirm('确定删除该评论？'))return;
-  const d=await api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/comments.json');
+  const d=await api('/repos/'+encodeURIComponent(G.user)+'/'+encodeURIComponent(G.repo)+'/contents/data/comments.json');
   const comments=JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))));
   const idx=comments.findIndex(x=>x.id===id);
   if(idx<0)return alert('评论不存在');
