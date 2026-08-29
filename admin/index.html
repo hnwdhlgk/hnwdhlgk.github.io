@@ -361,8 +361,17 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
   <div id="view-users" class="view">
     <div class="card"><h3>普通用户管理</h3>
       <p class="muted">管理可注册发布兼职的普通用户账号。管理员通过 GitHub Token 登录，不在此列表。</p>
+      <div style="display:flex;gap:10px;margin:12px 0;flex-wrap:wrap">
+        <input id="userSearch" placeholder="搜索用户名..." style="flex:1;min-width:200px;padding:8px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px" oninput="renderUsers()">
+        <select id="userRoleFilter" style="padding:8px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;background:#fff" onchange="renderUsers()">
+          <option value="">全部角色</option>
+          <option value="superadmin">超级管理员</option>
+          <option value="admin">管理员</option>
+          <option value="user">普通用户</option>
+        </select>
+        <button onclick="addUser()" style="padding:8px 16px">+ 新增用户</button>
+      </div>
       <div id="users"></div>
-      <div class="ops" style="margin-top:14px"><button onclick="addUser()">+ 新增用户</button></div>
     </div>
   </div>
 </div>
@@ -1493,21 +1502,41 @@ function roleBtn(i,role,label,cls){
   return '<button class="small '+(cls||'')+'" data-idx="'+i+'" data-role="'+role+'" onclick="setUserRole(this.dataset.idx,this.dataset.role)">'+label+'</button>';
 }
 function renderUsers(){
-  $('users').innerHTML=USERS.length?USERS.map(function(u,i){
-    var pwdStatus=u.pass?'<span class="ok">已设置密码</span>':'<span class="wait">未设置密码</span>';
-    var roleLabel='普通用户',roleClass='role-user';
-    if(u.role==='admin'){roleLabel='管理员';roleClass='role-admin'}
-    if(u.role==='superadmin'){roleLabel='超级管理员';roleClass='role-super'}
-    var roleBtns='';
-    if(u.role==='superadmin'){
-      roleBtns=roleBtn(i,'admin','降为管理员')+roleBtn(i,'user','设为普通用户');
-    }else if(u.role==='admin'){
-      roleBtns=roleBtn(i,'superadmin','升为超级管理员','primary')+roleBtn(i,'user','设为普通用户');
-    }else{
-      roleBtns=roleBtn(i,'superadmin','设为超级管理员','primary')+roleBtn(i,'admin','设为管理员');
-    }
-    return '<div class="user-row"><span class="uname">'+esc(u.username)+'</span>'+pwdStatus+'<span class="role '+roleClass+'">'+roleLabel+'</span>'+roleBtns+'<button class="small" onclick="resetUserPwd('+i+')">重置密码</button><button class="danger small" onclick="delUser('+i+')">删除</button></div>';
-  }).join(''):'<p class="muted">暂无普通用户</p>';
+  var search=($('userSearch')?$('userSearch').value:'').toLowerCase();
+  var roleFilter=$('userRoleFilter')?$('userRoleFilter').value:'';
+  var filtered=USERS.filter(function(u){
+    if(search && u.username.toLowerCase().indexOf(search)===-1)return false;
+    if(roleFilter && (u.role||'user')!==roleFilter)return false;
+    return true;
+  });
+  if(!filtered.length){
+    $('users').innerHTML='<p class="muted" style="padding:20px;text-align:center">暂无匹配用户</p>';
+    return;
+  }
+  $('users').innerHTML='<table class="data-table"><thead><tr><th style="width:30%">用户名</th><th style="width:15%">密码状态</th><th style="width:15%">角色</th><th style="width:20%">角色设置</th><th style="width:20%">操作</th></tr></thead><tbody>'+filtered.map(function(u){
+    var i=USERS.indexOf(u);
+    var pwdStatus=u.pass?'<span style="color:#16a34a;font-size:12px">✓ 已设置</span>':'<span style="color:#f59e0b;font-size:12px">○ 未设置</span>';
+    var roleLabel='普通用户',roleColor='#64748b';
+    if(u.role==='admin'){roleLabel='管理员';roleColor='#2563eb'}
+    if(u.role==='superadmin'){roleLabel='超级管理员';roleColor='#dc2626'}
+    var roleBadge='<span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:'+roleColor+'15;color:'+roleColor+'">'+roleLabel+'</span>';
+    var roleSelect='<select style="width:100%;padding:5px 8px;border:1px solid #e2e8f0;border-radius:5px;font-size:12px;background:#fff" onchange="setUserRole('+i+',this.value)">'+
+      '<option value="superadmin"'+(u.role==='superadmin'?' selected':'')+'>超级管理员</option>'+
+      '<option value="admin"'+(u.role==='admin'?' selected':'')+'>管理员</option>'+
+      '<option value="user"'+(u.role!=='superadmin'&&u.role!=='admin'?' selected':'')+'>普通用户</option>'+
+      '</select>';
+    var ops='<div style="display:flex;gap:6px">'+
+      '<button class="small" onclick="resetUserPwd('+i+')" style="padding:5px 10px;font-size:12px;background:#64748b">重置密码</button>'+
+      '<button class="danger small" onclick="delUser('+i+')" style="padding:5px 10px;font-size:12px;background:#ef4444">删除</button>'+
+      '</div>';
+    return '<tr>'+
+      '<td style="font-weight:600;color:#1e293b">'+esc(u.username)+'</td>'+
+      '<td>'+pwdStatus+'</td>'+
+      '<td>'+roleBadge+'</td>'+
+      '<td>'+roleSelect+'</td>'+
+      '<td>'+ops+'</td>'+
+      '</tr>';
+  }).join('')+'</tbody></table>';
 }
 window.addUser=function(){var n=prompt('用户名');if(!n)return;if(USERS.some(function(u){return u.username===n})){alert('用户名已存在');return};USERS.push({username:n,pass:'',created_at:new Date().toISOString()});stat('正在添加…','wait');writeFile('data/users.json',USERS,userSha,'新增用户').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();stat('已添加','ok')}).catch(function(e){stat('添加失败：'+e.message,'err')})}
 window.delUser=function(i){if(!confirm('确定删除用户 '+USERS[i].username+'？'))return;USERS.splice(i,1);stat('正在删除…','wait');writeFile('data/users.json',USERS,userSha,'删除用户').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();stat('已删除','ok')}).catch(function(e){stat('删除失败：'+e.message,'err')})}
