@@ -1427,7 +1427,10 @@ function renderUsers(){
     }else{
       roleBtns=roleBtn(i,'superadmin','设为超级管理员','primary')+roleBtn(i,'admin','设为管理员');
     }
-    return '<div class="user-row"><span class="uname">'+esc(u.username)+'</span>'+pwdStatus+'<span class="role '+roleClass+'">'+roleLabel+'</span>'+roleBtns+'<button class="small" onclick="resetUserPwd('+i+')">重置密码</button><button class="danger small" onclick="delUser('+i+')">删除</button></div>';
+    var isVerified=u.verified===true;
+    var verifyBadge=isVerified?'<span class="ok" style="background:#16a34a;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px">✓ 已认证</span>':'<span class="wait" style="background:#94a3b8;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px">未认证</span>';
+    var verifyBtn=isVerified?'<button class="small" onclick="setUserVerified('+i+',false)">取消认证</button>':'<button class="small" style="background:#16a34a;color:#fff" onclick="setUserVerified('+i+',true)">设为已认证</button>';
+    return '<div class="user-row"><span class="uname">'+esc(u.username)+'</span>'+pwdStatus+'<span class="role '+roleClass+'">'+roleLabel+'</span>'+verifyBadge+roleBtns+verifyBtn+'<button class="small" onclick="resetUserPwd('+i+')">重置密码</button><button class="danger small" onclick="delUser('+i+')">删除</button></div>';
   }).join(''):'<p class="muted">暂无普通用户</p>';
 }
 window.addUser=function(){var n=prompt('用户名');if(!n)return;if(USERS.some(function(u){return u.username===n})){alert('用户名已存在');return};USERS.push({username:n,pass:'',created_at:new Date().toISOString()});stat('正在添加…','wait');writeFile('data/users.json',USERS,userSha,'新增用户').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();stat('已添加','ok')}).catch(function(e){stat('添加失败：'+e.message,'err')})}
@@ -1436,6 +1439,13 @@ window.setUserRole=function(i,role){
   USERS[i].role=role;
   stat('正在保存…','wait');
   writeFile('data/users.json',USERS,userSha,'设置用户角色').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();stat('角色已更新','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
+}
+window.setUserVerified=function(i,verified){
+  if(verified&&!confirm('确定将用户 '+USERS[i].username+' 设为已认证？'))return;
+  USERS[i].verified=verified;
+  if(verified)USERS[i].verified_at=new Date().toISOString();
+  stat('正在保存…','wait');
+  writeFile('data/users.json',USERS,userSha,verified?'设置用户已认证':'取消用户认证').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();stat(verified?'已设为认证用户':'已取消认证','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
 }
 window.resetUserPwd=async function(i){
   var pwd=prompt("请输入 "+USERS[i].username+" 的新密码（至少6位）");
