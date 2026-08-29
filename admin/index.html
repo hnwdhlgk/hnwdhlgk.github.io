@@ -989,10 +989,10 @@ function renderTgChannels(){
           '<option value="link"'+(fetchMode==='link'?' selected':'')+'>抓取指定链接</option>'+
           '<option value="msgid"'+(fetchMode==='msgid'?' selected':'')+'>抓取指定消息ID</option>'+
         '</select></div>'+
-        '<div style="flex:1" id="tgc_link_wrap_'+i+'" style="display:'+(fetchMode==='link'?'block':'none')+'">'+
+        '<div id="tgc_link_wrap_'+i+'" style="flex:1;display:'+(fetchMode==='link'?'block':'none')+'">'+
           '<label>消息链接</label><input id="tgc_link_'+i+'" value="'+esc(ch.fetch_link||'')+'" placeholder="https://t.me/频道名/消息ID">'+
         '</div>'+
-        '<div style="width:180px" id="tgc_msgid_wrap_'+i+'" style="display:'+(fetchMode==='msgid'?'block':'none')+'">'+
+        '<div id="tgc_msgid_wrap_'+i+'" style="width:180px;display:'+(fetchMode==='msgid'?'block':'none')+'">'+
           '<label>消息ID</label><input id="tgc_msgid_'+i+'" value="'+esc(ch.fetch_msgid||'')+'" placeholder="12345">'+
         '</div>'+
       '</div>'+
@@ -1016,8 +1016,10 @@ window.addTgChannel=function(){
 }
 window.toggleTgFetchMode=function(i){
   var mode=document.getElementById('tgc_mode_'+i).value;
-  document.getElementById('tgc_link_wrap_'+i).style.display=mode==='link'?'block':'none';
-  document.getElementById('tgc_msgid_wrap_'+i).style.display=mode==='msgid'?'block':'none';
+  var linkWrap=document.getElementById('tgc_link_wrap_'+i);
+  var msgidWrap=document.getElementById('tgc_msgid_wrap_'+i);
+  if(linkWrap)linkWrap.style.display=mode==='link'?'block':'none';
+  if(msgidWrap)msgidWrap.style.display=mode==='msgid'?'block':'none';
 }
 window.delTgChannel=function(i){
   if(!confirm('确定删除此频道配置？'))return;
