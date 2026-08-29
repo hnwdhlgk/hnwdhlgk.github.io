@@ -694,6 +694,22 @@ function renderJobs(){
     var titleHtml='<div style="display:flex;align-items:center;gap:8px;min-width:0">'+(j.image?'<img src="'+esc(j.image)+'" style="width:36px;height:36px;object-fit:cover;border-radius:6px;flex-shrink:0">':'')+'<span style="color:#1e293b;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(j.title)+'</span></div>';
     var authorDisplay=esc(j.author||'-');
     if(authorDisplay.startsWith('telegram:@'))authorDisplay='<span style="color:#0284c7">@'+authorDisplay.replace('telegram:@','')+'</span>';
+    // 主页链接
+    var homeLink = '';
+    if(j.telegram_channel && j.telegram_msg_id) homeLink = 'https://t.me/'+j.telegram_channel+'/'+j.telegram_msg_id;
+    else if(j.image_link) homeLink = j.image_link;
+    var linkHtml = homeLink ? '<a href="'+esc(homeLink)+'" target="_blank" style="color:#2563eb;text-decoration:none;font-size:12px">🔗 查看</a>' : '<span style="color:#cbd5e1;font-size:12px">-</span>';
+    // 操作按钮
+    var opsHtml = '<div style="display:flex;flex-direction:column;gap:4px;align-items:center">';
+    opsHtml += '<span style="font-size:11px;color:#64748b">点击:'+(j.views||0)+'</span>';
+    opsHtml += '<div style="display:flex;gap:3px">';
+    if(j.status==='pending'){
+      opsHtml += '<button class="green small" onclick="approveJob(\''+j.id+'\')" style="padding:3px 6px;font-size:10px">通过</button>';
+      opsHtml += '<button class="danger small" onclick="rejectJob(\''+j.id+'\')" style="padding:3px 6px;font-size:10px">拒绝</button>';
+    }
+    opsHtml += '<button class="ghost small" onclick="editJob(\''+j.id+'\')" style="padding:3px 6px;font-size:10px">编辑</button>';
+    opsHtml += '<button class="danger small" onclick="delJob(\''+j.id+'\')" style="padding:3px 6px;font-size:10px">删除</button>';
+    opsHtml += '</div></div>';
     return '<tr>'+
       '<td>'+titleHtml+'</td>'+
       '<td>'+cat+'</td>'+
@@ -701,10 +717,9 @@ function renderJobs(){
       '<td style="color:#64748b">'+esc(j.location||'-')+'</td>'+
       '<td style="font-size:12px">'+authorDisplay+'</td>'+
       '<td>'+vBadge+'</td>'+
-      '<td style="text-align:center">'+b+'</td>'+
       '<td style="font-size:12px;color:#94a3b8;white-space:nowrap">'+fmtDate(j.created_at)+'</td>'+
-      '<td style="text-align:center;font-weight:600">'+(j.views||0)+'</td>'+
-      '<td style="white-space:nowrap">'+(j.status==='pending'?'<button class="green small" onclick="approveJob(\''+j.id+'\')">通过</button> <button class="danger small" onclick="rejectJob(\''+j.id+'\')">拒绝</button> ':'')+'<button class="ghost small" onclick="editJob(\''+j.id+'\')">编辑</button> <button class="danger small" onclick="delJob(\''+j.id+'\')">删除</button></td>'+
+      '<td style="text-align:center">'+linkHtml+'</td>'+
+      '<td style="white-space:nowrap">'+opsHtml+'</td>'+
       '</tr>';
   }).join('')+'</tbody></table>':'<p class="muted">暂无'+(titles[currentFilter]||'')+'数据</p>';
 }
