@@ -1011,8 +1011,37 @@ function renderTgChannels(){
   }).join('');
 }
 window.addTgChannel=function(){
-  window._tgChannels.push({bot_token:'',channel:'',default_category:'personal',default_status:'pending',tag_maps:[],enabled:true,fetch_mode:'auto'});
+  // 先收集当前输入框的值，避免丢失
+  collectTgChannels();
+  if(!CONFIG.telegram)CONFIG.telegram={};
+  if(!CONFIG.telegram.channels)CONFIG.telegram.channels=[];
+  CONFIG.telegram.channels.push({bot_token:'',channel:'',default_category:'personal',default_status:'pending',tag_maps:[],enabled:true,fetch_mode:'auto'});
+  window._tgChannels=JSON.parse(JSON.stringify(CONFIG.telegram.channels));
   renderTgChannels();
+}
+// 收集当前所有频道输入框的值到CONFIG
+function collectTgChannels(){
+  if(!CONFIG.telegram)CONFIG.telegram={};
+  if(!CONFIG.telegram.channels)CONFIG.telegram.channels=[];
+  window._tgChannels.forEach(function(ch,i){
+    if(!CONFIG.telegram.channels[i])CONFIG.telegram.channels[i]={};
+    var tokenEl=document.getElementById('tgc_token_'+i);
+    var channelEl=document.getElementById('tgc_channel_'+i);
+    var catEl=document.getElementById('tgc_category_'+i);
+    var statusEl=document.getElementById('tgc_status_'+i);
+    var enabledEl=document.getElementById('tgc_enabled_'+i);
+    var modeEl=document.getElementById('tgc_mode_'+i);
+    var linkEl=document.getElementById('tgc_link_'+i);
+    var msgidEl=document.getElementById('tgc_msgid_'+i);
+    if(tokenEl)CONFIG.telegram.channels[i].bot_token=tokenEl.value.trim();
+    if(channelEl)CONFIG.telegram.channels[i].channel=channelEl.value.trim();
+    if(catEl)CONFIG.telegram.channels[i].default_category=catEl.value.trim();
+    if(statusEl)CONFIG.telegram.channels[i].default_status=statusEl.value;
+    if(enabledEl)CONFIG.telegram.channels[i].enabled=enabledEl.value==='true';
+    if(modeEl)CONFIG.telegram.channels[i].fetch_mode=modeEl.value;
+    if(linkEl)CONFIG.telegram.channels[i].fetch_link=linkEl.value.trim();
+    if(msgidEl)CONFIG.telegram.channels[i].fetch_msgid=msgidEl.value.trim();
+  });
 }
 window.toggleTgFetchMode=function(i){
   var mode=document.getElementById('tgc_mode_'+i).value;
@@ -1023,7 +1052,9 @@ window.toggleTgFetchMode=function(i){
 }
 window.delTgChannel=function(i){
   if(!confirm('确定删除此频道配置？'))return;
-  window._tgChannels.splice(i,1);
+  collectTgChannels();
+  CONFIG.telegram.channels.splice(i,1);
+  window._tgChannels=JSON.parse(JSON.stringify(CONFIG.telegram.channels));
   renderTgChannels();
 }
 function renderTgMap(){
