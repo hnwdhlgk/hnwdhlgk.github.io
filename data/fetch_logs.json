@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-29T08:30:33.294Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "历史消息抓取未找到按钮（扫描0条消息，页面大小:11059字节）"
+  },
+  {
     "time": "2026-08-29T08:30:30.548Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -790,13 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "无新消息"
-  },
-  {
-    "time": "2026-08-28T20:15:39.235Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "error",
-    "message": "getUpdates失败：Conflict: terminated by other getUpdates request; make sure that only one bot instance is running"
   }
 ]
