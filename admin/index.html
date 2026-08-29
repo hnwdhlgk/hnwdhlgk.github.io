@@ -1001,7 +1001,7 @@ window.loadJobCommentStatus=async function(){
       return;
     }
     
-    el.innerHTML='<table class="data-table"><thead><tr><th>兼职标题</th><th>Telegram消息</th><th>已同步评论</th><th>操作</th></tr></thead><tbody>'+tgJobs.map(j=>{
+    el.innerHTML='<table class="data-table"><thead><tr><th style="width:15%">兼职标题</th><th style="width:40%">评论区链接（可修改）</th><th style="width:10%">已同步</th><th style="width:15%">操作</th></tr></thead><tbody>'+tgJobs.map((j,idx)=>{
       let msgId=j.telegram_msg_id||'';
       let tgLink='';
       if(j.image_link){
@@ -1012,42 +1012,52 @@ window.loadJobCommentStatus=async function(){
         tgLink='https://t.me/'+j.telegram_channel+'/'+msgId;
       }
       const count=commentCounts[j.id]||0;
+      const inputId='cmt_link_'+idx;
       return '<tr>'+
-        '<td style="font-size:13px;font-weight:500">'+esc(j.title)+'</td>'+
-        '<td style="font-size:12px">'+(tgLink?'<a href="'+tgLink+'" target="_blank" style="color:#2563eb">'+tgLink+'</a>':'<span style="color:#94a3b8">无链接</span>')+'</td>'+
-        '<td style="text-align:center"><span style="display:inline-block;padding:2px 10px;background:#eff6ff;color:#2563eb;border-radius:10px;font-size:12px;font-weight:600">'+count+'条</span></td>'+
-        '<td><button class="small" onclick="syncJobComments(\''+j.id+'\',\''+msgId+'\')" style="padding:5px 12px;font-size:12px;background:#16a34a">同步评论</button></td>'+
+        '<td style="font-size:13px;font-weight:500;vertical-align:middle">'+esc(j.title)+'</td>'+
+        '<td><input id="'+inputId+'" value="'+esc(tgLink)+'" placeholder="https://t.me/频道名/消息ID" style="width:100%;padding:6px 10px;border:1px solid #e2e8f0;border-radius:5px;font-size:12px;box-sizing:border-box"></td>'+
+        '<td style="text-align:center;vertical-align:middle"><span style="display:inline-block;padding:2px 10px;background:#eff6ff;color:#2563eb;border-radius:10px;font-size:12px;font-weight:600">'+count+'条</span></td>'+
+        '<td style="vertical-align:middle"><div style="display:flex;gap:6px">'+
+        '<button class="small" onclick="fetchJobComments(\''+j.id+'\',\''+inputId+'\')" style="padding:6px 12px;font-size:12px;background:#2563eb;color:#fff;border:none;border-radius:5px;cursor:pointer">获取评论</button>'+
+        '<a href="'+esc(tgLink)+'" target="_blank" style="padding:6px 10px;font-size:12px;background:#f1f5f9;color:#475569;border-radius:5px;text-decoration:none;display:inline-flex;align-items:center">打开</a>'+
+        '</div></td>'+
         '</tr>';
     }).join('')+'</tbody></table>';
   }catch(e){
     el.innerHTML='<p class="muted">加载失败：'+e.message+'</p>';
   }
 }
-// 单独同步某个兼职的评论
-window.syncJobComments=async function(jobId,msgId){
-  if(!msgId){alert('该兼职没有Telegram消息ID');return}
+// 获取某个兼职的评论（使用输入框中的链接）
+window.fetchJobComments=async function(jobId,inputId){
+  const link=document.getElementById(inputId).value.trim();
+  if(!link){alert('请输入评论区链接');return}
   if(!CONFIG.worker_url){alert('请先配置Worker URL');return}
   const cm=CONFIG.comments_monitor||{};
   if(!cm.bot_token){alert('请先在站点配置中设置评论监控Bot Token');return}
+  if(!cm.discussion_chat_id){alert('请先在站点配置中设置讨论组Chat ID');return}
   
-  // 构造链接
-  const channel=cm.channel||'@hnwdhlgk';
-  const link='https://t.me/'+channel.replace('@','')+'/'+msgId;
-  
-  if(!confirm('确定同步该兼职的评论？\n'+link))return;
+  if(!confirm('确定获取该链接的评论？\n'+link))return;
   
   try{
     const r=await fetch(CONFIG.worker_url+'/api/import-comments',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({link:link,author_name:cm.author_name||'海南大学修车部',author_username:cm.author_username||'',discussion_chat_id:cm.discussion_chat_id||''})
+      body:JSON.stringify({
+        link:link,
+        author_name:cm.author_name||'海南大学修车部',
+        author_username:cm.author_username||'',
+        discussion_chat_id:cm.discussion_chat_id||''
+      })
     }).then(r=>r.json());
     if(r.ok){
-      alert('同步成功：'+r.message);
+      alert('获取成功：'+r.message);
       loadJobCommentStatus();
       loadComments(currentCommentFilter);
     }else{
-      alert('同步失败：'+(r.error||'未知错误'));
+      let errMsg=r.error||'未知错误';
+      if(r.found_comments)errMsg+='\n找到'+r.found_comments+'条评论，但未找到对应兼职';
+      if(r.discussion_chat_id)errMsg+='\n讨论组ID: '+r.discussion_chat_id;
+      alert('获取失败：'+errMsg);
     }
   }catch(e){
     alert('请求失败：'+e.message);
