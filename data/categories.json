@@ -62,7 +62,52 @@
     "image_link": "",
     "enabled": true,
     "sort_order": 2,
-    "subcategories": []
+    "subcategories": [
+      {
+        "name": "海口市",
+        "slug": "business_haikou",
+        "subcategories": [
+          {
+            "name": "龙华区",
+            "slug": "business_longhua"
+          },
+          {
+            "name": "美兰区",
+            "slug": "business_meilan"
+          },
+          {
+            "name": "琼山区",
+            "slug": "business_qiongshan"
+          },
+          {
+            "name": "秀英区",
+            "slug": "business_xiuying"
+          }
+        ]
+      },
+      {
+        "name": "三亚市",
+        "slug": "business_sanya",
+        "subcategories": [
+          {
+            "name": "吉阳区",
+            "slug": "business_jiyang"
+          },
+          {
+            "name": "天涯区",
+            "slug": "business_tianya"
+          },
+          {
+            "name": "海棠区",
+            "slug": "business_haitang"
+          },
+          {
+            "name": "崖州区",
+            "slug": "business_yazhou"
+          }
+        ]
+      }
+    ]
   },
   {
     "name": "中介",
@@ -72,6 +117,51 @@
     "image_link": "",
     "enabled": true,
     "sort_order": 3,
-    "subcategories": []
+    "subcategories": [
+      {
+        "name": "海口市",
+        "slug": "agency_haikou",
+        "subcategories": [
+          {
+            "name": "龙华区",
+            "slug": "agency_longhua"
+          },
+          {
+            "name": "美兰区",
+            "slug": "agency_meilan"
+          },
+          {
+            "name": "琼山区",
+            "slug": "agency_qiongshan"
+          },
+          {
+            "name": "秀英区",
+            "slug": "agency_xiuying"
+          }
+        ]
+      },
+      {
+        "name": "三亚市",
+        "slug": "agency_sanya",
+        "subcategories": [
+          {
+            "name": "吉阳区",
+            "slug": "agency_jiyang"
+          },
+          {
+            "name": "天涯区",
+            "slug": "agency_tianya"
+          },
+          {
+            "name": "海棠区",
+            "slug": "agency_haitang"
+          },
+          {
+            "name": "崖州区",
+            "slug": "agency_yazhou"
+          }
+        ]
+      }
+    ]
   }
 ]
