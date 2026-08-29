@@ -266,12 +266,13 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       </div>
       <div class="row">
         <div><label>监控频道</label><input id="cfg_cm_channel" placeholder="@hnwdhlgk"></div>
-        <div><label>评论者显示名称</label><input id="cfg_cm_author_name" placeholder="海南大学修车部"></div>
+        <div><label>讨论组 Chat ID（必填）</label><input id="cfg_cm_discussion_chat_id" placeholder="如 -1001234567890"></div>
       </div>
       <div class="row">
+        <div><label>评论者显示名称</label><input id="cfg_cm_author_name" placeholder="海南大学修车部"></div>
         <div><label>筛选作者用户名（可选）</label><input id="cfg_cm_author_username" placeholder="@username，留空则同步所有评论"></div>
-        <div></div>
       </div>
+      <p class="muted" style="margin-top:8px;color:#dc2626"><b>获取讨论组Chat ID方法：</b>Bot加入讨论组后，在讨论组发一条消息，访问 https://api.telegram.org/bot&lt;你的TOKEN&gt;/getUpdates，找到 chat.id 字段（负数，如 -1001234567890）</p>
       <p class="muted" style="margin-top:8px">工作原理：自动扫描所有兼职的Telegram跳转链接，使用getDiscussionMessage获取对应讨论组，抓取回复消息的评论并同步。</p>
       <div class="ops">
         <button onclick="saveConfig()">保存配置</button>
@@ -967,7 +968,7 @@ window.addHeroBtn=function(){
   // 评论监控配置
   var cm=CONFIG.comments_monitor||{};
   var cmEnabled=$('cfg_cm_enabled');if(cmEnabled)cmEnabled.value=cm.enabled?'true':'false';
-  ['bot_token','channel','author_name','author_username'].forEach(function(k){
+  ['bot_token','discussion_chat_id','channel','author_name','author_username'].forEach(function(k){
     var el=$('cfg_cm_'+k);if(el)el.value=cm[k]||'';
   });
 }
@@ -1039,7 +1040,7 @@ window.syncJobComments=async function(jobId,msgId){
     const r=await fetch(CONFIG.worker_url+'/api/import-comments',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({link:link,author_name:cm.author_name||'海南大学修车部',author_username:cm.author_username||''})
+      body:JSON.stringify({link:link,author_name:cm.author_name||'海南大学修车部',author_username:cm.author_username||'',discussion_chat_id:cm.discussion_chat_id||''})
     }).then(r=>r.json());
     if(r.ok){
       alert('同步成功：'+r.message);
@@ -1063,6 +1064,8 @@ window.importComments=async function(){
   try{
     const body={link:link};
     if(author)body.author_name=author;
+    const cm=CONFIG.comments_monitor||{};
+    if(cm.discussion_chat_id)body.discussion_chat_id=cm.discussion_chat_id;
     const r=await fetch(CONFIG.worker_url+'/api/import-comments',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -1097,7 +1100,7 @@ window.delHeroBtn=function(i){
   // 评论监控配置
   var cm=CONFIG.comments_monitor||{};
   var cmEnabled=$('cfg_cm_enabled');if(cmEnabled)cmEnabled.value=cm.enabled?'true':'false';
-  ['bot_token','channel','author_name','author_username'].forEach(function(k){
+  ['bot_token','discussion_chat_id','channel','author_name','author_username'].forEach(function(k){
     var el=$('cfg_cm_'+k);if(el)el.value=cm[k]||'';
   });
 }
@@ -1114,6 +1117,8 @@ window.importComments=async function(){
   try{
     const body={link:link};
     if(author)body.author_name=author;
+    const cm=CONFIG.comments_monitor||{};
+    if(cm.discussion_chat_id)body.discussion_chat_id=cm.discussion_chat_id;
     const r=await fetch(CONFIG.worker_url+'/api/import-comments',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -1163,7 +1168,7 @@ function renderConfig(){
   // 评论监控配置
   var cm=CONFIG.comments_monitor||{};
   var cmEnabled=$('cfg_cm_enabled');if(cmEnabled)cmEnabled.value=cm.enabled?'true':'false';
-  ['bot_token','channel','author_name','author_username'].forEach(function(k){
+  ['bot_token','discussion_chat_id','channel','author_name','author_username'].forEach(function(k){
     var el=$('cfg_cm_'+k);if(el)el.value=cm[k]||'';
   });
 }
@@ -1180,6 +1185,8 @@ window.importComments=async function(){
   try{
     const body={link:link};
     if(author)body.author_name=author;
+    const cm=CONFIG.comments_monitor||{};
+    if(cm.discussion_chat_id)body.discussion_chat_id=cm.discussion_chat_id;
     const r=await fetch(CONFIG.worker_url+'/api/import-comments',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -1252,7 +1259,7 @@ window.saveConfig=function(){
   // 保存评论监控配置
   var cm={};
   cm.enabled=$('cfg_cm_enabled').value==='true';
-  ['bot_token','channel','author_name','author_username'].forEach(function(k){
+  ['bot_token','discussion_chat_id','channel','author_name','author_username'].forEach(function(k){
     var el=$('cfg_cm_'+k);if(el)cm[k]=el.value.trim();
   });
   CONFIG.comments_monitor=cm;
