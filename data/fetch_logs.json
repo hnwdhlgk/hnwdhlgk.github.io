@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-29T17:30:52.165Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "未收到@hnwdhldh的消息。Bot(@hainanguanlibot)收到的频道：无。频道可访问:海南伟大航路导航页(类型:channel)。网页抓取也未获取到按钮"
+  },
+  {
     "time": "2026-08-29T17:30:51.326Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
@@ -790,13 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "历史消息抓取未找到按钮（扫描0条消息，页面大小:11060字节）"
-  },
-  {
-    "time": "2026-08-29T04:30:30.524Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
   }
 ]
