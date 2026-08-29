@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-29T08:30:30.548Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-08-29T08:00:41.033Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
@@ -790,13 +798,5 @@
     "count": 0,
     "status": "error",
     "message": "getUpdates失败：Conflict: terminated by other getUpdates request; make sure that only one bot instance is running"
-  },
-  {
-    "time": "2026-08-28T20:15:35.008Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "未收到@hnwdhldh的消息。Bot(@hainanguanlibot)收到的频道：无"
   }
 ]
