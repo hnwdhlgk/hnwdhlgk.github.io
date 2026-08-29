@@ -124,6 +124,7 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
     <div class="menu-item" data-view="formlabels" onclick="showView('formlabels')"><span class="mi-ic">📝</span>表单设置</div>
     <div class="menu-item" data-view="telegram" onclick="showView('telegram')"><span class="mi-ic">✈️</span>Telegram抓取</div>
     <div class="menu-item" data-view="fetchlogs" onclick="showView('fetchlogs')"><span class="mi-ic">📋</span>抓取日志</div>
+    <div class="menu-item" data-view="comments" onclick="showView('comments')"><span class="mi-ic">💬</span>评论管理</div>
     <div class="menu-item" data-view="users" onclick="showView('users')"><span class="mi-ic">👥</span>用户管理</div>
   </nav>
   <div class="sidebar-footer"><div class="who" id="whoami">—</div><button onclick="logoutGithub()">退出登录</button></div>
@@ -357,6 +358,18 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
     </div>
   </div>
 
+  <!-- 评论管理 -->
+  <div id="view-comments" class="view">
+    <div class="card"><h3>评论管理</h3>
+      <p class="muted">审核用户发表的兼职评论，通过后显示在主页。</p>
+      <div style="display:flex;gap:10px;margin:12px 0">
+        <button class="ghost" onclick="loadComments('pending')" id="cmtPendingBtn">待审核</button>
+        <button class="ghost" onclick="loadComments('approved')" id="cmtApprovedBtn">已通过</button>
+        <button class="ghost" onclick="loadComments('all')" id="cmtAllBtn">全部</button>
+      </div>
+      <div id="commentsList"></div>
+    </div>
+  </div>
   <!-- 用户管理 -->
   <div id="view-users" class="view">
     <div class="card"><h3>普通用户管理</h3>
@@ -427,7 +440,7 @@ function showView(name,param){
   var v=$('view-'+name);if(v)v.classList.add('active');
   document.querySelectorAll('.menu-item[data-view]').forEach(function(m){m.classList.remove('active')});
   document.querySelectorAll('.menu-item[data-view="'+name+'"]').forEach(function(m){if(!param||m.dataset.filter===param||m.dataset.section===param)m.classList.add('active')});
-  var titles={dashboard:'概览',cat1:'一级分类',cat2:'二级分类',cat3:'三级分类',jobs:'兼职管理',config:'站点配置',labels:'字段标签',formlabels:'表单设置',telegram:'Telegram抓取',fetchlogs:'抓取日志',users:'用户管理'};
+  var titles={dashboard:'概览',cat1:'一级分类',cat2:'二级分类',cat3:'三级分类',jobs:'兼职管理',config:'站点配置',labels:'字段标签',formlabels:'表单设置',telegram:'Telegram抓取',fetchlogs:'抓取日志',users:'用户管理',comments:'评论管理'};
   $('pageTitle').textContent=titles[name]||name;
   if(name==='cat1')renderCat1();
   if(name==='cat2'){fillCat2Parent();renderCat2()}
@@ -1544,6 +1557,71 @@ window.setUserRole=function(i,role){
   USERS[i].role=role;
   stat('正在保存…','wait');
   writeFile('data/users.json',USERS,userSha,'设置用户角色').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();stat('角色已更新','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
+}
+// 评论管理
+let currentCommentFilter='pending';
+window.loadComments=async function(filter){
+  currentCommentFilter=filter||'pending';
+  document.getElementById('commentsList').innerHTML='<p class="muted">加载中...</p>';
+  try{
+    const d=await api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/comments.json');
+    const comments=JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))));
+    let filtered=comments;
+    if(filter!=='all')filtered=comments.filter(c=>c.status===filter);
+    if(!filtered.length){
+      document.getElementById('commentsList').innerHTML='<p class="muted" style="padding:20px;text-align:center">暂无评论</p>';
+      return;
+    }
+    document.getElementById('commentsList').innerHTML='<table class="data-table"><thead><tr><th>兼职</th><th>用户</th><th>评论内容</th><th>状态</th><th>时间</th><th>操作</th></tr></thead><tbody>'+filtered.map(c=>{
+      const job=JOBS.find(j=>j.id===c.job_id);
+      const jobTitle=job?job.title:'(已删除)';
+      const statusText=c.status==='approved'?'<span style="color:#16a34a">✓ 已通过</span>':c.status==='rejected'?'<span style="color:#ef4444">✗ 已拒绝</span>':'<span style="color:#f59e0b">⏳ 待审核</span>';
+      const time=new Date(c.created_at).toLocaleString('zh-CN');
+      let ops='';
+      if(c.status==='pending'){
+        ops='<button class="green small" onclick="approveComment(\''+c.id+'\')" style="background:#16a34a">通过</button> <button class="danger small" onclick="rejectComment(\''+c.id+'\')" style="background:#ef4444">拒绝</button> ';
+      }
+      ops+='<button class="danger small" onclick="deleteComment(\''+c.id+'\')" style="background:#ef4444">删除</button>';
+      return '<tr><td style="font-size:12px">'+esc(jobTitle)+'</td><td>'+(c.anonymous?'<i>匿名</i>':esc(c.username))+'</td><td style="font-size:12px;max-width:300px">'+esc(c.content)+'</td><td>'+statusText+'</td><td style="font-size:11px;color:#94a3b8">'+time+'</td><td>'+ops+'</td></tr>';
+    }).join('')+'</tbody></table>';
+  }catch(e){
+    document.getElementById('commentsList').innerHTML='<p class="muted">加载失败：'+e.message+'</p>';
+  }
+}
+async function saveCommentsData(comments,msg){
+  const d=await api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/comments.json');
+  await api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/comments.json','PUT',{message:msg||'更新评论',content:btoa(unescape(encodeURIComponent(JSON.stringify(comments,null,2)))),sha:d.sha,branch:BRANCH});
+}
+window.approveComment=async function(id){
+  const d=await api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/comments.json');
+  const comments=JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))));
+  const c=comments.find(x=>x.id===id);
+  if(!c)return alert('评论不存在');
+  c.status='approved';
+  await saveCommentsData(comments,'评论审核通过');
+  stat('已通过','ok');
+  loadComments(currentCommentFilter);
+}
+window.rejectComment=async function(id){
+  const d=await api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/comments.json');
+  const comments=JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))));
+  const c=comments.find(x=>x.id===id);
+  if(!c)return alert('评论不存在');
+  c.status='rejected';
+  await saveCommentsData(comments,'评论审核拒绝');
+  stat('已拒绝','ok');
+  loadComments(currentCommentFilter);
+}
+window.deleteComment=async function(id){
+  if(!confirm('确定删除该评论？'))return;
+  const d=await api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/comments.json');
+  const comments=JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))));
+  const idx=comments.findIndex(x=>x.id===id);
+  if(idx<0)return alert('评论不存在');
+  comments.splice(idx,1);
+  await saveCommentsData(comments,'删除评论');
+  stat('已删除','ok');
+  loadComments(currentCommentFilter);
 }
 window.resetUserPwd=async function(i){
   var pwd=prompt("请输入 "+USERS[i].username+" 的新密码（至少6位）");
