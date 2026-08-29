@@ -497,6 +497,7 @@ function showView(name,param){
   if(name==='jobs'){if(param)currentFilter=param;renderJobs()}
   if(name==='config'&&param){var sec=$('sec-'+param);if(sec)setTimeout(function(){sec.scrollIntoView({behavior:'smooth',block:'start'})},100)}
   if(name==='dashboard')renderDashboard();
+  if(name==='comments'){loadComments('pending');setTimeout(function(){loadJobCommentStatus()},200)}
   closeSidebar();
 }
 function setJobFilter(f){currentFilter=f;document.querySelectorAll('#jobFilters button').forEach(function(b){b.classList.toggle('active',b.dataset.f===f)});initJobFilterCats();renderJobs()}
@@ -1100,87 +1101,8 @@ window.delHeroBtn=function(i){
     var el=$('cfg_cm_'+k);if(el)el.value=cm[k]||'';
   });
 }
-// 加载兼职评论监控状态
-window.loadJobCommentStatus=async function(){
-  const el=document.getElementById('jobCommentStatus');
-  el.innerHTML='<p class="muted">加载中...</p>';
-  try{
-    // 读取兼职列表和评论列表
-    const [jobsData, commentsData] = await Promise.all([
-      api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/jobs.json'),
-      api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/comments.json').catch(()=>({content:btoa('[]')}))
-    ]);
-    const jobs=JSON.parse(decodeURIComponent(escape(atob(jobsData.content.replace(/\n/g,'')))));
-    const comments=JSON.parse(decodeURIComponent(escape(atob(commentsData.content.replace(/\n/g,'')))));
-    
-    // 统计每个兼职的评论数
-    const commentCounts={};
-    comments.forEach(c=>{commentCounts[c.job_id]=(commentCounts[c.job_id]||0)+1});
-    
-    // 筛选有Telegram链接的兼职
-    const tgJobs=jobs.filter(j=>{
-      if(j.telegram_msg_id)return true;
-      if(j.image_link && /t\.me\/[^\/]+\/\d+/.test(j.image_link))return true;
-      return false;
-    });
-    
-    if(!tgJobs.length){
-      el.innerHTML='<p class="muted" style="padding:20px;text-align:center">暂无关联Telegram消息的兼职</p>';
-      return;
-    }
-    
-    el.innerHTML='<table class="data-table"><thead><tr><th>兼职标题</th><th>Telegram消息</th><th>已同步评论</th><th>操作</th></tr></thead><tbody>'+tgJobs.map(j=>{
-      let msgId=j.telegram_msg_id||'';
-      let tgLink='';
-      if(j.image_link){
-        const m=j.image_link.match(/t\.me\/([^\/\?]+)\/(\d+)/);
-        if(m){tgLink='https://t.me/'+m[1]+'/'+m[2];msgId=m[2];}
-      }
-      if(!tgLink && j.telegram_channel && msgId){
-        tgLink='https://t.me/'+j.telegram_channel+'/'+msgId;
-      }
-      const count=commentCounts[j.id]||0;
-      return '<tr>'+
-        '<td style="font-size:13px;font-weight:500">'+esc(j.title)+'</td>'+
-        '<td style="font-size:12px">'+(tgLink?'<a href="'+tgLink+'" target="_blank" style="color:#2563eb">'+tgLink+'</a>':'<span style="color:#94a3b8">无链接</span>')+'</td>'+
-        '<td style="text-align:center"><span style="display:inline-block;padding:2px 10px;background:#eff6ff;color:#2563eb;border-radius:10px;font-size:12px;font-weight:600">'+count+'条</span></td>'+
-        '<td><button class="small" onclick="syncJobComments(\''+j.id+'\',\''+msgId+'\')" style="padding:5px 12px;font-size:12px;background:#16a34a">同步评论</button></td>'+
-        '</tr>';
-    }).join('')+'</tbody></table>';
-  }catch(e){
-    el.innerHTML='<p class="muted">加载失败：'+e.message+'</p>';
-  }
-}
-// 单独同步某个兼职的评论
-window.syncJobComments=async function(jobId,msgId){
-  if(!msgId){alert('该兼职没有Telegram消息ID');return}
-  if(!CONFIG.worker_url){alert('请先配置Worker URL');return}
-  const cm=CONFIG.comments_monitor||{};
-  if(!cm.bot_token){alert('请先在站点配置中设置评论监控Bot Token');return}
-  
-  // 构造链接
-  const channel=cm.channel||'@hnwdhlgk';
-  const link='https://t.me/'+channel.replace('@','')+'/'+msgId;
-  
-  if(!confirm('确定同步该兼职的评论？\n'+link))return;
-  
-  try{
-    const r=await fetch(CONFIG.worker_url+'/api/import-comments',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({link:link,author_name:cm.author_name||'海南大学修车部',author_username:cm.author_username||''})
-    }).then(r=>r.json());
-    if(r.ok){
-      alert('同步成功：'+r.message);
-      loadJobCommentStatus();
-      loadComments(currentCommentFilter);
-    }else{
-      alert('同步失败：'+(r.error||'未知错误'));
-    }
-  }catch(e){
-    alert('请求失败：'+e.message);
-  }
-}
+
+
 // 一键导入评论
 window.importComments=async function(){
   const link=document.getElementById('importLink').value.trim();
@@ -1245,87 +1167,8 @@ function renderConfig(){
     var el=$('cfg_cm_'+k);if(el)el.value=cm[k]||'';
   });
 }
-// 加载兼职评论监控状态
-window.loadJobCommentStatus=async function(){
-  const el=document.getElementById('jobCommentStatus');
-  el.innerHTML='<p class="muted">加载中...</p>';
-  try{
-    // 读取兼职列表和评论列表
-    const [jobsData, commentsData] = await Promise.all([
-      api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/jobs.json'),
-      api('/repos/'+encodeURIComponent(GH_USER)+'/'+encodeURIComponent(GH_REPO)+'/contents/data/comments.json').catch(()=>({content:btoa('[]')}))
-    ]);
-    const jobs=JSON.parse(decodeURIComponent(escape(atob(jobsData.content.replace(/\n/g,'')))));
-    const comments=JSON.parse(decodeURIComponent(escape(atob(commentsData.content.replace(/\n/g,'')))));
-    
-    // 统计每个兼职的评论数
-    const commentCounts={};
-    comments.forEach(c=>{commentCounts[c.job_id]=(commentCounts[c.job_id]||0)+1});
-    
-    // 筛选有Telegram链接的兼职
-    const tgJobs=jobs.filter(j=>{
-      if(j.telegram_msg_id)return true;
-      if(j.image_link && /t\.me\/[^\/]+\/\d+/.test(j.image_link))return true;
-      return false;
-    });
-    
-    if(!tgJobs.length){
-      el.innerHTML='<p class="muted" style="padding:20px;text-align:center">暂无关联Telegram消息的兼职</p>';
-      return;
-    }
-    
-    el.innerHTML='<table class="data-table"><thead><tr><th>兼职标题</th><th>Telegram消息</th><th>已同步评论</th><th>操作</th></tr></thead><tbody>'+tgJobs.map(j=>{
-      let msgId=j.telegram_msg_id||'';
-      let tgLink='';
-      if(j.image_link){
-        const m=j.image_link.match(/t\.me\/([^\/\?]+)\/(\d+)/);
-        if(m){tgLink='https://t.me/'+m[1]+'/'+m[2];msgId=m[2];}
-      }
-      if(!tgLink && j.telegram_channel && msgId){
-        tgLink='https://t.me/'+j.telegram_channel+'/'+msgId;
-      }
-      const count=commentCounts[j.id]||0;
-      return '<tr>'+
-        '<td style="font-size:13px;font-weight:500">'+esc(j.title)+'</td>'+
-        '<td style="font-size:12px">'+(tgLink?'<a href="'+tgLink+'" target="_blank" style="color:#2563eb">'+tgLink+'</a>':'<span style="color:#94a3b8">无链接</span>')+'</td>'+
-        '<td style="text-align:center"><span style="display:inline-block;padding:2px 10px;background:#eff6ff;color:#2563eb;border-radius:10px;font-size:12px;font-weight:600">'+count+'条</span></td>'+
-        '<td><button class="small" onclick="syncJobComments(\''+j.id+'\',\''+msgId+'\')" style="padding:5px 12px;font-size:12px;background:#16a34a">同步评论</button></td>'+
-        '</tr>';
-    }).join('')+'</tbody></table>';
-  }catch(e){
-    el.innerHTML='<p class="muted">加载失败：'+e.message+'</p>';
-  }
-}
-// 单独同步某个兼职的评论
-window.syncJobComments=async function(jobId,msgId){
-  if(!msgId){alert('该兼职没有Telegram消息ID');return}
-  if(!CONFIG.worker_url){alert('请先配置Worker URL');return}
-  const cm=CONFIG.comments_monitor||{};
-  if(!cm.bot_token){alert('请先在站点配置中设置评论监控Bot Token');return}
-  
-  // 构造链接
-  const channel=cm.channel||'@hnwdhlgk';
-  const link='https://t.me/'+channel.replace('@','')+'/'+msgId;
-  
-  if(!confirm('确定同步该兼职的评论？\n'+link))return;
-  
-  try{
-    const r=await fetch(CONFIG.worker_url+'/api/import-comments',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({link:link,author_name:cm.author_name||'海南大学修车部',author_username:cm.author_username||''})
-    }).then(r=>r.json());
-    if(r.ok){
-      alert('同步成功：'+r.message);
-      loadJobCommentStatus();
-      loadComments(currentCommentFilter);
-    }else{
-      alert('同步失败：'+(r.error||'未知错误'));
-    }
-  }catch(e){
-    alert('请求失败：'+e.message);
-  }
-}
+
+
 // 一键导入评论
 window.importComments=async function(){
   const link=document.getElementById('importLink').value.trim();
