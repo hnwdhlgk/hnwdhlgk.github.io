@@ -687,7 +687,7 @@ function renderJobs(){
   if(jobFilterSub2)list=list.filter(function(j){return j.subcategory2===jobFilterSub2});
   var editingOne=list.find(function(j){return j.editing});
   if(editingOne){$('jobs').innerHTML=renderJobEdit(editingOne);return}
-  $('jobs').innerHTML=list.length?'<table class="data-table"><thead><tr><th style="width:18%">标题</th><th style="width:12%">分类</th><th style="width:10%">薪资</th><th style="width:10%">地点</th><th style="width:13%">发布者</th><th style="width:10%">认证状态</th><th style="width:10%">发布时间</th><th style="width:8%">主页链接</th><th style="width:9%">点击操作</th></tr></thead><tbody>'+list.map(function(j){
+  $('jobs').innerHTML=list.length?'<table class="data-table"><thead><tr><th style="width:14%">标题</th><th style="width:16%">分类</th><th style="width:9%">薪资</th><th style="width:9%">地点</th><th style="width:12%">发布者</th><th style="width:9%">认证状态</th><th style="width:9%">发布时间</th><th style="width:11%">主页链接</th><th style="width:11%">点击操作</th></tr></thead><tbody>'+list.map(function(j){
     var b='<span class="badge '+esc(j.status)+'">'+(j.status==='approved'?'已通过':j.status==='rejected'?'已拒绝':'待审核')+'</span>';
     var vBadge=j.verified===true?'<span style="color:#16a34a;font-weight:600">✓ 已认证</span>':'<span style="color:#94a3b8">✗ 未认证</span>';
     var cat='<span style="color:#334155;font-weight:500">'+esc(catName(j.category)||'-')+'</span>'+(j.subcategory?'<br><span style="color:#94a3b8;font-size:11px">'+esc(subName(j.category,j.subcategory))+'</span>':'')+(j.subcategory2?'<br><span style="color:#cbd5e1;font-size:11px">'+esc(sub2Name(j.category,j.subcategory,j.subcategory2))+'</span>':'');
@@ -705,19 +705,32 @@ function renderJobs(){
     var editAuthor = '<input type="text" value="'+esc(j.author||'')+'" style="width:100%;padding:4px 6px;border:1px solid #e2e8f0;border-radius:4px;font-size:11px;background:#fff" onchange="quickEditJob(\''+j.id+'\',\'author\',this.value)">';
     var editVerified = '<select style="width:100%;padding:4px 6px;border:1px solid #e2e8f0;border-radius:4px;font-size:11px;background:#fff" onchange="quickEditJob(\''+j.id+'\',\'verified\',this.value==\'true\')"><option value="true"'+(j.verified===true?' selected':'')+'>✓ 已认证</option><option value="false"'+(j.verified!==true?' selected':'')+'>✗ 未认证</option></select>';
     var editLink = '<input type="text" value="'+esc(homeLink||'')+'" placeholder="主页链接" style="width:100%;padding:4px 6px;border:1px solid #e2e8f0;border-radius:4px;font-size:11px;background:#fff" onchange="quickEditJob(\''+j.id+'\',\'home_link\',this.value)">';
-    // 分类下拉框
-    var catOptions = '<option value="">未分类</option>'+CATEGORIES.filter(function(c){return c.enabled!==false}).map(function(c){return '<option value="'+esc(c.slug)+'"'+(j.category===c.slug?' selected':'')+'>'+esc(c.name)+'</option>'}).join('');
-    var editCat = '<select style="width:100%;padding:4px 6px;border:1px solid #e2e8f0;border-radius:4px;font-size:11px;background:#fff" onchange="quickEditJob(\''+j.id+'\',\'category\',this.value)">'+catOptions+'</select>';
+    // 分类三级联动下拉框
+    var catSel = '<select id="qcat_'+j.id+'" style="width:100%;padding:3px 4px;border:1px solid #e2e8f0;border-radius:4px;font-size:10px;background:#fff;margin-bottom:2px" onchange="quickEditCat(\''+j.id+'\',this.value)">';
+    catSel += '<option value="">未分类</option>';
+    CATEGORIES.filter(function(c){return c.enabled!==false}).forEach(function(c){
+      catSel += '<optgroup label="'+esc(c.name)+'">';
+      catSel += '<option value="'+esc(c.slug)+'"'+(j.category===c.slug && !j.subcategory?' selected':'')+'>'+esc(c.name)+'</option>';
+      (c.subcategories||[]).forEach(function(sub){
+        catSel += '<option value="'+esc(c.slug)+'|'+esc(sub.slug)+'"'+(j.category===c.slug && j.subcategory===sub.slug && !j.subcategory2?' selected':'')+'>　└ '+esc(sub.name)+'</option>';
+        (sub.subcategories||[]).forEach(function(sub2){
+          catSel += '<option value="'+esc(c.slug)+'|'+esc(sub.slug)+'|'+esc(sub2.slug)+'"'+(j.category===c.slug && j.subcategory===sub.slug && j.subcategory2===sub2.slug?' selected':'')+'>　　└ '+esc(sub2.name)+'</option>';
+        });
+      });
+      catSel += '</optgroup>';
+    });
+    catSel += '</select>';
+    var editCat = catSel;
     // 操作按钮
-    var opsHtml = '<div style="display:flex;flex-direction:column;gap:4px;align-items:center">';
-    opsHtml += '<span style="font-size:11px;color:#64748b">点击:'+(j.views||0)+'</span>';
-    opsHtml += '<div style="display:flex;gap:3px">';
+    var opsHtml = '<div style="display:flex;flex-direction:column;gap:5px;align-items:center">';
+    opsHtml += '<span style="font-size:12px;color:#475569;font-weight:600">点击:'+(j.views||0)+'</span>';
+    opsHtml += '<div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:center">';
     if(j.status==='pending'){
-      opsHtml += '<button class="green small" onclick="approveJob(\''+j.id+'\')" style="padding:3px 6px;font-size:10px">通过</button>';
-      opsHtml += '<button class="danger small" onclick="rejectJob(\''+j.id+'\')" style="padding:3px 6px;font-size:10px">拒绝</button>';
+      opsHtml += '<button class="green small" onclick="approveJob(\''+j.id+'\')" style="padding:5px 10px;font-size:12px">通过</button>';
+      opsHtml += '<button class="danger small" onclick="rejectJob(\''+j.id+'\')" style="padding:5px 10px;font-size:12px">拒绝</button>';
     }
-    opsHtml += '<button class="ghost small" onclick="editJob(\''+j.id+'\')" style="padding:3px 6px;font-size:10px">详情</button>';
-    opsHtml += '<button class="danger small" onclick="delJob(\''+j.id+'\')" style="padding:3px 6px;font-size:10px">删除</button>';
+    opsHtml += '<button class="ghost small" onclick="editJob(\''+j.id+'\')" style="padding:5px 10px;font-size:12px">详情</button>';
+    opsHtml += '<button class="danger small" onclick="delJob(\''+j.id+'\')" style="padding:5px 10px;font-size:12px">删除</button>';
     opsHtml += '</div></div>';
     return '<tr>'+
       '<td style="min-width:150px">'+editTitle+'</td>'+
@@ -731,6 +744,17 @@ function renderJobs(){
       '<td style="white-space:nowrap">'+opsHtml+'</td>'+
       '</tr>';
   }).join('')+'</tbody></table>':'<p class="muted">暂无'+(titles[currentFilter]||'')+'数据</p>';
+}
+// 快速编辑三级分类
+window.quickEditCat=function(id,value){
+  var parts=value.split('|');
+  var job=JOBS.find(function(j){return j.id===id});
+  if(!job)return;
+  job.category=parts[0]||'';
+  job.subcategory=parts[1]||'';
+  job.subcategory2=parts[2]||'';
+  stat('正在保存…','wait');
+  writeFile('data/jobs.json',JOBS,jobSha,'快速编辑分类').then(function(){return readFile('data/jobs.json')}).then(function(d){JOBS=d.data;jobSha=d.sha;renderJobs();stat('已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
 }
 // 快速编辑兼职字段
 window.quickEditJob=function(id,field,value){
