@@ -87,6 +87,7 @@
   "comments_monitor": {
     "enabled": true,
     "bot_token": "7574930619:AAG-PPRWPQY2xXFJfO0ZnowY9PjClg9LTEE",
+    "discussion_chat_id": "-1002601544961",
     "channel": "@hnwdhlgk",
     "author_name": "海南大学修车部",
     "author_username": ""
