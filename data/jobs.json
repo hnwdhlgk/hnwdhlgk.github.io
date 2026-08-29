@@ -13,7 +13,7 @@
     "category": "personal",
     "subcategory": "haikou",
     "subcategory2": "longhua",
-    "image": "",
+    "image": "https://hnwdhlgk.github.io/jobs/img-1787998139287.jpg",
     "status": "approved",
     "id": "tglink-208-1787997875739",
     "author": "telegram:@hnwdhlgk",
@@ -21,7 +21,12 @@
     "created_at": "2026-08-29T10:04:35.739Z",
     "views": 0,
     "telegram_msg_id": 208,
-    "telegram_channel": "hnwdhlgk"
+    "telegram_channel": "hnwdhlgk",
+    "contact_link": "",
+    "contact2_link": "",
+    "contact3_link": "",
+    "image_link": "https://t.me/hnwdhlgk/208?single",
+    "show_verified": true
   },
   {
     "title": "🧚‍♀️ 小不点",
