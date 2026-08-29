@@ -85,7 +85,8 @@
     "contact2_link": "",
     "contact3_link": "",
     "image_link": "https://t.me/hnwdhlgk/208?single",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "🧚‍♀️ 小不点",
@@ -114,7 +115,8 @@
     "contact2_link": "",
     "contact3_link": "",
     "image_link": "",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "🧚‍♀️ 小果冻",
@@ -139,7 +141,8 @@
     "views": 1,
     "telegram_msg_id": 10390,
     "telegram_channel": "hnwdhlgk",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "🧚‍♀️ 月瑶",
@@ -164,7 +167,8 @@
     "views": 0,
     "telegram_msg_id": 9406,
     "telegram_channel": "hnwdhlgk",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "🧚‍♀️ 姜媛媛",
@@ -193,7 +197,8 @@
     "contact2_link": "",
     "contact3_link": "",
     "image_link": "https://t.me/hnwdhlgk/10381?single",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "🧚‍♀️ 兔兔",
@@ -218,7 +223,8 @@
     "views": 0,
     "telegram_msg_id": 786,
     "telegram_channel": "hnwdhlgk",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "🧚‍♀️ 丹丹",
@@ -243,7 +249,8 @@
     "views": 1,
     "telegram_msg_id": 10269,
     "telegram_channel": "hnwdhlgk",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "🧚‍♀️ 娜娜",
@@ -268,7 +275,8 @@
     "views": 1,
     "telegram_msg_id": 9928,
     "telegram_channel": "hnwdhlgk",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "🧚‍♀️ 璐璐",
@@ -293,7 +301,8 @@
     "views": 1,
     "telegram_msg_id": 10344,
     "telegram_channel": "hnwdhlgk",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "🧚‍♀️ 小九",
@@ -322,7 +331,8 @@
     "contact2_link": "",
     "contact3_link": "",
     "image_link": "https://t.me/hnwdhlgk/10316?single",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "🧚‍♀️ 小楸",
@@ -351,7 +361,8 @@
     "contact2_link": "",
     "contact3_link": "",
     "image_link": "https://t.me/hnwdhlgk/9067?single",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "🧚‍♀️美杜莎",
@@ -384,7 +395,8 @@
     "contact2_link": "",
     "contact3_link": "",
     "image_link": "https://t.me/hnwdhlgk",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "id": "tg-10427-1787933335741",
@@ -409,7 +421,8 @@
     "created_at": "2026-08-28T15:44:32.000Z",
     "views": 1,
     "telegram_msg_id": 10427,
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "🧚‍♀️ 青青",
@@ -434,7 +447,8 @@
     "views": 1,
     "telegram_msg_id": 10409,
     "telegram_channel": "hnwdhlgk",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "小美",
@@ -475,7 +489,8 @@
     "contact2_link": "",
     "contact3_link": "",
     "image_link": "https://t.me/hnwdhlgk/10418",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "珊珊",
@@ -505,7 +520,8 @@
     "contact2_link": "",
     "contact3_link": "",
     "image_link": "https://t.me/hnwdhlgk/42",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "可乐",
@@ -540,7 +556,8 @@
     "contact2_link": "",
     "contact3_link": "",
     "image_link": "https://t.me/hnwdhlgk/33",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "月瑶",
@@ -569,7 +586,8 @@
     "contact2_link": "",
     "contact3_link": "",
     "image_link": "https://t.me/hnwdhlgk/9406",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "喵喵",
@@ -600,7 +618,8 @@
     "author_type": "user",
     "status": "approved",
     "created_at": "2026-08-28T06:29:09.186Z",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   },
   {
     "title": "贝贝",
@@ -639,6 +658,7 @@
     "contact2_link": "",
     "contact3": "@Bei04688",
     "contact3_link": "",
-    "show_verified": true
+    "show_verified": true,
+    "verified": true
   }
 ]
