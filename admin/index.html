@@ -687,8 +687,9 @@ function renderJobs(){
   if(jobFilterSub2)list=list.filter(function(j){return j.subcategory2===jobFilterSub2});
   var editingOne=list.find(function(j){return j.editing});
   if(editingOne){$('jobs').innerHTML=renderJobEdit(editingOne);return}
-  $('jobs').innerHTML=list.length?'<table class="data-table"><thead><tr><th>标题</th><th>分类</th><th>薪资</th><th>地点</th><th>发布者</th><th>状态</th><th>发布时间</th><th>点击</th><th>操作</th></tr></thead><tbody>'+list.map(function(j){
+  $('jobs').innerHTML=list.length?'<table class="data-table"><thead><tr><th>标题</th><th>分类</th><th>薪资</th><th>地点</th><th>发布者</th><th>认证</th><th>状态</th><th>发布时间</th><th>点击</th><th>操作</th></tr></thead><tbody>'+list.map(function(j){
     var b='<span class="badge '+esc(j.status)+'">'+(j.status==='approved'?'已通过':j.status==='rejected'?'已拒绝':'待审核')+'</span>';
+    var vBadge=j.verified===true?'<span style="color:#16a34a;font-weight:600">✓ 已认证</span>':'<span style="color:#94a3b8">✗ 未认证</span>';
     var cat=esc(catName(j.category)||'-')+(j.subcategory?'<br><span style="color:#71859a;font-size:11px">'+esc(subName(j.category,j.subcategory))+'</span>':'')+(j.subcategory2?'<br><span style="color:#71859a;font-size:11px">'+esc(sub2Name(j.category,j.subcategory,j.subcategory2))+'</span>':'');
     return '<tr>'+
       '<td><b>'+esc(j.title)+'</b>'+(j.image?'<br><img src="'+esc(j.image)+'" style="width:50px;height:38px;object-fit:cover;border-radius:4px;margin-top:4px">':'')+'</td>'+
@@ -696,6 +697,7 @@ function renderJobs(){
       '<td>'+esc(j.salary||'-')+'</td>'+
       '<td>'+esc(j.location||'-')+'</td>'+
       '<td>'+esc(j.author||'-')+'</td>'+
+      '<td>'+vBadge+'</td>'+
       '<td>'+b+'</td>'+
       '<td style="font-size:12px;color:#71859a">'+fmtDate(j.created_at)+'</td>'+
       '<td>'+(j.views||0)+'</td>'+
@@ -754,10 +756,14 @@ function renderJobEdit(j){
     '<label>标签（逗号分隔）</label><input id="ej_tags" value="'+esc((j.tags||[]).join(','))+'">'+
     '<div style="background:#f0f9ff;padding:12px;border-radius:8px;margin:10px 0;border:1px solid #bae6fd">'+
     '<div style="font-weight:600;margin-bottom:8px;color:#0369a1">认证设置</div>'+
-    '<div style="margin-bottom:6px">发布者：<b>'+esc(j.author||'')+'</b></div>'+
+    '<div style="margin-bottom:8px">发布者：<b>'+esc(j.author||'')+'</b></div>'+
+    '<div style="margin-bottom:8px"><label>认证状态</label><select id="ej_verified">'+
+    '<option value="true"'+(j.verified===true?' selected':'')+'>✓ 已认证</option>'+
+    '<option value="false"'+(j.verified!==true?' selected':'')+'>✗ 未认证</option>'+
+    '</select></div>'+
     '<label style="display:flex;align-items:center;gap:8px;cursor:pointer">'+
     '<input type="checkbox" id="ej_show_verified" '+(j.show_verified!==false?'checked':'')+'>'+
-    '显示认证图标（发布者已认证时生效）'+
+    '显示认证图标'+
     '</label></div>'+
     '<label>封面图片</label>'+
     '<input type="file" id="ej_imgfile" accept="image/*" onchange="uploadJobImg(this)" style="margin:6px 0">'+
@@ -801,7 +807,7 @@ window.uploadJobImg=function(input){
 }
 window.saveJob=function(id){
   var j=JOBS.find(function(x){return x.id===id});if(!j)return;
-  j.title=$('ej_title').value.trim()||j.title;j.description=getRTE('ej_desc');j.category=$('ej_cat').value;j.subcategory=$('ej_sub').value;j.subcategory2=$('ej_sub2').value;j.salary=$('ej_salary').value;j.location=$('ej_loc').value;j.contact=$('ej_contact').value;j.contact_link=$('ej_contactlink').value.trim();j.contact2=$('ej_contact2').value;j.contact2_link=$('ej_contact2link').value.trim();j.contact3=$('ej_contact3').value;j.contact3_link=$('ej_contact3link').value.trim();j.tags=parseTags($('ej_tags').value);j.image=$('ej_image').value.trim();j.image_link=$('ej_imagelink').value.trim();j.show_verified=$('ej_show_verified')?$('ej_show_verified').checked:true;
+  j.title=$('ej_title').value.trim()||j.title;j.description=getRTE('ej_desc');j.category=$('ej_cat').value;j.subcategory=$('ej_sub').value;j.subcategory2=$('ej_sub2').value;j.salary=$('ej_salary').value;j.location=$('ej_loc').value;j.contact=$('ej_contact').value;j.contact_link=$('ej_contactlink').value.trim();j.contact2=$('ej_contact2').value;j.contact2_link=$('ej_contact2link').value.trim();j.contact3=$('ej_contact3').value;j.contact3_link=$('ej_contact3link').value.trim();j.tags=parseTags($('ej_tags').value);j.image=$('ej_image').value.trim();j.image_link=$('ej_imagelink').value.trim();j.show_verified=$('ej_show_verified')?$('ej_show_verified').checked:true;j.verified=$('ej_verified').value==='true';
   delete j.editing;delete j.isNew;
   stat('正在保存…','wait');writeFile('data/jobs.json',JOBS,jobSha,'更新兼职').then(function(){return readFile('data/jobs.json')}).then(function(d){JOBS=d.data;jobSha=d.sha;renderJobs();renderDashboard();stat('兼职已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
 }
@@ -1427,10 +1433,7 @@ function renderUsers(){
     }else{
       roleBtns=roleBtn(i,'superadmin','设为超级管理员','primary')+roleBtn(i,'admin','设为管理员');
     }
-    var isVerified=u.verified===true;
-    var verifyBadge=isVerified?'<span class="ok" style="background:#16a34a;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px">✓ 已认证</span>':'<span class="wait" style="background:#94a3b8;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px">未认证</span>';
-    var verifyBtn=isVerified?'<button class="small" onclick="setUserVerified('+i+',false)">取消认证</button>':'<button class="small" style="background:#16a34a;color:#fff" onclick="setUserVerified('+i+',true)">设为已认证</button>';
-    return '<div class="user-row"><span class="uname">'+esc(u.username)+'</span>'+pwdStatus+'<span class="role '+roleClass+'">'+roleLabel+'</span>'+verifyBadge+roleBtns+verifyBtn+'<button class="small" onclick="resetUserPwd('+i+')">重置密码</button><button class="danger small" onclick="delUser('+i+')">删除</button></div>';
+    return '<div class="user-row"><span class="uname">'+esc(u.username)+'</span>'+pwdStatus+'<span class="role '+roleClass+'">'+roleLabel+'</span>'+roleBtns+'<button class="small" onclick="resetUserPwd('+i+')">重置密码</button><button class="danger small" onclick="delUser('+i+')">删除</button></div>';
   }).join(''):'<p class="muted">暂无普通用户</p>';
 }
 window.addUser=function(){var n=prompt('用户名');if(!n)return;if(USERS.some(function(u){return u.username===n})){alert('用户名已存在');return};USERS.push({username:n,pass:'',created_at:new Date().toISOString()});stat('正在添加…','wait');writeFile('data/users.json',USERS,userSha,'新增用户').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();stat('已添加','ok')}).catch(function(e){stat('添加失败：'+e.message,'err')})}
@@ -1439,13 +1442,6 @@ window.setUserRole=function(i,role){
   USERS[i].role=role;
   stat('正在保存…','wait');
   writeFile('data/users.json',USERS,userSha,'设置用户角色').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();stat('角色已更新','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
-}
-window.setUserVerified=function(i,verified){
-  if(verified&&!confirm('确定将用户 '+USERS[i].username+' 设为已认证？'))return;
-  USERS[i].verified=verified;
-  if(verified)USERS[i].verified_at=new Date().toISOString();
-  stat('正在保存…','wait');
-  writeFile('data/users.json',USERS,userSha,verified?'设置用户已认证':'取消用户认证').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();stat(verified?'已设为认证用户':'已取消认证','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')})
 }
 window.resetUserPwd=async function(i){
   var pwd=prompt("请输入 "+USERS[i].username+" 的新密码（至少6位）");
