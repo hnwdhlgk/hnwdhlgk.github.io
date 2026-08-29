@@ -381,6 +381,22 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
 
   <!-- 评论管理 -->
   <div id="view-comments" class="view">
+    <div class="card"><h3>一键导入评价</h3>
+      <p class="muted">输入Telegram消息链接，自动抓取该消息下所有指定作者的评论，一键导入到对应兼职的评论区。</p>
+      <div style="display:flex;gap:10px;margin:12px 0;flex-wrap:wrap">
+        <input id="importLink" placeholder="Telegram消息链接，如 https://t.me/hnwdhlgk/51" style="flex:1;min-width:300px;padding:8px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px">
+        <input id="importAuthor" placeholder="评论者显示名称（默认：海南大学修车部）" style="width:200px;padding:8px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px">
+        <button onclick="importComments()" style="padding:8px 20px;background:#16a34a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600">一键导入</button>
+      </div>
+      <div id="importResult" class="muted" style="margin-top:10px;font-size:13px"></div>
+      <div style="margin-top:15px;padding:12px;background:#f8fafc;border-radius:6px;font-size:12px;color:#64748b">
+        <b>使用说明：</b><br>
+        1. 确保兼职的图片跳转链接是Telegram消息链接（如 https://t.me/hnwdhlgk/51）<br>
+        2. Bot必须是频道管理员，频道已开启评论功能<br>
+        3. 导入的评论自动审核通过，显示在主页评论区<br>
+        4. 重复评论不会重复导入
+      </div>
+    </div>
     <div class="card"><h3>评论管理</h3>
       <p class="muted">审核用户发表的兼职评论，通过后显示在主页。</p>
       <div style="display:flex;gap:10px;margin:12px 0">
@@ -949,6 +965,36 @@ window.addHeroBtn=function(){
     var el=$('cfg_cm_'+k);if(el)el.value=cm[k]||'';
   });
 }
+// 一键导入评论
+window.importComments=async function(){
+  const link=document.getElementById('importLink').value.trim();
+  const author=document.getElementById('importAuthor').value.trim();
+  if(!link){alert('请输入Telegram消息链接');return}
+  if(!CONFIG.worker_url){alert('请先配置Worker URL');return}
+  const resultEl=document.getElementById('importResult');
+  resultEl.innerHTML='<span style="color:#2563eb">正在导入，请稍候...</span>';
+  try{
+    const body={link:link};
+    if(author)body.author_name=author;
+    const r=await fetch(CONFIG.worker_url+'/api/import-comments',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    }).then(r=>r.json());
+    if(r.ok){
+      resultEl.innerHTML='<span style="color:#16a34a;font-weight:600">✓ '+r.message+'</span>';
+      if(r.imported&&r.imported.length){
+        resultEl.innerHTML+='<div style="margin-top:8px"><b>导入的评论：</b><ul style="margin:5px 0;padding-left:20px">'+r.imported.map(c=>'<li>'+esc(c.content)+' ('+new Date(c.date).toLocaleString()+')</li>').join('')+'</ul></div>';
+      }
+      loadComments(currentCommentFilter);
+    }else{
+      resultEl.innerHTML='<span style="color:#ef4444">✗ 导入失败：'+(r.error||'未知错误')+'</span>';
+      if(r.found_comments)resultEl.innerHTML+='<br><span style="color:#64748b">找到'+r.found_comments+'条评论，但未找到对应兼职</span>';
+    }
+  }catch(e){
+    resultEl.innerHTML='<span style="color:#ef4444">✗ 请求失败：'+e.message+'</span>';
+  }
+}
 // 测试评论监控
 window.testCommentsMonitor=async function(){
   if(!CONFIG.worker_url){alert('请先配置Worker URL');return}
@@ -967,6 +1013,36 @@ window.delHeroBtn=function(i){
   ['bot_token','channel','author_name','author_username'].forEach(function(k){
     var el=$('cfg_cm_'+k);if(el)el.value=cm[k]||'';
   });
+}
+// 一键导入评论
+window.importComments=async function(){
+  const link=document.getElementById('importLink').value.trim();
+  const author=document.getElementById('importAuthor').value.trim();
+  if(!link){alert('请输入Telegram消息链接');return}
+  if(!CONFIG.worker_url){alert('请先配置Worker URL');return}
+  const resultEl=document.getElementById('importResult');
+  resultEl.innerHTML='<span style="color:#2563eb">正在导入，请稍候...</span>';
+  try{
+    const body={link:link};
+    if(author)body.author_name=author;
+    const r=await fetch(CONFIG.worker_url+'/api/import-comments',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    }).then(r=>r.json());
+    if(r.ok){
+      resultEl.innerHTML='<span style="color:#16a34a;font-weight:600">✓ '+r.message+'</span>';
+      if(r.imported&&r.imported.length){
+        resultEl.innerHTML+='<div style="margin-top:8px"><b>导入的评论：</b><ul style="margin:5px 0;padding-left:20px">'+r.imported.map(c=>'<li>'+esc(c.content)+' ('+new Date(c.date).toLocaleString()+')</li>').join('')+'</ul></div>';
+      }
+      loadComments(currentCommentFilter);
+    }else{
+      resultEl.innerHTML='<span style="color:#ef4444">✗ 导入失败：'+(r.error||'未知错误')+'</span>';
+      if(r.found_comments)resultEl.innerHTML+='<br><span style="color:#64748b">找到'+r.found_comments+'条评论，但未找到对应兼职</span>';
+    }
+  }catch(e){
+    resultEl.innerHTML='<span style="color:#ef4444">✗ 请求失败：'+e.message+'</span>';
+  }
 }
 // 测试评论监控
 window.testCommentsMonitor=async function(){
@@ -1001,6 +1077,36 @@ function renderConfig(){
   ['bot_token','channel','author_name','author_username'].forEach(function(k){
     var el=$('cfg_cm_'+k);if(el)el.value=cm[k]||'';
   });
+}
+// 一键导入评论
+window.importComments=async function(){
+  const link=document.getElementById('importLink').value.trim();
+  const author=document.getElementById('importAuthor').value.trim();
+  if(!link){alert('请输入Telegram消息链接');return}
+  if(!CONFIG.worker_url){alert('请先配置Worker URL');return}
+  const resultEl=document.getElementById('importResult');
+  resultEl.innerHTML='<span style="color:#2563eb">正在导入，请稍候...</span>';
+  try{
+    const body={link:link};
+    if(author)body.author_name=author;
+    const r=await fetch(CONFIG.worker_url+'/api/import-comments',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    }).then(r=>r.json());
+    if(r.ok){
+      resultEl.innerHTML='<span style="color:#16a34a;font-weight:600">✓ '+r.message+'</span>';
+      if(r.imported&&r.imported.length){
+        resultEl.innerHTML+='<div style="margin-top:8px"><b>导入的评论：</b><ul style="margin:5px 0;padding-left:20px">'+r.imported.map(c=>'<li>'+esc(c.content)+' ('+new Date(c.date).toLocaleString()+')</li>').join('')+'</ul></div>';
+      }
+      loadComments(currentCommentFilter);
+    }else{
+      resultEl.innerHTML='<span style="color:#ef4444">✗ 导入失败：'+(r.error||'未知错误')+'</span>';
+      if(r.found_comments)resultEl.innerHTML+='<br><span style="color:#64748b">找到'+r.found_comments+'条评论，但未找到对应兼职</span>';
+    }
+  }catch(e){
+    resultEl.innerHTML='<span style="color:#ef4444">✗ 请求失败：'+e.message+'</span>';
+  }
 }
 // 测试评论监控
 window.testCommentsMonitor=async function(){
