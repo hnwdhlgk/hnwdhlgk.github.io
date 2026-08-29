@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-29T10:00:46.140Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-08-29T09:59:54.848Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
@@ -790,13 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "网页抓取未找到按钮（页面大小:11059字节）"
-  },
-  {
-    "time": "2026-08-28T22:41:33.295Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "未收到@hnwdhldh的消息。Bot(@hainanguanlibot)收到的频道：无。网页抓取也未获取到按钮"
   }
 ]
