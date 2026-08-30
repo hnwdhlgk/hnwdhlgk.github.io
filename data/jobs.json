@@ -1,30 +1,5 @@
 [
   {
-    "id": "tglink-hnwdhlgk-10439-1788118211944",
-    "title": "🧚‍♀️ 童童",
-    "description": "<a href=\"https://t.me/hainanxiuche_bot?start=commentTeacher-TE178802776276\" target=\"_blank\" rel=\"noopener\">❣️     给童童写评价</a>\n<a href=\"https://t.me/hainanxiuche_bot?start=teacherComment-TE178802776276\" target=\"_blank\" rel=\"noopener\">❣️  查看老师所有评价</a>",
-    "category": "personal",
-    "subcategory": "haikou",
-    "subcategory2": "meilan",
-    "salary": "8p 14pp",
-    "location": "",
-    "contact": "<a href=\"https://t.me/xtthll52013\" target=\"_blank\" rel=\"noopener\">@xtthll52013</a>",
-    "contact2": "<a href=\"https://t.me/ttzhnkklbot\" target=\"_blank\" rel=\"noopener\">@ttzhnkklbot</a>",
-    "contact3": "",
-    "tags": [
-      "嫩妹"
-    ],
-    "image": "https://hnwdhlgk.github.io/assets/tg-link-hnwdhlgk-10439-1788118210650.jpg",
-    "image_link": "https://t.me/hnwdhlgk/10440?single",
-    "status": "pending",
-    "author": "telegram:@hnwdhlgk",
-    "author_type": "telegram",
-    "created_at": "2026-08-30T19:30:11.944Z",
-    "views": 0,
-    "telegram_msg_id": 10439,
-    "telegram_channel": "hnwdhlgk"
-  },
-  {
     "title": "冬冬",
     "description": "<br>",
     "salary": "600p 1000pp",
@@ -33,11 +8,12 @@
     "contact2": "@dongdong01bot",
     "contact3": "<a href=\"https://t.me/aila789\" target=\"_blank\" rel=\"noopener\">https://t.me/aila789</a>",
     "tags": [
-      "御姐 大长腿"
+      "御姐",
+      "大长腿"
     ],
     "category": "personal",
     "subcategory": "sanya",
-    "subcategory2": "agency_jiyang",
+    "subcategory2": "jiyang",
     "image": "https://hnwdhlgk.github.io/assets/tg-link-9492-1788118093703.jpg",
     "status": "pending",
     "id": "tglink-9492-1788118109067",
@@ -46,7 +22,13 @@
     "created_at": "2026-08-30T19:28:29.067Z",
     "views": 0,
     "telegram_msg_id": 9492,
-    "telegram_channel": "hainanchayi"
+    "telegram_channel": "hainanchayi",
+    "contact_link": "",
+    "contact2_link": "",
+    "contact3_link": "",
+    "image_link": "https://t.me/hnwdhlgk",
+    "show_verified": true,
+    "verified": false
   },
   {
     "title": "余婉婉",
