@@ -7,7 +7,7 @@
     "tag_maps": [],
     "channels": [
       {
-        "bot_token": "7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs",
+        "bot_token": "",
         "channel": "@hnwdhlgk",
         "default_category": "personal",
         "default_status": "pending",
@@ -22,7 +22,7 @@
     "channels": [
       {
         "channel": "@hnwdhldh",
-        "bot_token": "7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs",
+        "bot_token": "",
         "enabled": true,
         "message_ids": []
       }
@@ -83,13 +83,5 @@
     "contact": "如@hainanguanlibot",
     "contact2": "如@hainanguanlibot",
     "contact3": "如@hainanguanlibot 切记要@开头"
-  },
-  "comments_monitor": {
-    "enabled": true,
-    "bot_token": "7574930619:AAG-PPRWPQY2xXFJfO0ZnowY9PjClg9LTEE",
-    "discussion_chat_id": "-1002601544961",
-    "channel": "@hnwdhlgk",
-    "author_name": "海南大学修车部",
-    "author_username": "hainanxiuche_bot"
   }
 }
