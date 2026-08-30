@@ -60,9 +60,26 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
   .card{padding:12px;border-radius:12px}
   .card h3{font-size:16px}
   .topbar h2{font-size:16px}
-  .data-table th,.data-table td{padding:6px;font-size:11px}
   .badge{font-size:10px;padding:2px 5px}
   .preview-img{max-width:100%;max-height:160px}
+  /* 手机端表格改为卡片式布局 */
+  .data-table{border:none;background:transparent}
+  .data-table thead{display:none!important}
+  .data-table tbody{display:block}
+  .data-table tr{display:block!important;background:#fff;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);width:100%!important;box-sizing:border-box}
+  .data-table td{display:block!important;width:100%!important;border:none;padding:7px 0;font-size:13px;box-sizing:border-box;text-align:left!important}
+  .data-table td:before{content:attr(data-label);display:block;font-weight:700;color:#64748b;font-size:11px;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.3px}
+  .data-table td:empty{display:none!important}
+  .data-table td input,.data-table td select{width:100%!important;box-sizing:border-box;font-size:14px!important;padding:8px 10px!important}
+  .data-table td img{max-width:60px;max-height:60px}
+  /* 操作按钮全宽 */
+  .data-table td[data-label="操作"]>div{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .data-table td[data-label="操作"] button{flex:1;min-width:70px;padding:10px 12px!important;font-size:13px!important}
+  /* 弹窗适配 */
+  #adminModalBox{width:95%!important;padding:16px!important;max-height:90vh!important}
+  .modal{width:95%!important;padding:16px!important;max-height:90vh!important}
+  /* 输入框防缩放 */
+  input,select,textarea{font-size:14px!important}
 }
 
 .rte-wrap{border:1px solid #d6e2ed;border-radius:9px;margin:6px 0 12px;background:#fff}
