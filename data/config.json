@@ -66,7 +66,7 @@
     "channels": [
       {
         "channel": "@hnwdhldh",
-        "bot_token": "7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs",
+        "bot_token": "",
         "enabled": true,
         "message_ids": []
       }
