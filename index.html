@@ -827,7 +827,7 @@ function renderJobs(){
 <div style="margin-top:8px;padding-top:8px;border-top:1px solid #f1f5f9">
   <button onclick="event.stopPropagation();viewJob('${esc(j.id)}')" style="width:100%;padding:8px 12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:13px;color:#475569;display:flex;align-items:center;justify-content:space-between;gap:6px;transition:all 0.2s" onmouseover="this.style.background=\'#eff6ff\';this.style.borderColor=\'#93c5fd\'" onmouseout="this.style.background=\'#f8fafc\';this.style.borderColor=\'#e2e8f0\'">
     <span style="display:flex;align-items:center;gap:6px"><span>💬</span><span>查看评论</span></span>
-    ${j.commentCount?`<span style="background:#2563eb;color:#fff;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600">${j.commentCount}</span>`:'<span style="color:#94a3b8;font-size:11px">暂无评论</span>'}
+    <span style="${j.commentCount?'background:#2563eb;color:#fff;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600':'color:#94a3b8;font-size:11px'}">${j.commentCount||'暂无评论'}</span>
   </button>
 </div>
 <div class="views">👁 ${j.views||0}</div></article>`).join(""):'<div class="empty">暂无兼职信息</div>')+pagHtml;
