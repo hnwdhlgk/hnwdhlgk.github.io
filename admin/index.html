@@ -356,7 +356,10 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
         <thead><tr><th>抓取标签</th><th>映射类型</th><th>映射值</th><th>操作</th></tr></thead>
         <tbody id="tgMapList"></tbody>
       </table>
-      <div class="ops"><button class="ghost" onclick="addTgMap()">+ 新增映射</button></div>
+      <div class="ops">
+        <button class="ghost" onclick="addTgMap()">+ 新增映射</button>
+        <button onclick="saveTelegram()" style="margin-left:10px">保存标签映射</button>
+      </div>
     </div>
   </div>
 
