@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-30T13:00:09.522Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-08-30T12:30:16.803Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
@@ -785,14 +793,6 @@
   },
   {
     "time": "2026-08-29T20:08:12.994Z",
-    "type": "comments_monitor",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新评论"
-  },
-  {
-    "time": "2026-08-29T20:07:23.921Z",
     "type": "comments_monitor",
     "channel": "@hnwdhlgk",
     "count": 0,
