@@ -4,7 +4,48 @@
   "worker_url": "https://ndx.8851366.workers.dev",
   "telegram": {
     "enabled": true,
-    "tag_maps": [],
+    "tag_maps": [
+      {
+        "tag": "",
+        "type": "tag",
+        "value": ""
+      },
+      {
+        "tag": "",
+        "type": "tag",
+        "value": ""
+      },
+      {
+        "tag": "",
+        "type": "tag",
+        "value": ""
+      },
+      {
+        "tag": "",
+        "type": "tag",
+        "value": ""
+      },
+      {
+        "tag": "",
+        "type": "tag",
+        "value": ""
+      },
+      {
+        "tag": "",
+        "type": "tag",
+        "value": ""
+      },
+      {
+        "tag": "",
+        "type": "tag",
+        "value": ""
+      },
+      {
+        "tag": "",
+        "type": "tag",
+        "value": ""
+      }
+    ],
     "channels": [
       {
         "bot_token": "7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs",
