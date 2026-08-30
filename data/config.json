@@ -4,7 +4,43 @@
   "worker_url": "https://ndx.8851366.workers.dev",
   "telegram": {
     "enabled": true,
-    "tag_maps": [],
+    "tag_maps": [
+      {
+        "tag": "【老师花名】：",
+        "type": "tag",
+        "value": "标题"
+      },
+      {
+        "tag": "【专属标签】：",
+        "type": "tag",
+        "value": "标签"
+      },
+      {
+        "tag": "【区域位置】：",
+        "type": "tag",
+        "value": "二级分类"
+      },
+      {
+        "tag": "【品茶价格】：",
+        "type": "salary",
+        "value": ""
+      },
+      {
+        "tag": "【联系方式】：",
+        "type": "contact",
+        "value": ""
+      },
+      {
+        "tag": " 双向 ",
+        "type": "contact2",
+        "value": ""
+      },
+      {
+        "tag": "",
+        "type": "tag",
+        "value": ""
+      }
+    ],
     "channels": [
       {
         "bot_token": "7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs",
