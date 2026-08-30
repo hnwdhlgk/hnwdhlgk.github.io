@@ -528,6 +528,16 @@ window.loadAll=function(){stat('正在同步…','wait');Promise.all([readFile('
 }).catch(function(e){stat('同步失败：'+e.message,'err')})}
 window.logoutGithub=function(){try{sessionStorage.clear()}catch(e){}G={user:'',repo:'',token:''};$('token').value='';$('app').style.display='none';$('loginPage').style.display='';msg('已退出，请重新输入 Token')}
 function renderAll(){renderDashboard();renderConfig();renderUsers()}
+function renderConfig(){
+  try{renderCat1()}catch(e){}
+  try{renderCat2()}catch(e){}
+  try{renderCat3()}catch(e){}
+  try{renderHeroBtnsCfg()}catch(e){}
+  try{renderTelegram()}catch(e){}
+  try{renderTgChannels()}catch(e){}
+  try{renderTgMap()}catch(e){}
+  try{renderOdChannels()}catch(e){}
+}
 
 /* ====== 概览 ====== */
 function renderDashboard(){
