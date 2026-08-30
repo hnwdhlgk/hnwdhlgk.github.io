@@ -12,7 +12,7 @@
     ],
     "category": "personal",
     "subcategory": "haikou",
-    "subcategory2": "agency_meilan",
+    "subcategory2": "meilan",
     "image": "https://hnwdhlgk.github.io/assets/tg-link-9504-1788117999738.jpg",
     "status": "pending",
     "id": "tglink-9504-1788118015511",
@@ -21,7 +21,13 @@
     "created_at": "2026-08-30T19:26:55.511Z",
     "views": 0,
     "telegram_msg_id": 9504,
-    "telegram_channel": "hainanchayi"
+    "telegram_channel": "hainanchayi",
+    "contact_link": "",
+    "contact2_link": "",
+    "contact3_link": "",
+    "image_link": "https://t.me/hnwdhlgk",
+    "show_verified": true,
+    "verified": false
   },
   {
     "title": "希米",
