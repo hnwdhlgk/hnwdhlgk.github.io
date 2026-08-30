@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-30T11:30:41.598Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-08-30T11:00:44.112Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
@@ -790,13 +798,5 @@
     "count": 0,
     "status": "error",
     "message": "网页抓取失败:sortedIds is not defined"
-  },
-  {
-    "time": "2026-08-29T19:00:55.929Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
   }
 ]
