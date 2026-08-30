@@ -1052,7 +1052,17 @@ window.fetchJobComments=async function(jobId,inputId){
       })
     }).then(r=>r.json());
     if(r.ok){
-      alert('获取成功：'+r.message);
+      let msg='获取成功：'+r.message;
+      msg+='\n\n【调试】总数:'+(r.total_found||0)+' 新导入:'+(r.count||0)+' 重复:'+(r.duplicate_count||0);
+      if(r.embed_debug){
+        msg+='\n嵌入页长度:'+(r.embed_debug.html_length||0)+' 找到:'+(r.embed_debug.comments_found||0);
+        if(r.embed_debug.error)msg+=' 错误:'+r.embed_debug.error;
+      }
+      if(r.debug_comments&&r.debug_comments.length){
+        msg+='\n评论预览:';
+        r.debug_comments.forEach((c,i)=>{msg+='\n'+(i+1)+'.['+(c.source||'?')+']'+(c.text_preview||'')});
+      }
+      alert(msg);
       loadJobCommentStatus();
       loadComments(currentCommentFilter);
     }else{
