@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-30T14:00:09.511Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-08-30T13:30:21.593Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
@@ -790,13 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "自动抓取未找到按钮。预览页提取ID数:0，尝试抓取消息数:0，扫描ID:"
-  },
-  {
-    "time": "2026-08-29T21:30:58.564Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
   }
 ]
