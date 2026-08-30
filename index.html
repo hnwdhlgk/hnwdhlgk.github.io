@@ -579,7 +579,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:32px 0 40px;b
   <section class="about" id="aboutSection" style="margin-top:30px"><div><h2 id="aboutTitle">让校园信息更容易找到</h2></div><div><p id="aboutText">海南大学兼职公开榜致力于为海南大学学子提供安全、可靠的兼职信息平台。所有信息均经审核，确保真实有效。</p></div></section>
 
 <footer>海南大学兼职公开榜</footer>
-<div class="modal-mask" id="modalMask"><div class="modal"><div id="modalBody"></div></div></div>
+<div class="modal-mask" id="modalMask"><div class="modal" style="position:relative"><button onclick="closeModal()" style="position:absolute;top:12px;right:12px;z-index:10;background:rgba(255,255,255,0.95);border:1px solid #e2e8f0;border-radius:50%;width:36px;height:36px;font-size:20px;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.1);line-height:1">&times;</button><div id="modalBody"></div></div></div>
 
 <script>
 const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
@@ -867,7 +867,7 @@ function viewJob(id){
 async function showJobDetail(j){
   const isV=j.verified===true;
   let html='<div style="max-height:80vh;overflow-y:auto">';
-  html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h3 style="margin:0">'+esc(j.title)+(j.show_verified!==false?' <img src="assets/verified_badge.png" style="width:20px;height:20px;vertical-align:middle">':'')+'</h3><button onclick="closeModal()" style="background:none;border:none;font-size:24px;color:#94a3b8;cursor:pointer;padding:0 8px;line-height:1">&times;</button></div>';
+  html+='<h3 style="margin:0 0 10px;padding-right:40px">'+esc(j.title)+(j.show_verified!==false?' <img src="assets/verified_badge.png" style="width:20px;height:20px;vertical-align:middle">':'')+'</h3>';
   if(j.image){
     if(j.image_link||(j.telegram_channel&&j.telegram_msg_id)){
       const il=j.image_link||('https://t.me/'+j.telegram_channel+'/'+j.telegram_msg_id+'?single');
