@@ -1052,7 +1052,16 @@ window.fetchJobComments=async function(jobId,inputId){
       })
     }).then(r=>r.json());
     if(r.ok){
-      alert('获取成功：'+r.message+'（找到'+(r.total_found||0)+'条，新导入'+(r.count||0)+'条，重复'+(r.duplicate_count||0)+'条）');
+      let msg='获取成功：'+r.message+'\n（找到'+(r.total_found||0)+'条，新导入'+(r.count||0)+'条，重复'+(r.duplicate_count||0)+'条）';
+      if(r.found_details&&r.found_details.length){
+        msg+='\n\n找到的评论：';
+        r.found_details.forEach((c,i)=>{
+          msg+='\n'+(i+1)+'. ID:'+c.message_id+' 发送者:'+c.from;
+          msg+='\n   内容:'+c.text_preview;
+          msg+='\n   频道消息ID:'+c.channel_msg_id+' 回复:'+c.reply_to+' 转发自:'+c.reply_forward_from;
+        });
+      }
+      alert(msg);
       loadJobCommentStatus();
       loadComments(currentCommentFilter);
     }else{
