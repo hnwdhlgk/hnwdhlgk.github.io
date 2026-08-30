@@ -746,15 +746,15 @@ function renderJobs(){
     opsHtml += '<button class="danger small" onclick="delJob(\''+j.id+'\')" style="padding:5px 10px;font-size:12px">删除</button>';
     opsHtml += '</div></div>';
     return '<tr>'+
-      '<td style="min-width:150px">'+editTitle+'</td>'+
-      '<td style="min-width:90px">'+editCat+'</td>'+
-      '<td style="min-width:80px">'+editSalary+'</td>'+
-      '<td style="min-width:80px">'+editLocation+'</td>'+
-      '<td style="min-width:100px">'+editAuthor+'</td>'+
-      '<td style="min-width:90px">'+editVerified+'</td>'+
-      '<td style="font-size:12px;color:#94a3b8;white-space:nowrap;text-align:center">'+fmtDate(j.created_at)+'</td>'+
-      '<td style="min-width:120px">'+editLink+'</td>'+
-      '<td style="white-space:nowrap">'+opsHtml+'</td>'+
+      '<td data-label="标题" style="min-width:150px">'+editTitle+'</td>'+
+      '<td data-label="分类" style="min-width:90px">'+editCat+'</td>'+
+      '<td data-label="薪资" style="min-width:80px">'+editSalary+'</td>'+
+      '<td data-label="地点" style="min-width:80px">'+editLocation+'</td>'+
+      '<td data-label="发布者" style="min-width:100px">'+editAuthor+'</td>'+
+      '<td data-label="认证" style="min-width:90px">'+editVerified+'</td>'+
+      '<td data-label="发布时间" style="font-size:12px;color:#94a3b8;white-space:nowrap;text-align:center">'+fmtDate(j.created_at)+'</td>'+
+      '<td data-label="主页链接" style="min-width:120px">'+editLink+'</td>'+
+      '<td data-label="操作" style="white-space:nowrap">'+opsHtml+'</td>'+
       '</tr>';
   }).join('')+'</tbody></table>':'<p class="muted">暂无'+(titles[currentFilter]||'')+'数据</p>';
 }
@@ -1593,7 +1593,7 @@ async function loadJobComments(jobId){
       ops+='<button class="ghost small" onclick="editJobComment(\''+c.id+'\',\''+jobId+'\')" style="padding:4px 10px;font-size:11px;background:#eff6ff;color:#2563eb;border-color:#bfdbfe">编辑</button>';
       ops+='<button class="danger small" onclick="deleteJobComment(\''+c.id+'\',\''+jobId+'\')" style="padding:4px 10px;font-size:11px">删除</button>';
       ops+='</div>';
-      return '<tr><td style="font-size:12px;vertical-align:top">'+name+'<br>'+statusBadge+'</td><td style="font-size:12px;color:#475569;vertical-align:top">'+esc(c.content)+'</td><td style="font-size:11px;color:#94a3b8;white-space:nowrap;vertical-align:top">'+fmtDate(c.created_at)+'</td><td style="vertical-align:top">'+ops+'</td></tr>';
+      return '<tr><td data-label="用户" style="font-size:12px;vertical-align:top">'+name+'<br>'+statusBadge+'</td><td data-label="内容" style="font-size:12px;color:#475569;vertical-align:top">'+esc(c.content)+'</td><td data-label="时间" style="font-size:11px;color:#94a3b8;white-space:nowrap;vertical-align:top">'+fmtDate(c.created_at)+'</td><td data-label="操作" style="vertical-align:top">'+ops+'</td></tr>';
     }).join('')+'</tbody></table>';
   }catch(e){
     var el=document.getElementById('jobCommentsList');
