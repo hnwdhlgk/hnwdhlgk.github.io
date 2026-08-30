@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-30T19:35:24.891Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "抓取1条新兼职(网页抓取)"
+  },
+  {
     "time": "2026-08-30T19:35:22.640Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -790,13 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "自动抓取未找到按钮。预览页提取ID数:0，尝试抓取消息数:0，扫描ID:"
-  },
-  {
-    "time": "2026-08-30T07:00:54.262Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
   }
 ]
