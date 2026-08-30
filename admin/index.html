@@ -1187,6 +1187,7 @@ window.delTgMap=function(i){
   renderOdChannels();
 }
 window.saveTelegram=function(){
+  if(window.collectTgMap)window.collectTgMap();
   CONFIG.telegram=CONFIG.telegram||{};
   CONFIG.telegram.enabled=$('tg_enabled').value==='true';
   CONFIG.telegram.ocr_api_key=$('tg_ocr_key').value.trim();
