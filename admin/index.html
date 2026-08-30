@@ -899,10 +899,20 @@ window.newJob=function(){
 window.editJob=function(id){
   JOBS.forEach(function(j){if(j.id===id)j.editing=true});renderJobs();
   var j=JOBS.find(function(x){return x.id===id});if(!j)return;
-  fillCat('ej_cat',j.category);fillSub2('ej_cat','ej_sub','ej_sub2');
-  if(j.subcategory)$('ej_sub').value=j.subcategory;
+  fillCat('ej_cat',j.category);
+  fillSub2('ej_cat','ej_sub','ej_sub2');
+  if(j.subcategory){$('ej_sub').value=j.subcategory;}
   fillSub3('ej_cat','ej_sub','ej_sub2');
-  if(j.subcategory2)$('ej_sub2').value=j.subcategory2;
+  if(j.subcategory2){
+    $('ej_sub2').value=j.subcategory2;
+    // 确保三级分类选中
+    var s2=$('ej_sub2');
+    if(s2.value!==j.subcategory2){
+      for(var i=0;i<s2.options.length;i++){
+        if(s2.options[i].value===j.subcategory2){s2.selectedIndex=i;break;}
+      }
+    }
+  }
 }
 window.cancelEdit=function(id){var j=JOBS.find(function(x){return x.id===id});if(j&&j.isNew){JOBS=JOBS.filter(function(x){return x.id!==id})}else if(j){delete j.editing}renderJobs()}
 window.removeJobImg=function(id){var j=JOBS.find(function(x){return x.id===id});if(j){j.image='';renderJobs()}}
