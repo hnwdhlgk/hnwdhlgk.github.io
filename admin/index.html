@@ -1056,7 +1056,23 @@ window.fetchJobComments=async function(jobId,inputId){
       msg+='\n\n【调试】总数:'+(r.total_found||0)+' 新导入:'+(r.count||0)+' 重复:'+(r.duplicate_count||0);
       if(r.embed_debug){
         msg+='\n嵌入页长度:'+(r.embed_debug.html_length||0)+' 找到:'+(r.embed_debug.comments_found||0);
-        if(r.embed_debug.error)msg+=' 错误:'+r.embed_debug.error;
+        msg+='\n包含comment:'+(r.embed_debug.has_comment_class?'是':'否');
+        msg+=' 包含widget_message:'+(r.embed_debug.has_widget_message?'是':'否');
+        msg+=' 包含tgme_widget:'+(r.embed_debug.has_tgme_widget?'是':'否');
+        if(r.embed_debug.message_divs&&r.embed_debug.message_divs.length){
+          msg+='\n消息div标签('+r.embed_debug.message_divs.length+'):';
+          r.embed_debug.message_divs.slice(0,3).forEach((d,i)=>{msg+='\n'+(i+1)+'.'+d.substring(0,100)});
+        }
+        if(r.embed_debug.keyword_matches&&r.embed_debug.keyword_matches.length){
+          msg+='\n关键词匹配('+r.embed_debug.keyword_matches.length+'):';
+          r.embed_debug.keyword_matches.slice(0,3).forEach((k,i)=>{msg+='\n'+(i+1)+'.'+k.substring(0,80)});
+        }
+        // 输出完整HTML到console
+        if(r.embed_debug.full_html_sample){
+          console.log('【嵌入页面HTML样本】', r.embed_debug.full_html_sample);
+          console.log('【嵌入页面完整调试】', r.embed_debug);
+          msg+='\n\n完整HTML已输出到控制台(F12查看)';
+        }
       }
       if(r.debug_comments&&r.debug_comments.length){
         msg+='\n评论预览:';
