@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "id": "tg-import-460325-1788089770685",
+    "job_id": "1787866180350",
+    "username": "海南大学修车部",
+    "anonymous": false,
+    "content": "test",
+    "status": "approved",
+    "created_at": "2026-08-29T20:26:48.000Z",
+    "telegram_msg_id": 51,
+    "telegram_comment_id": 460325,
+    "source": "telegram_import"
+  }
+]
