@@ -1,8 +1,16 @@
 {
-  "processed": [
-    "link-hainanchayi-9438",
-    "link-hnwdhlgk-10363",
-    "link-hainanchayi-9430"
-  ],
-  "last_fetch": "2026-08-30T19:33:28.334Z"
+  "processed_map": {
+    "hnwdhlgk": [
+      "link-hainanchayi-9438",
+      "link-hnwdhlgk-10363",
+      "link-hainanchayi-9430",
+      "link-https://t.me/hnwdhlgk/10439",
+      "web-10439"
+    ],
+    "hainanchayi": [
+      "link-https://t.me/hainanchayi/9574",
+      "web-9574"
+    ]
+  },
+  "last_fetch": "2026-08-30T19:35:45.546Z"
 }
