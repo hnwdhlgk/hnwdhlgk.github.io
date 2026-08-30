@@ -829,8 +829,7 @@ function renderJobs(){
     <span style="display:flex;align-items:center;gap:6px"><span>💬</span><span>查看评论</span></span>
     <span style="${j.commentCount?'background:#2563eb;color:#fff;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600':'color:#94a3b8;font-size:11px'}">${j.commentCount||'暂无评论'}</span>
   </button>
-</div>
-<div class="views">👁 ${j.views||0}</div></article>`).join(""):'<div class="empty">暂无兼职信息</div>')+pagHtml;
+<div class="views" style="position:static;display:inline-block;margin-top:6px">👁 ${j.views||0}</div></div></article>`).join(""):'<div class="empty">暂无兼职信息</div>')+pagHtml;
 }
 
 // 图片预览放大
