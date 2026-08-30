@@ -867,7 +867,7 @@ function viewJob(id){
 async function showJobDetail(j){
   const isV=j.verified===true;
   let html='<div style="max-height:80vh;overflow-y:auto">';
-  html+='<h3 style="margin:0 0 10px">'+esc(j.title)+(j.show_verified!==false?' <img src="assets/verified_badge.png" style="width:20px;height:20px;vertical-align:middle">':'')+'</h3>';
+  html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h3 style="margin:0">'+esc(j.title)+(j.show_verified!==false?' <img src="assets/verified_badge.png" style="width:20px;height:20px;vertical-align:middle">':'')+'</h3><button onclick="closeModal()" style="background:none;border:none;font-size:24px;color:#94a3b8;cursor:pointer;padding:0 8px;line-height:1">&times;</button></div>';
   if(j.image){
     if(j.image_link||(j.telegram_channel&&j.telegram_msg_id)){
       const il=j.image_link||('https://t.me/'+j.telegram_channel+'/'+j.telegram_msg_id+'?single');
