@@ -52,7 +52,7 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
   .filter-tabs button{padding:6px 10px;font-size:12px}
   .filter-label{font-size:12px}
 }
-@media(max-width:480px){
+@media(max-width:600px){
   .stats{grid-template-columns:1fr 1fr;gap:10px}
   .stat-card{padding:12px}
   .stat-card .num{font-size:20px}
@@ -62,19 +62,20 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
   .topbar h2{font-size:16px}
   .badge{font-size:10px;padding:2px 5px}
   .preview-img{max-width:100%;max-height:160px}
-  /* 手机端表格改为卡片式布局 */
-  .data-table{border:none;background:transparent}
-  .data-table thead{display:none!important}
-  .data-table tbody{display:block}
-  .data-table tr{display:block!important;background:#fff;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);width:100%!important;box-sizing:border-box}
-  .data-table td{display:block!important;width:100%!important;border:none;padding:7px 0;font-size:13px;box-sizing:border-box;text-align:left!important}
-  .data-table td:before{content:attr(data-label);display:block;font-weight:700;color:#64748b;font-size:11px;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.3px}
-  .data-table td:empty{display:none!important}
-  .data-table td input,.data-table td select{width:100%!important;box-sizing:border-box;font-size:14px!important;padding:8px 10px!important}
-  .data-table td img{max-width:60px;max-height:60px}
+  /* 手机端表格改为卡片式布局 - 使用更高优先级 */
+  table.data-table{display:block;width:100%!important;border:none;background:transparent;overflow:visible}
+  table.data-table thead{display:none!important}
+  table.data-table tbody{display:block;width:100%}
+  table.data-table tr{display:block!important;background:#fff;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);width:100%!important;max-width:100%!important;box-sizing:border-box;min-width:0!important}
+  table.data-table td{display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;border:none;padding:7px 0;font-size:13px;box-sizing:border-box;text-align:left!important;white-space:normal!important}
+  table.data-table td:before{content:attr(data-label);display:block;font-weight:700;color:#64748b;font-size:11px;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.3px}
+  table.data-table td:empty{display:none!important}
+  table.data-table td input,table.data-table td select{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box;font-size:14px!important;padding:8px 10px!important}
+  table.data-table td img{max-width:60px;max-height:60px}
+  table.data-table td>div{width:100%!important;box-sizing:border-box}
   /* 操作按钮全宽 */
-  .data-table td[data-label="操作"]>div{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-  .data-table td[data-label="操作"] button{flex:1;min-width:70px;padding:10px 12px!important;font-size:13px!important}
+  table.data-table td[data-label="操作"]>div{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  table.data-table td[data-label="操作"] button{flex:1;min-width:70px;padding:10px 12px!important;font-size:13px!important}
   /* 弹窗适配 */
   #adminModalBox{width:95%!important;padding:16px!important;max-height:90vh!important}
   .modal{width:95%!important;padding:16px!important;max-height:90vh!important}
