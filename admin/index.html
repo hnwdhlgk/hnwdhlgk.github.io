@@ -1584,20 +1584,55 @@ async function loadJobComments(jobId){
     var el=document.getElementById('jobCommentsList');
     if(!el)return;
     if(!comments.length){el.innerHTML='<p class="muted" style="text-align:center;padding:20px">暂无评论</p>';return}
-    el.innerHTML='<table class="data-table"><thead><tr><th style="width:15%">用户</th><th style="width:50%">内容</th><th style="width:15%">时间</th><th style="width:20%">操作</th></tr></thead><tbody>'+comments.map(function(c){
-      var name=c.anonymous?'匿名用户':esc(c.username);
+    el.innerHTML='<table class="data-table"><thead><tr><th style="width:18%">用户</th><th style="width:45%">内容</th><th style="width:15%">时间</th><th style="width:22%">操作</th></tr></thead><tbody>'+comments.map(function(c){
+      // 管理员可以看到匿名用户的真实用户名
+      var name=esc(c.username||'未知');
+      if(c.anonymous)name+=' <span style="color:#f59e0b;font-size:10px;background:#fef3c7;padding:1px 6px;border-radius:3px">匿名</span>';
       var statusBadge=c.status==='approved'?'<span style="color:#16a34a;font-size:11px">已通过</span>':c.status==='rejected'?'<span style="color:#dc2626;font-size:11px">已拒绝</span>':'<span style="color:#f59e0b;font-size:11px">待审核</span>';
-      var ops='';
-      if(c.status!=='approved')ops+='<button class="green small" onclick="approveJobComment(\''+c.id+'\',\''+jobId+'\')" style="padding:4px 8px;font-size:11px">通过</button> ';
-      if(c.status!=='rejected')ops+='<button class="danger small" onclick="rejectJobComment(\''+c.id+'\',\''+jobId+'\')" style="padding:4px 8px;font-size:11px">拒绝</button> ';
-      ops+='<button class="danger small" onclick="deleteJobComment(\''+c.id+'\',\''+jobId+'\')" style="padding:4px 8px;font-size:11px">删除</button>';
-      return '<tr><td style="font-size:12px">'+name+'<br>'+statusBadge+'</td><td style="font-size:12px;color:#475569">'+esc(c.content)+'</td><td style="font-size:11px;color:#94a3b8;white-space:nowrap">'+fmtDate(c.created_at)+'</td><td>'+ops+'</td></tr>';
+      var ops='<div style="display:flex;gap:4px;flex-wrap:wrap">';
+      ops+='<button class="ghost small" onclick="editJobComment(\''+c.id+'\',\''+jobId+'\')" style="padding:4px 10px;font-size:11px;background:#eff6ff;color:#2563eb;border-color:#bfdbfe">编辑</button>';
+      ops+='<button class="danger small" onclick="deleteJobComment(\''+c.id+'\',\''+jobId+'\')" style="padding:4px 10px;font-size:11px">删除</button>';
+      ops+='</div>';
+      return '<tr><td style="font-size:12px;vertical-align:top">'+name+'<br>'+statusBadge+'</td><td style="font-size:12px;color:#475569;vertical-align:top">'+esc(c.content)+'</td><td style="font-size:11px;color:#94a3b8;white-space:nowrap;vertical-align:top">'+fmtDate(c.created_at)+'</td><td style="vertical-align:top">'+ops+'</td></tr>';
     }).join('')+'</tbody></table>';
   }catch(e){
     var el=document.getElementById('jobCommentsList');
     if(el)el.innerHTML='<p class="muted" style="text-align:center;padding:20px;color:#dc2626">加载失败：'+e.message+'</p>';
   }
 }
+// 编辑评论
+window.editJobComment=function(commentId,jobId){
+  fetch(CONFIG.worker_url+'/api/all-comments').then(function(r){return r.json()}).then(function(data){
+    var c=(data.comments||[]).find(function(x){return x.id===commentId});
+    if(!c){alert('评论不存在');return}
+    var html='<div style="max-height:70vh;overflow-y:auto">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px"><h3 style="margin:0">编辑评论</h3><button onclick="closeAdminModal()" style="background:none;border:none;font-size:24px;color:#94a3b8;cursor:pointer;padding:0 8px;line-height:1">&times;</button></div>';
+    html+='<div style="margin-bottom:12px"><label style="display:block;margin-bottom:5px;font-size:13px;font-weight:600;color:#334155">用户</label><div style="padding:8px 12px;background:#f8fafc;border-radius:6px;font-size:13px">'+esc(c.username||'未知')+(c.anonymous?' <span style="color:#f59e0b">（匿名）</span>':'')+'</div></div>';
+    html+='<div style="margin-bottom:12px"><label style="display:block;margin-bottom:5px;font-size:13px;font-weight:600;color:#334155">评论内容</label><textarea id="editCommentContent" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;min-height:100px;resize:vertical;box-sizing:border-box">'+esc(c.content)+'</textarea></div>';
+    html+='<div style="margin-bottom:15px"><label style="display:block;margin-bottom:5px;font-size:13px;font-weight:600;color:#334155">状态</label><select id="editCommentStatus" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px"><option value="approved"'+(c.status==='approved'?' selected':'')+'>已通过</option><option value="pending"'+(c.status==='pending'?' selected':'')+'>待审核</option><option value="rejected"'+(c.status==='rejected'?' selected':'')+'>已拒绝</option></select></div>';
+    html+='<div style="display:flex;gap:10px;justify-content:flex-end"><button class="ghost" onclick="closeAdminModal()" style="padding:8px 20px">取消</button><button onclick="saveJobComment(\''+commentId+'\',\''+jobId+'\')" style="padding:8px 20px;background:#2563eb;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px">保存</button></div>';
+    html+='</div>';
+    showAdminModal(html);
+  }).catch(function(e){alert('加载失败：'+e.message)});
+};
+window.saveJobComment=function(commentId,jobId){
+  var content=document.getElementById('editCommentContent').value.trim();
+  var status=document.getElementById('editCommentStatus').value;
+  if(!content){alert('评论内容不能为空');return}
+  // 通过GitHub API直接更新评论
+  readFile('data/comments.json').then(function(d){
+    var comments=d.data;
+    var c=comments.find(function(x){return x.id===commentId});
+    if(!c){alert('评论不存在');return}
+    c.content=content;
+    c.status=status;
+    writeFile('data/comments.json',comments,d.sha,'编辑评论').then(function(){
+      closeAdminModal();
+      loadJobComments(jobId);
+      stat('评论已更新','ok');
+    }).catch(function(e){alert('保存失败：'+e.message)});
+  }).catch(function(e){alert('读取失败：'+e.message)});
+};
 window.approveJobComment=function(commentId,jobId){
   fetch(CONFIG.worker_url+'/api/approve-comment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:G.user,id:commentId})}).then(function(r){return r.json()}).then(function(r){
     if(r.ok){loadJobComments(jobId);stat('评论已通过','ok')}else{alert(r.error||'操作失败')}
