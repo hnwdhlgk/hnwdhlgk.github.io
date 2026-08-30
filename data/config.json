@@ -25,8 +25,8 @@
         "bot_token": "7746120187:AAF7arp50gDRoENynUjzfxQruy3-Y7mGSEs",
         "enabled": true,
         "message_ids": [
-          16792,
-          16793
+          "16792",
+          "16793"
         ]
       }
     ]
