@@ -1150,9 +1150,20 @@ window.updateTgMapVal=function(i){
     valInput.style.display='';
   }
 }
-window.addTgMap=function(){
+window.collectTgMap=function(){
+  var rows=document.querySelectorAll('#tgMapList tr');
+  var maps=[];
+  rows.forEach(function(row){
+    var inputs=row.querySelectorAll('input,select');
+    if(inputs.length>=3){
+      maps.push({tag:inputs[0].value,type:inputs[1].value,value:inputs[2].value});
+    }
+  });
   CONFIG.telegram=CONFIG.telegram||{};
-  CONFIG.telegram.tag_maps=CONFIG.telegram.tag_maps||[];
+  CONFIG.telegram.tag_maps=maps;
+}
+window.addTgMap=function(){
+  window.collectTgMap();
   CONFIG.telegram.tag_maps.push({tag:'',type:'tag',value:''});
   renderTgMap();
   var od=CONFIG.on_duty||{};
@@ -1164,6 +1175,7 @@ window.addTgMap=function(){
   renderOdChannels();
 }
 window.delTgMap=function(i){
+  window.collectTgMap();
   CONFIG.telegram.tag_maps.splice(i,1);
   renderTgMap();
   var od=CONFIG.on_duty||{};
