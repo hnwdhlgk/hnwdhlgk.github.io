@@ -22,7 +22,12 @@
     "views": 0,
     "telegram_msg_id": "",
     "telegram_channel": "",
-    "image_link": "https://t.me/hnwdhlgk"
+    "image_link": "https://t.me/hnwdhlgk",
+    "contact_link": "",
+    "contact2_link": "",
+    "contact3_link": "",
+    "show_verified": true,
+    "verified": false
   },
   {
     "title": "🧚‍♀️ 凤梨",
