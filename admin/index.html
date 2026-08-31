@@ -2090,11 +2090,12 @@ function editUserForward(username){
       const fw = d.forward || {};
       window._ufChannels = JSON.parse(JSON.stringify(fw.channels || []));
       renderUfChannels();
-      let html = '<div style="margin-bottom:12px"><label style="display:block;margin-bottom:6px;font-weight:600">启用自动转发</label>';
-      html += '<select id="uf_enabled" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px"><option value="true"' + (fw.enabled?' selected':'') + '>开启</option><option value="false"' + (!fw.enabled?' selected':'') + '>关闭</option></select></div>';
-      html += '<div style="margin-bottom:12px"><label style="display:block;margin-bottom:6px;font-weight:600">转发间隔（分钟）</label>';
-      html += '<input id="uf_interval" type="number" value="' + (fw.interval || 5) + '" min="1" max="1440" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px"></div>';
-      html += '<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><label style="font-weight:600;margin:0">转发任务列表</label><button onclick="ufAddTask()" style="padding:4px 12px;background:#0f766e;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px">+ 添加任务</button></div>';
+      let html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">';
+      html += '<div><label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:#334155">启用自动转发</label>';
+      html += '<select id="uf_enabled" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;background:#fff;cursor:pointer;transition:border-color 0.2s" onfocus="this.style.borderColor=\'#0f766e\'" onblur="this.style.borderColor=\'#e2e8f0\'"><option value="true"' + (fw.enabled?' selected':'') + '>开启</option><option value="false"' + (!fw.enabled?' selected':'') + '>关闭</option></select></div>';
+      html += '<div><label style="display:block;margin-bottom:8px;font-weight:600;font-size:13px;color:#334155">转发间隔（分钟）</label>';
+      html += '<input id="uf_interval" type="number" value="' + (fw.interval || 5) + '" min="1" max="1440" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;transition:border-color 0.2s" onfocus="this.style.borderColor=\'#0f766e\'" onblur="this.style.borderColor=\'#e2e8f0\'"></div></div>';
+      html += '<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div><label style="font-weight:600;font-size:14px;color:#334155;margin:0">转发任务列表</label><p style="margin:2px 0 0;font-size:11px;color:#94a3b8">每个任务可配置多个源频道和一个目标频道</p></div><button onclick="ufAddTask()" style="padding:8px 16px;background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;transition:all 0.2s;box-shadow:0 2px 6px rgba(15,118,110,0.25)" onmouseover="this.style.transform=\'translateY(-1px)\'" onmouseout="this.style.transform=\'translateY(0)\'">+ 添加任务</button></div>';
       html += '<div id="ufChannelsList"></div></div>';
       body.innerHTML = html;
       renderUfChannels();
