@@ -48,6 +48,8 @@
         "default_category": "personal",
         "default_status": "pending",
         "enabled": true,
+        "target_channel": "",
+        "target_bot_token": "",
         "tag_maps": []
       },
       {
@@ -56,6 +58,8 @@
         "default_category": "personal",
         "default_status": "pending",
         "enabled": true,
+        "target_channel": "",
+        "target_bot_token": "",
         "tag_maps": []
       }
     ],
