@@ -1298,11 +1298,12 @@ window.delTgMap=function(i){
   try{renderForward()}catch(e){}
 }
 window.saveTelegram=function(){
+  try{
   if(window.collectTgMap)window.collectTgMap();
   CONFIG.telegram=CONFIG.telegram||{};
   CONFIG.telegram.enabled=$('tg_enabled').value==='true';
   CONFIG.telegram.ocr_api_key=$('tg_ocr_key').value.trim();
-  CONFIG.fetch_interval=parseInt($('tg_fetch_interval').value)||10;
+  CONFIG.fetch_interval=parseInt($('tg_fetch_interval')?$('tg_fetch_interval').value:10)||10;
   // 收集多频道配置
   var channels=[];
   window._tgChannels.forEach(function(ch,i){
@@ -1326,6 +1327,7 @@ window.saveTelegram=function(){
   delete CONFIG.telegram.default_status;
   stat('正在保存…','wait');
   writeFile('data/config.json',CONFIG,cfgSha,'保存Telegram多频道配置').then(function(){return readFile('data/config.json')}).then(function(d){CONFIG=d.data;cfgSha=d.sha;renderTelegram();stat('配置已保存（'+channels.length+'个频道）','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')});
+  }catch(e){stat('保存失败：'+e.message,'err');console.error(e);}
 }
 var _tgPreview=null;
 // 在岗老师多频道管理
