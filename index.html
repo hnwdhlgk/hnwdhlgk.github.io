@@ -1611,12 +1611,15 @@ function adminRenderFwTasks(){
     list.innerHTML='<p style="color:var(--muted);font-size:13px">暂无转发任务，点击「添加转发任务」配置</p>';
     return;
   }
+  if(!window._fwExpanded)window._fwExpanded={};
   list.innerHTML=channels.map((ch,i)=>{
     const sources=Array.isArray(ch.sources)?ch.sources:(ch.source?[ch.source]:['']);
+    const srcText=sources.filter(s=>s&&s.trim()).map(s=>s.replace(/https?:\/\/t\.me\//,'@').split('?')[0]).join(', ')||'未设置';
+    const tgtText=ch.target?ch.target.replace(/https?:\/\/t\.me\//,'@').split('?')[0]:'未设置';
+    const isExpanded=window._fwExpanded[i];
     let sourcesHtml=sources.map((s,j)=>'<div style="display:flex;gap:8px;margin-bottom:6px"><input value="'+esc(s||'')+'" placeholder="https://t.me/源频道名" style="flex:1;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px" onchange="window._adminFwConfig.channels['+i+'].sources['+j+']=this.value">'+(sources.length>1?'<button onclick="adminRemoveFwSource('+i+','+j+')" style="background:#b3261e;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px">删除</button>':'')+'</div>').join('');
     sourcesHtml+='<button onclick="adminAddFwSource('+i+')" style="margin-bottom:8px;padding:4px 10px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:4px;cursor:pointer;font-size:12px">+ 添加源频道</button>';
-    return '<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:12px;background:#f8fafc">'+
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><strong style="color:#1e293b">转发任务 '+(i+1)+'</strong>'+(channels.length>1?'<button onclick="adminRemoveFwTask('+i+')" style="background:#b3261e;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px">删除</button>':'')+'</div>'+
+    const detailHtml='<div style="display:'+(isExpanded?'block':'none')+';padding-top:12px;margin-top:10px;border-top:1px solid #e2e8f0">'+
       '<div style="margin-bottom:8px"><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">源频道/群组链接（可多选）</label>'+sourcesHtml+'</div>'+
       '<div style="margin-bottom:8px"><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">目标频道/群组链接</label><input value="'+esc(ch.target||'')+'" placeholder="https://t.me/目标频道名" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px" onchange="window._adminFwConfig.channels['+i+'].target=this.value"></div>'+
       '<div style="display:flex;gap:10px;margin-bottom:8px">'+
@@ -1626,7 +1629,25 @@ function adminRenderFwTasks(){
       '<div style="margin-bottom:8px"><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">标签映射（源标签:目标标签，每行一个，可选）</label><textarea rows="2" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px" placeholder="#嫩妹:#清纯" onchange="window._adminFwConfig.channels['+i+'].tag_map=this.value">'+esc(ch.tag_map||'')+'</textarea></div>'+
       '<div><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">文本替换（原文本:替换文本，每行一个，可选）</label><textarea rows="2" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px" placeholder="嫩妹:小美" onchange="window._adminFwConfig.channels['+i+'].text_replace=this.value">'+esc(ch.text_replace||'')+'</textarea></div>'+
     '</div>';
+    return '<div style="border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px;margin-bottom:8px;background:#fff">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="adminToggleFwTask('+i+')">'+
+        '<div style="flex:1">'+
+          '<div style="font-weight:600;color:#1e293b;font-size:14px">任务 '+(i+1)+': <span style="color:#64748b;font-weight:400">'+srcText+' → '+tgtText+'</span></div>'+
+          '<div style="font-size:12px;color:#94a3b8;margin-top:2px">每次转发'+(ch.batch_size||3)+'条'+(ch.tag_map?' · 标签映射':'')+(ch.text_replace?' · 文本替换':'')+'</div>'+
+        '</div>'+
+        '<div style="display:flex;gap:6px;align-items:center">'+
+          '<span style="font-size:18px;color:#64748b;transition:transform 0.2s;transform:rotate('+(isExpanded?'180deg':'0deg')+')">▼</span>'+
+          (channels.length>1?'<button onclick="event.stopPropagation();adminRemoveFwTask('+i+')" style="background:#b3261e;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px">删除</button>':'')+
+        '</div>'+
+      '</div>'+
+      detailHtml+
+    '</div>';
   }).join('');
+}
+function adminToggleFwTask(i){
+  if(!window._fwExpanded)window._fwExpanded={};
+  window._fwExpanded[i]=!window._fwExpanded[i];
+  adminRenderFwTasks();
 }
 function adminAddFwTask(){
   if(!window._adminFwConfig)window._adminFwConfig={};
@@ -1670,6 +1691,9 @@ async function adminSaveFwConfig(){
     });
     listHtml+='</ul>';
     if(result){result.style.display='';result.innerHTML=listHtml;result.style.color='#16a34a';result.style.background='#f0fdf4';result.style.padding='12px';result.style.borderRadius='6px';result.style.border='1px solid #bbf7d0';}
+    // 保存后折叠所有任务，显示列表模式
+    window._fwExpanded={};
+    adminRenderFwTasks();
     setTimeout(()=>{if(result)result.style.display='none';},8000);
   }catch(e){
     const result=document.getElementById('fwResult');
