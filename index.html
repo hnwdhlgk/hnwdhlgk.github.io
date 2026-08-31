@@ -1550,13 +1550,13 @@ async function renderTgTagmapPanel(){
 
 // 频道转发面板
 async function renderTgForwardPanel(){
-  let cfg={};
+  let fw={};
   try{
-    const r=await fetch(WORKER_URL.replace(/\/+$/,"")+"/api/admin/config?username="+encodeURIComponent(me),{method:"GET",headers:{"Content-Type":"application/json"}});
+    // 读取用户自己的转发配置（独立存储互不干扰）
+    const r=await fetch(WORKER_URL.replace(/\/+$/,"")+"/api/forward-config?username="+encodeURIComponent(me),{method:"GET",headers:{"Content-Type":"application/json"}});
     const d=await r.json();
-    cfg=d.config||{};
-  }catch(e){cfg={};}
-  const fw=cfg.forward||{};
+    fw=d.forward||{};
+  }catch(e){fw={};}
   window._adminFwConfig=JSON.parse(JSON.stringify(fw));
   
   let html=`<div style="margin-bottom:16px">
@@ -1607,10 +1607,10 @@ async function renderTgForwardPanel(){
 async function adminRefreshFwStatus(){
   try{
     // 使用GET方法读取配置（POST是写入，会导致数据为空错误）
-    const r=await fetch(WORKER_URL.replace(/\/+$/,"")+"/api/admin/config?username="+encodeURIComponent(me),{method:"GET",headers:{"Content-Type":"application/json"}});
+    const r=await fetch(WORKER_URL.replace(/\/+$/,"")+"/api/forward-config?username="+encodeURIComponent(me),{method:"GET",headers:{"Content-Type":"application/json"}});
     const d=await r.json();
     if(d.error)throw new Error(d.error);
-    const fw=(d.config&&d.config.forward)||{};
+    const fw=d.forward||{};
     const statusEl=document.getElementById("fwStatus");
     if(!statusEl)return;
     const enabled=fw.enabled;
@@ -1739,7 +1739,7 @@ async function adminSaveFwConfig(){
     window._adminFwConfig.interval=interval;
     const result=document.getElementById('fwResult');
     if(result){result.style.display='';result.textContent='正在保存...';result.style.color='#64748b';}
-    await wApi("/api/forward-config",{forward:window._adminFwConfig});
+    await wApi("/api/forward-config",{username:me,forward:window._adminFwConfig});
     // 保存成功后以列表形式显示配置
     const channels=window._adminFwConfig.channels||[];
     let listHtml='<div style="color:#16a34a;font-weight:600;margin-bottom:8px">✓ 转发设置已保存（'+channels.length+'个任务，间隔'+interval+'分钟）</div>';
