@@ -497,7 +497,7 @@ function showView(name,param){
   if(name==='cat3'){fillCat3Parent1();renderCat3()}
   if(name==='jobs'){initJobFilterCats();renderJobs()}
   if(name==='formlabels'){renderLinkRules()}
-  if(name==='telegram')renderTelegram();
+  if(name.startsWith('telegram'))renderTelegram();
   if(name==='fetchlogs')loadFetchLogs();
   if(name==='config')renderConfig();
   if(name==='labels')renderConfig();
