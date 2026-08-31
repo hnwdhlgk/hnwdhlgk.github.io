@@ -152,7 +152,6 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       </div>
     </div>
     <div class="menu-item" data-view="users" onclick="showView('users')"><span class="mi-ic">👥</span>用户管理</div>
-    <div class="menu-item" data-view="user-forward" onclick="showView('user-forward')"><span class="mi-ic">🔄</span>用户转发管理</div>
   </nav>
   <div class="sidebar-footer"><div class="who" id="whoami">—</div><button onclick="logoutGithub()">退出登录</button></div>
 </aside>
@@ -417,30 +416,35 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
         <span id="fwResult" class="muted" style="margin-left:10px"></span>
       </div>
     </div>
+    
+    <!-- 用户转发管理（展开栏） -->
+    <div class="card" style="margin-top:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleUserForwardPanel()">
+        <h3 style="margin:0">👥 用户转发管理</h3>
+        <span id="ufToggleIcon" style="font-size:18px;color:#64748b;transition:transform 0.2s">▼</span>
+      </div>
+      <p class="muted" style="margin:8px 0 0">查看和编辑每位用户的转发任务配置与执行状态</p>
+      <div id="userForwardPanel" style="display:none;margin-top:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <span class="muted" style="font-size:13px">所有用户的转发配置列表</span>
+          <button class="ghost" onclick="loadUserForwardList()">刷新列表</button>
+        </div>
+        <div id="userForwardList">点击展开后加载...</div>
+      </div>
+    </div>
   </div>
 
-  <!-- 用户转发管理 -->
-  <div id="view-user-forward" class="view">
-    <div class="card">
-      <div class="ops" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h2 style="margin:0">用户转发管理</h2>
-        <button class="ghost" onclick="loadUserForwardList()">刷新列表</button>
+  <!-- 编辑用户转发配置弹窗（美化版） -->
+  <div id="userForwardModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;justify-content:center;align-items:center">
+    <div style="background:#fff;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.3);width:90%;max-width:650px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden">
+      <div style="padding:16px 20px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#0f766e,#14b8a6)">
+        <h3 id="ufModalTitle" style="margin:0;color:#fff;font-size:16px">编辑用户转发配置</h3>
+        <button onclick="closeUserForwardModal()" style="background:none;border:none;color:#fff;font-size:24px;cursor:pointer;line-height:1;padding:0 8px;border-radius:4px;transition:background 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='none'">×</button>
       </div>
-      <p class="muted">查看和编辑每位用户的转发任务配置与执行状态</p>
-      <div id="userForwardList" style="margin-top:16px">加载中...</div>
-    </div>
-    <!-- 编辑用户转发配置弹窗 -->
-    <div class="modal-mask" id="userForwardModal" style="display:none">
-      <div class="modal" style="max-width:700px;max-height:80vh;overflow-y:auto">
-        <div class="modal-header">
-          <h3 id="ufModalTitle">编辑用户转发配置</h3>
-          <button onclick="closeUserForwardModal()" style="background:none;border:none;font-size:20px;cursor:pointer">×</button>
-        </div>
-        <div class="modal-body" id="ufModalBody"></div>
-        <div class="modal-footer">
-          <button class="ghost" onclick="closeUserForwardModal()">取消</button>
-          <button class="primary" onclick="saveUserForwardConfig()">保存</button>
-        </div>
+      <div id="ufModalBody" style="padding:20px;overflow-y:auto;flex:1"></div>
+      <div style="padding:12px 20px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:10px;background:#f8fafc">
+        <button onclick="closeUserForwardModal()" style="padding:8px 20px;border:1px solid #cbd5e1;background:#fff;border-radius:6px;cursor:pointer;font-size:14px;transition:all 0.2s" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">取消</button>
+        <button onclick="saveUserForwardConfig()" style="padding:8px 20px;border:none;background:#0f766e;color:#fff;border-radius:6px;cursor:pointer;font-size:14px;transition:all 0.2s" onmouseover="this.style.background='#0d5d56'" onmouseout="this.style.background='#0f766e'">保存配置</button>
       </div>
     </div>
   </div>
