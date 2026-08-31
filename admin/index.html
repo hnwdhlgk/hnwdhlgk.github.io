@@ -488,7 +488,9 @@ async function uploadImage(file,dir){
 
 /* ====== 菜单 ====== */
 function toggleGroup(el){el.parentElement.classList.toggle('open')}
+var currentView="";
 function showView(name,param){
+  currentView=name;
   document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active')});
   var v=$('view-'+name);if(v)v.classList.add('active');
   document.querySelectorAll('.menu-item[data-view]').forEach(function(m){m.classList.remove('active')});
