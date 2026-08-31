@@ -392,11 +392,19 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <div id="fwChannelsList" style="margin:16px 0"></div>
       <div style="margin-top:16px;padding-top:16px;border-top:1px solid #e2e8f0">
         <label><b>手动转发指定消息</b></label>
-        <div class="row">
-          <div style="flex:2"><input id="fw_manual_link" placeholder="https://t.me/频道名/消息ID" style="width:100%"></div>
-          <div><button onclick="manualForward()">转发此消息</button></div>
+        <p class="muted" style="margin:6px 0 10px">可独立设置源和目标，或留空使用上方转发任务配置。1:1复制包含超链接、图片、视频、文本格式。</p>
+        <div class="row" style="margin-bottom:8px">
+          <div><label>源频道/群组链接（可选）</label><input id="fw_manual_source" placeholder="https://t.me/源频道名" style="width:100%"></div>
+          <div><label>目标频道/群组链接（可选）</label><input id="fw_manual_target" placeholder="https://t.me/目标频道名" style="width:100%"></div>
         </div>
-        <p class="muted" style="margin-top:6px">支持私有频道消息（需配置源频道Bot Token）。1:1复制包含超链接、图片、视频、文本格式。</p>
+        <div class="row" style="margin-bottom:8px">
+          <div><label>源频道Bot Token（可选）</label><input id="fw_manual_source_token" placeholder="123456:ABC-DEF..." style="width:100%"></div>
+          <div><label>目标频道Bot Token（可选）</label><input id="fw_manual_target_token" placeholder="123456:ABC-DEF..." style="width:100%"></div>
+        </div>
+        <div class="row">
+          <div style="flex:2"><label>消息链接</label><input id="fw_manual_link" placeholder="https://t.me/频道名/消息ID" style="width:100%"></div>
+          <div style="display:flex;align-items:flex-end"><button onclick="manualForward()">转发此消息</button></div>
+        </div>
       </div>
       <div class="ops">
         <button class="ghost" onclick="addFwChannel()">+ 添加转发任务</button>
@@ -1355,9 +1363,18 @@ window.saveForward=function(){
 }
 window.manualForward=function(){
   var link=$('fw_manual_link').value.trim();
+  var source=$('fw_manual_source')?$('fw_manual_source').value.trim():'';
+  var target=$('fw_manual_target')?$('fw_manual_target').value.trim():'';
+  var sourceToken=$('fw_manual_source_token')?$('fw_manual_source_token').value.trim():'';
+  var targetToken=$('fw_manual_target_token')?$('fw_manual_target_token').value.trim():'';
   if(!link){alert('请输入消息链接');return;}
   stat('正在转发指定消息…','wait');
-  fetch(CONFIG.worker_url+'/api/forward-manual',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({link:link,channels:FW_CONFIG.channels})}).then(function(r){return r.json()}).then(function(d){
+  var body={link:link,channels:FW_CONFIG.channels};
+  if(source)body.source=source;
+  if(target)body.target=target;
+  if(sourceToken)body.source_bot_token=sourceToken;
+  if(targetToken)body.target_bot_token=targetToken;
+  fetch(CONFIG.worker_url+'/api/forward-manual',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json()}).then(function(d){
     if(d.ok){stat('转发成功：'+(d.message||''),'ok');$('fwResult').textContent=d.message||'';}
     else stat('转发失败：'+(d.message||d.error),'err');
   }).catch(function(e){stat('转发失败：'+e.message,'err')});
