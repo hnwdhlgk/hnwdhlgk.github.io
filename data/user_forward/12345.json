@@ -13,6 +13,5 @@
     }
   ],
   "enabled": true,
-  "interval": 1,
-  "last_forward": 1788192468883
+  "interval": 1
 }
