@@ -1107,6 +1107,7 @@ function renderTelegram(){
     var tg=CONFIG.telegram||{};
     if($('tg_enabled'))$('tg_enabled').value=tg.enabled?'true':'false';
     if($('tg_ocr_key'))$('tg_ocr_key').value=tg.ocr_api_key||'';
+    if($('tg_fetch_interval'))$('tg_fetch_interval').value=CONFIG.fetch_interval||10;
     if(!tg.channels&&tg.bot_token){
       tg.channels=[{bot_token:tg.bot_token,channel:tg.channel,default_category:tg.default_category||'personal',default_status:tg.default_status||'pending',tag_maps:tg.tag_maps||[],enabled:true}];
     }
@@ -1116,6 +1117,7 @@ function renderTelegram(){
   if(view==='telegram-onduty'){
     var od=CONFIG.on_duty||{};
     if($('od_enabled'))$('od_enabled').value=od.enabled?'true':'false';
+    if($('od_interval'))$('od_interval').value=CONFIG.onduty_interval||30;
     if(!od.channels&&od.channel){
       od.channels=[{channel:od.channel,bot_token:od.bot_token||'',enabled:true}];
     }
