@@ -1271,6 +1271,8 @@ window.saveTelegram=function(){
       default_category:$('tgc_category_'+i).value.trim(),
       default_status:$('tgc_status_'+i).value,
       enabled:$('tgc_enabled_'+i).value==='true',
+      target_channel:$('tgc_target_channel_'+i).value.trim(),
+      target_bot_token:$('tgc_target_bot_token_'+i).value.trim(),
       tag_maps:ch.tag_maps||[]
     });
   });
