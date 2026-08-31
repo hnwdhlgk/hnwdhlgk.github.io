@@ -331,8 +331,8 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
     </div>
   </div>
 
-  <!-- Telegram抓取 -->
-  <div id="view-telegram" class="view">
+  <!-- 多频道抓取 -->
+  <div id="view-telegram-channels" class="view">
     <div class="card"><h3>多频道抓取设置</h3>
       <p class="muted">支持配置多个Telegram频道，每个频道使用独立的Bot Token。Bot需设为对应频道的管理员。</p>
       <div class="row"><div><label>启用自动抓取</label><select id="tg_enabled"><option value="false">关闭</option><option value="true">开启</option></select></div>
@@ -340,25 +340,33 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <div id="tgChannelsList" style="margin:16px 0"></div>
       <div class="ops"><button class="ghost" onclick="addTgChannel()">+ 添加频道</button><button onclick="saveTelegram()">保存所有设置</button><button class="ghost" onclick="manualFetchTelegram()">立即抓取全部</button><span id="tgFetchResult" class="muted" style="margin-left:10px"></span></div>
     </div>
+  </div>
 
+  <!-- 在岗老师 -->
+  <div id="view-telegram-onduty" class="view">
     <div class="card"><h3>今日在岗老师（多频道）</h3>
       <p class="muted">监控多个频道最新消息中的按钮，自动显示在主页「今日在岗老师」区域。Bot需设为对应频道管理员。</p>
       <div class="row"><div><label>启用</label><select id="od_enabled"><option value="false">关闭</option><option value="true">开启</option></select></div></div>
       <div id="odChannelsList" style="margin:16px 0"></div>
       <div class="ops"><button class="ghost" onclick="addOdChannel()">+ 添加频道</button><button onclick="saveOnDuty()">保存所有设置</button><button class="ghost" onclick="testOnDutyChannel()">测试频道连接</button><button class="ghost" onclick="fetchOnDutyNow()">立即抓取全部</button><span id="odResult" class="muted" style="margin-left:10px"></span></div>
     </div>
+  </div>
 
+  <!-- 链接抓取 -->
+  <div id="view-telegram-link" class="view">
     <div class="card"><h3>抓取指定链接 / 监控指定频道</h3>
       <p class="muted">支持两种输入：①具体消息链接（如 https://t.me/hnwdhlgk/123）抓取单条消息；②频道主页链接（如 https://t.me/hnwdhlgk）自动抓取该频道最新消息。频道需为公开频道。</p>
       <label>消息链接或频道链接</label><input id="tg_link" placeholder="https://t.me/频道名/消息ID 或 https://t.me/频道名">
       <div class="ops"><button onclick="fetchByLink()">抓取此消息</button><span id="tgLinkResult" class="muted" style="margin-left:10px"></span></div>
     </div>
-
     <div class="card" id="tgPreviewCard" style="display:none"><h3>抓取预览 <span class="muted" style="font-size:13px;font-weight:normal">确认无误后点击发布</span></h3>
       <div id="tgPreviewContent"></div>
       <div class="ops" style="margin-top:14px"><button onclick="confirmTelegramPublish()">确认发布</button><button class="ghost" onclick="cancelTelegramPreview()">取消</button></div>
     </div>
+  </div>
 
+  <!-- 标签映射 -->
+  <div id="view-telegram-maps" class="view">
     <div class="card"><h3>标签映射规则</h3>
       <p class="muted">设置抓取到的 #标签 对应到网站的分类。例如 #10p 映射到某个三级分类，#海口 映射到二级分类，#嫩妹 作为自定义标签。</p>
       <table class="form-table">
@@ -370,7 +378,10 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
         <button onclick="saveTelegram()" style="margin-left:10px">保存标签映射</button>
       </div>
     </div>
+  </div>
 
+  <!-- 频道转发 -->
+  <div id="view-telegram-forward" class="view">
     <div class="card"><h3>频道内容转发</h3>
       <p class="muted">设置源频道/群组，自动将内容1:1复制或按标签映射后转发到目标频道/群组。目标频道的Bot需设为管理员。</p>
       <div class="row"><div><label>启用转发</label><select id="fw_enabled"><option value="false">关闭</option><option value="true">开启</option></select></div>
