@@ -1292,18 +1292,29 @@ window.renderForward=function(){
   if($('fw_enabled'))$('fw_enabled').value=cfg.enabled?'true':'false';
   FW_CONFIG.channels=cfg.channels||[];
   if(FW_CONFIG.channels.length===0){
-    FW_CONFIG.channels.push({source:'',target:'',source_bot_token:'',bot_token:'',batch_size:3,tag_map:'',text_replace:''});
+    FW_CONFIG.channels.push({sources:[''],target:'',source_bot_token:'',bot_token:'',batch_size:3,tag_map:'',text_replace:''});
   }
   var html='';
   (FW_CONFIG.channels||[]).forEach(function(ch,i){
+    // 确保sources是数组
+    if(!Array.isArray(ch.sources)) ch.sources = ch.source ? [ch.source] : [''];
+    var sourcesHtml = '';
+    ch.sources.forEach(function(src, j){
+      sourcesHtml += '<div style="display:flex;gap:8px;margin-bottom:6px">'+
+        '<input value="'+esc(src||'')+'" placeholder="https://t.me/源频道名" onchange="FW_CONFIG.channels['+i+'].sources['+j+']=this.value" style="flex:1">'+
+        (ch.sources.length>1?'<button class="danger" onclick="removeFwSource('+i+','+j+')" style="background:#b3261e;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;white-space:nowrap">删除</button>':'')+
+        '</div>';
+    });
+    sourcesHtml += '<button class="ghost" onclick="addFwSource('+i+')" style="margin-bottom:8px">+ 添加源频道</button>';
+    
     html+='<div class="channel-item" style="border:1px solid #e2e8f0;border-radius:8px;padding:12px;margin-bottom:10px">'+
       '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'+
       '<b>转发任务 '+(i+1)+'</b>'+
       (FW_CONFIG.channels.length>1?'<button class="danger" onclick="removeFwChannel('+i+')" style="background:#b3261e;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer">删除</button>':'')+
       '</div>'+
-      '<div class="row"><div><label>源频道/群组链接</label><input value="'+esc(ch.source||'')+'" placeholder="https://t.me/源频道名" onchange="FW_CONFIG.channels['+i+'].source=this.value" style="width:100%"></div>'+
-      '<div><label>目标频道/群组链接</label><input value="'+esc(ch.target||'')+'" placeholder="https://t.me/目标频道名" onchange="FW_CONFIG.channels['+i+'].target=this.value" style="width:100%"></div></div>'+
-      '<div class="row"><div><label>源频道Bot Token（可选，用于读取私有频道）</label><input value="'+esc(ch.source_bot_token||'')+'" placeholder="123456:ABC-DEF..." style="width:100%" onchange="FW_CONFIG.channels['+i+'].source_bot_token=this.value"></div>'+
+      '<div><label>源频道/群组链接（可多选）</label>'+sourcesHtml+'</div>'+
+      '<div style="margin-top:8px"><label>目标频道/群组链接</label><input value="'+esc(ch.target||'')+'" placeholder="https://t.me/目标频道名" onchange="FW_CONFIG.channels['+i+'].target=this.value" style="width:100%"></div>'+
+      '<div class="row" style="margin-top:8px"><div><label>源频道Bot Token（可选，用于读取私有频道）</label><input value="'+esc(ch.source_bot_token||'')+'" placeholder="123456:ABC-DEF..." style="width:100%" onchange="FW_CONFIG.channels['+i+'].source_bot_token=this.value"></div>'+
       '<div><label>目标频道Bot Token（必须，目标频道管理员）</label><input value="'+esc(ch.bot_token||'')+'" placeholder="123456:ABC-DEF..." style="width:100%" onchange="FW_CONFIG.channels['+i+'].bot_token=this.value"></div></div>'+
       '<div class="row"><div><label>每次转发条数</label><input type="number" value="'+(ch.batch_size||3)+'" min="1" max="10" style="width:100%" onchange="FW_CONFIG.channels['+i+'].batch_size=parseInt(this.value)||3"></div>'+
       '<div></div></div>'+
@@ -1313,9 +1324,19 @@ window.renderForward=function(){
   });
   if($('fwChannelsList'))$('fwChannelsList').innerHTML=html;
 }
+window.addFwSource=function(channelIdx){
+  if(!FW_CONFIG.channels[channelIdx].sources) FW_CONFIG.channels[channelIdx].sources=[];
+  FW_CONFIG.channels[channelIdx].sources.push('');
+  renderForward();
+}
+window.removeFwSource=function(channelIdx, sourceIdx){
+  FW_CONFIG.channels[channelIdx].sources.splice(sourceIdx,1);
+  if(FW_CONFIG.channels[channelIdx].sources.length===0) FW_CONFIG.channels[channelIdx].sources.push('');
+  renderForward();
+}
 
 window.addFwChannel=function(){
-  FW_CONFIG.channels.push({source:'',target:'',source_bot_token:'',bot_token:'',batch_size:3,tag_map:'',text_replace:''});
+  FW_CONFIG.channels.push({sources:[''],target:'',source_bot_token:'',bot_token:'',batch_size:3,tag_map:'',text_replace:''});
   renderForward();
 }
 window.removeFwChannel=function(i){
