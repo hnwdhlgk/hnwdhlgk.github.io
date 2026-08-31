@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-31T19:07:35.949Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-08-31T19:06:44.145Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
@@ -790,13 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "消息无法解析为有效兼职（标题无效）"
-  },
-  {
-    "time": "2026-08-31T10:00:53.407Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "error",
-    "message": "无法获取消息内容"
   }
 ]
