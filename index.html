@@ -974,7 +974,7 @@ function renderAdminShortcuts(){
   const box=document.getElementById("adminShortcuts");
   if(!box)return;
   let items=[];
-  items.push({icon:"📊",label:"概览统计",panel:"dashboard",show:true});
+  items.push({icon:"📊",label:"概览统计",panel:"dashboard",show:hasPerm("dashboard")||hasPerm("jobs.view")});
   items.push({icon:"📁",label:"分类管理",panel:"categories",show:hasPerm("settings")||hasPerm("jobs.view")});
   items.push({icon:"📋",label:"兼职管理",panel:"jobs",show:hasPerm("jobs.view")||hasPerm("jobs.edit")||hasPerm("jobs.delete")||hasPerm("jobs.approve")});
   items.push({icon:"⚙️",label:"站点配置",panel:"config",show:hasPerm("settings")});
@@ -1517,7 +1517,7 @@ async function renderTgTagmapPanel(){
 }
 
 // 频道转发面板
-async function renderTgForwardPanel(){
+async async function renderTgForwardPanel(){
   let cfg={};
   try{const r=await wApi("/api/admin/config",{username:me});cfg=r.config||{};}catch(e){cfg={};}
   const fw=cfg.forward||{};
