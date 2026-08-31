@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-31T12:00:21.129Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-08-31T12:00:12.121Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -785,14 +793,6 @@
   },
   {
     "time": "2026-08-30T22:07:39.240Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "无按钮"
-  },
-  {
-    "time": "2026-08-30T22:00:20.710Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
     "count": 0,
