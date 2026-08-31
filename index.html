@@ -965,7 +965,7 @@ async function loadUserPerms(){
 // 检查是否有权限
 function hasPerm(key){
   if(window._userRole==='superadmin')return true;
-  if(window._userRole==='admin')return true; // 管理员默认有权限
+  // admin和普通用户都按照permissions字段判断
   return (window._userPerms||[]).indexOf(key)>=0;
 }
 
