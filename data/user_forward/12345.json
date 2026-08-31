@@ -1,0 +1,17 @@
+{
+  "channels": [
+    {
+      "name": "测试转发",
+      "sources": [
+        "https://t.me/hainanhuisuo"
+      ],
+      "target": "https://t.me/jiaoshouceshizhuanfa",
+      "bot_token": "8799802007:AAGFPGggxjDBvWb-4_fzc_rx8RpAFcIRpRo",
+      "batch_size": 3,
+      "tag_map": "",
+      "text_replace": ""
+    }
+  ],
+  "enabled": true,
+  "interval": 1
+}
