@@ -1307,6 +1307,7 @@ window.renderForward=function(){
       '<div class="row"><div><label>转发模式</label><select onchange="FW_CONFIG.channels['+i+'].mode=this.value;renderForward()"><option value="copy"'+(ch.mode==='copy'?' selected':'')+'>1:1原样复制</option><option value="map"'+(ch.mode==='map'?' selected':'')+'>标签映射</option></select></div>'+
       '<div><label>每次转发条数</label><input type="number" value="'+(ch.batch_size||3)+'" min="1" max="10" style="width:100%" onchange="FW_CONFIG.channels['+i+'].batch_size=parseInt(this.value)||3"></div></div>'+
       (ch.mode==='map'?'<div><label>标签映射（源标签:目标标签，每行一个）</label><textarea rows="3" style="width:100%" placeholder="#嫩妹:#清纯&#xA;#御姐:#性感" onchange="FW_CONFIG.channels['+i+'].tag_map=this.value">'+esc(ch.tag_map||'')+'</textarea></div>':'')+
+      '<div style="margin-top:8px"><label>文本替换规则（原文本:替换文本，每行一个，转发时自动替换）</label><textarea rows="3" style="width:100%" placeholder="嫩妹:小美&#xA;御姐:大美女" onchange="FW_CONFIG.channels['+i+'].text_replace=this.value">'+esc(ch.text_replace||'')+'</textarea></div>'+
       '</div>';
   });
   if($('fwChannelsList'))$('fwChannelsList').innerHTML=html;
