@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-31T05:00:09.708Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-08-31T04:30:17.051Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
@@ -785,14 +793,6 @@
   },
   {
     "time": "2026-08-30T14:54:27.795Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 6,
-    "status": "success",
-    "message": "自动抓取6个按钮（消息ID:16788,16790）"
-  },
-  {
-    "time": "2026-08-30T14:49:39.757Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
     "count": 6,
