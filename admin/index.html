@@ -140,8 +140,17 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
     </div>
     <div class="menu-item" data-view="labels" onclick="showView('labels')"><span class="mi-ic">🏷️</span>字段标签</div>
     <div class="menu-item" data-view="formlabels" onclick="showView('formlabels')"><span class="mi-ic">📝</span>表单设置</div>
-    <div class="menu-item" data-view="telegram" onclick="showView('telegram')"><span class="mi-ic">✈️</span>Telegram抓取</div>
-    <div class="menu-item" data-view="fetchlogs" onclick="showView('fetchlogs')"><span class="mi-ic">📋</span>抓取日志</div>
+    <div class="menu-group">
+      <div class="menu-item" onclick="toggleGroup(this)"><span class="mi-ic">✈️</span>Telegram抓取<span class="arrow">▸</span></div>
+      <div class="submenu">
+        <div class="menu-item" data-view="telegram-channels" onclick="showView('telegram-channels')">多频道抓取</div>
+        <div class="menu-item" data-view="telegram-onduty" onclick="showView('telegram-onduty')">在岗老师</div>
+        <div class="menu-item" data-view="telegram-link" onclick="showView('telegram-link')">链接抓取</div>
+        <div class="menu-item" data-view="telegram-maps" onclick="showView('telegram-maps')">标签映射</div>
+        <div class="menu-item" data-view="telegram-forward" onclick="showView('telegram-forward')">频道转发</div>
+        <div class="menu-item" data-view="fetchlogs" onclick="showView('fetchlogs')">抓取日志</div>
+      </div>
+    </div>
     <div class="menu-item" data-view="users" onclick="showView('users')"><span class="mi-ic">👥</span>用户管理</div>
   </nav>
   <div class="sidebar-footer"><div class="who" id="whoami">—</div><button onclick="logoutGithub()">退出登录</button></div>
@@ -470,7 +479,7 @@ function showView(name,param){
   var v=$('view-'+name);if(v)v.classList.add('active');
   document.querySelectorAll('.menu-item[data-view]').forEach(function(m){m.classList.remove('active')});
   document.querySelectorAll('.menu-item[data-view="'+name+'"]').forEach(function(m){if(!param||m.dataset.filter===param||m.dataset.section===param)m.classList.add('active')});
-  var titles={dashboard:'概览',cat1:'一级分类',cat2:'二级分类',cat3:'三级分类',jobs:'兼职管理',config:'站点配置',labels:'字段标签',formlabels:'表单设置',telegram:'Telegram抓取',fetchlogs:'抓取日志',users:'用户管理'};
+  var titles={dashboard:'概览',cat1:'一级分类',cat2:'二级分类',cat3:'三级分类',jobs:'兼职管理',config:'站点配置',labels:'字段标签',formlabels:'表单设置','telegram-channels':'多频道抓取','telegram-onduty':'在岗老师','telegram-link':'链接抓取','telegram-maps':'标签映射','telegram-forward':'频道转发',fetchlogs:'抓取日志',users:'用户管理'};
   $('pageTitle').textContent=titles[name]||name;
   if(name==='cat1')renderCat1();
   if(name==='cat2'){fillCat2Parent();renderCat2()}
