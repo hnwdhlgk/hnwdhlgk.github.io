@@ -1057,23 +1057,34 @@ window.loadFetchLogs=function(){
   }).catch(function(e){$('fetchLogsList').innerHTML='<p class="muted" style="color:#b3261e">加载失败：'+e.message+'</p>'});
 }
 function renderTelegram(){
+  var view=currentView||'';
+  // 多频道抓取
+  if(view==='telegram-channels'){
+    var tg=CONFIG.telegram||{};
+    if($('tg_enabled'))$('tg_enabled').value=tg.enabled?'true':'false';
+    if($('tg_ocr_key'))$('tg_ocr_key').value=tg.ocr_api_key||'';
+    if(!tg.channels&&tg.bot_token){
+      tg.channels=[{bot_token:tg.bot_token,channel:tg.channel,default_category:tg.default_category||'personal',default_status:tg.default_status||'pending',tag_maps:tg.tag_maps||[],enabled:true}];
+    }
+    renderTgChannels();
+  }
+  // 在岗老师
+  if(view==='telegram-onduty'){
+    var od=CONFIG.on_duty||{};
+    if($('od_enabled'))$('od_enabled').value=od.enabled?'true':'false';
+    if(!od.channels&&od.channel){
+      od.channels=[{channel:od.channel,bot_token:od.bot_token||'',enabled:true}];
+    }
+    renderOdChannels();
+  }
+  // 标签映射
+  if(view==='telegram-maps'){
     renderTgMap();
-  var tg=CONFIG.telegram||{};
-  $('tg_enabled').value=tg.enabled?'true':'false';
-  $('tg_ocr_key').value=tg.ocr_api_key||'';
-  // 多频道：兼容旧配置
-  if(!tg.channels&&tg.bot_token){
-    tg.channels=[{bot_token:tg.bot_token,channel:tg.channel,default_category:tg.default_category||'personal',default_status:tg.default_status||'pending',tag_maps:tg.tag_maps||[],enabled:true}];
   }
-  renderTgChannels();
-  var od=CONFIG.on_duty||{};
-  $('od_enabled').value=od.enabled?'true':'false';
-  // 多频道：兼容旧配置
-  if(!od.channels&&od.channel){
-    od.channels=[{channel:od.channel,bot_token:od.bot_token||'',enabled:true}];
+  // 频道转发
+  if(view==='telegram-forward'){
+    try{renderForward()}catch(e){}
   }
-  renderOdChannels();
-  try{renderForward()}catch(e){}
 }
 // 多频道管理
 window._tgChannels=[];
