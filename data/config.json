@@ -131,6 +131,7 @@
   "forward": {
     "channels": [
       {
+        "name": "测试转发",
         "sources": [
           "https://t.me/hainanhuisuo"
         ],
