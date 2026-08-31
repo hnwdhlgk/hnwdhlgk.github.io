@@ -1300,6 +1300,7 @@ window.saveTelegram=function(){
   CONFIG.telegram=CONFIG.telegram||{};
   CONFIG.telegram.enabled=$('tg_enabled').value==='true';
   CONFIG.telegram.ocr_api_key=$('tg_ocr_key').value.trim();
+  CONFIG.fetch_interval=parseInt($('tg_fetch_interval').value)||10;
   // 收集多频道配置
   var channels=[];
   window._tgChannels.forEach(function(ch,i){
@@ -1509,6 +1510,7 @@ function collectOdMsgIds(){
 window.saveOnDuty=function(){
   CONFIG.on_duty=CONFIG.on_duty||{};
   CONFIG.on_duty.enabled=$('od_enabled').value==='true';
+  CONFIG.onduty_interval=parseInt($('od_interval').value)||30;
   // 收集多频道配置
   var channels=[];
   window._odChannels.forEach(function(ch,i){
