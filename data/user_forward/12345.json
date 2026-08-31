@@ -1,4 +1,6 @@
 {
+  "enabled": true,
+  "interval": 1,
   "channels": [
     {
       "name": "测试转发",
@@ -7,11 +9,9 @@
       ],
       "target": "https://t.me/jiaoshouceshizhuanfa",
       "bot_token": "8799802007:AAGFPGggxjDBvWb-4_fzc_rx8RpAFcIRpRo",
-      "batch_size": 3,
+      "batch_size": 10,
       "tag_map": "",
       "text_replace": ""
     }
-  ],
-  "enabled": true,
-  "interval": 1
+  ]
 }
