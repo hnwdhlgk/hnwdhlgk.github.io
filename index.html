@@ -1552,6 +1552,10 @@ async function renderTgForwardPanel(){
         转发间隔(分钟): <input type="number" id="fwInterval" value="${fw.interval||5}" min="1" max="1440" style="width:80px;padding:6px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px">
       </label>
       <button class="btn-primary" onclick="adminTestForward()">立即测试转发</button>
+      <button class="btn-ghost" onclick="adminRefreshFwStatus()">刷新状态</button>
+    </div>
+    <div id="fwStatus" style="margin-bottom:16px;padding:12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;color:#475569;line-height:1.8">
+      正在加载定时状态...
     </div>
     <h4 style="margin:16px 0 10px">转发任务配置</h4>
     <div id="fwList"></div>
@@ -1580,6 +1584,43 @@ async function renderTgForwardPanel(){
   </div>`;
   document.getElementById("tgSubmenuContent").innerHTML=html;
   adminRenderFwTasks();
+  adminRefreshFwStatus();
+}
+
+// 刷新转发定时状态
+async function adminRefreshFwStatus(){
+  try{
+    const r=await wApi("/api/admin/config",{username:me});
+    const fw=(r.config&&r.config.forward)||{};
+    const statusEl=document.getElementById("fwStatus");
+    if(!statusEl)return;
+    const enabled=fw.enabled;
+    const interval=fw.interval||5;
+    const lastForward=fw.last_forward?new Date(fw.last_forward):null;
+    const now=Date.now();
+    let nextForwardText="—";
+    if(enabled&&lastForward){
+      const nextTime=lastForward.getTime()+interval*60*1000;
+      if(nextTime>now){
+        const waitMin=Math.ceil((nextTime-now)/60000);
+        nextForwardText=new Date(nextTime).toLocaleString("zh-CN")+"（约"+waitMin+"分钟后）";
+      }else{
+        nextForwardText="即将执行";
+      }
+    }else if(enabled&&!lastForward){
+      nextForwardText="首次执行（下次触发时）";
+    }
+    let html="<div style='display:flex;gap:20px;flex-wrap:wrap'>";
+    html+="<div><b>转发状态：</b><span style='color:"+(enabled?"#16a34a":"#dc2626")+"'>"+(enabled?"● 运行中":"○ 已关闭")+"</span></div>";
+    html+="<div><b>转发间隔：</b>"+interval+"分钟</div>";
+    html+="<div><b>上次转发：</b>"+(lastForward?lastForward.toLocaleString("zh-CN"):"从未执行")+"</div>";
+    html+="<div><b>下次转发：</b>"+nextForwardText+"</div>";
+    html+="</div>";
+    statusEl.innerHTML=html;
+  }catch(e){
+    const statusEl=document.getElementById("fwStatus");
+    if(statusEl)statusEl.innerHTML="<span style='color:#dc2626'>状态加载失败："+e.message+"</span>";
+  }
 }
 
 // 手动转发指定消息
