@@ -1445,7 +1445,11 @@ window.switchTgSubmenu=function(sub){
 // 多频道抓取面板
 async function renderTgChannelsPanel(){
   let cfg={};
-  try{const r=await wApi("/api/admin/config",{username:me});cfg=r.config||{};}catch(e){cfg={};}
+  try{
+    const r=await fetch(WORKER_URL.replace(/\/+$/,"")+"/api/admin/config?username="+encodeURIComponent(me),{method:"GET",headers:{"Content-Type":"application/json"}});
+    const d=await r.json();
+    cfg=d.config||{};
+  }catch(e){cfg={};}
   const tg=cfg.telegram||{};
   let channels=[];
   if(Array.isArray(tg.channels)&&tg.channels.length>0){channels=tg.channels;}
@@ -1476,7 +1480,11 @@ async function renderTgChannelsPanel(){
 // 在岗老师面板
 async function renderTgOnDutyPanel(){
   let cfg={};
-  try{const r=await wApi("/api/admin/config",{username:me});cfg=r.config||{};}catch(e){cfg={};}
+  try{
+    const r=await fetch(WORKER_URL.replace(/\/+$/,"")+"/api/admin/config?username="+encodeURIComponent(me),{method:"GET",headers:{"Content-Type":"application/json"}});
+    const d=await r.json();
+    cfg=d.config||{};
+  }catch(e){cfg={};}
   const od=cfg.on_duty||{};
   const channels=od.channels||[];
   window._adminOdChannels=JSON.parse(JSON.stringify(channels));
@@ -1519,7 +1527,11 @@ function renderTgLinkPanel(){
 // 标签映射面板
 async function renderTgTagmapPanel(){
   let cfg={};
-  try{const r=await wApi("/api/admin/config",{username:me});cfg=r.config||{};}catch(e){cfg={};}
+  try{
+    const r=await fetch(WORKER_URL.replace(/\/+$/,"")+"/api/admin/config?username="+encodeURIComponent(me),{method:"GET",headers:{"Content-Type":"application/json"}});
+    const d=await r.json();
+    cfg=d.config||{};
+  }catch(e){cfg={};}
   const tagMap=cfg.tag_map||{};
   window._adminTagMap=JSON.parse(JSON.stringify(tagMap));
   
@@ -1539,7 +1551,11 @@ async function renderTgTagmapPanel(){
 // 频道转发面板
 async function renderTgForwardPanel(){
   let cfg={};
-  try{const r=await wApi("/api/admin/config",{username:me});cfg=r.config||{};}catch(e){cfg={};}
+  try{
+    const r=await fetch(WORKER_URL.replace(/\/+$/,"")+"/api/admin/config?username="+encodeURIComponent(me),{method:"GET",headers:{"Content-Type":"application/json"}});
+    const d=await r.json();
+    cfg=d.config||{};
+  }catch(e){cfg={};}
   const fw=cfg.forward||{};
   window._adminFwConfig=JSON.parse(JSON.stringify(fw));
   
@@ -1590,8 +1606,11 @@ async function renderTgForwardPanel(){
 // 刷新转发定时状态
 async function adminRefreshFwStatus(){
   try{
-    const r=await wApi("/api/admin/config",{username:me});
-    const fw=(r.config&&r.config.forward)||{};
+    // 使用GET方法读取配置（POST是写入，会导致数据为空错误）
+    const r=await fetch(WORKER_URL.replace(/\/+$/,"")+"/api/admin/config?username="+encodeURIComponent(me),{method:"GET",headers:{"Content-Type":"application/json"}});
+    const d=await r.json();
+    if(d.error)throw new Error(d.error);
+    const fw=(d.config&&d.config.forward)||{};
     const statusEl=document.getElementById("fwStatus");
     if(!statusEl)return;
     const enabled=fw.enabled;
