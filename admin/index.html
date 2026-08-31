@@ -361,6 +361,19 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
         <button onclick="saveTelegram()" style="margin-left:10px">保存标签映射</button>
       </div>
     </div>
+
+    <div class="card"><h3>频道内容转发</h3>
+      <p class="muted">设置源频道/群组，自动将内容1:1复制或按标签映射后转发到目标频道/群组。目标频道的Bot需设为管理员。</p>
+      <div class="row"><div><label>启用转发</label><select id="fw_enabled"><option value="false">关闭</option><option value="true">开启</option></select></div>
+      <div><label>转发模式</label><select id="fw_mode"><option value="copy">1:1原样复制</option><option value="map">标签映射后转发</option></select></div></div>
+      <div id="fwChannelsList" style="margin:16px 0"></div>
+      <div class="ops">
+        <button class="ghost" onclick="addFwChannel()">+ 添加转发任务</button>
+        <button onclick="saveForward()">保存转发设置</button>
+        <button class="ghost" onclick="testForwardNow()">立即测试转发</button>
+        <span id="fwResult" class="muted" style="margin-left:10px"></span>
+      </div>
+    </div>
   </div>
 
   <!-- 抓取日志 -->
