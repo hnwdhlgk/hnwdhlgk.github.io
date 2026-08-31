@@ -1544,11 +1544,47 @@ async function renderTgForwardPanel(){
       <button class="btn-ghost" onclick="adminAddFwTask()">+ 添加转发任务</button>
       <button class="btn-primary" onclick="adminSaveFwConfig()">保存转发设置</button>
     </div>
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid #e2e8f0">
+      <h4 style="margin:0 0 12px">手动转发指定消息</h4>
+      <p style="color:var(--muted);font-size:12px;margin:0 0 12px">独立设置源和目标，转发单条消息。1:1复制包含超链接、图片、视频、文本格式。</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+        <div style="flex:1;min-width:200px"><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">源频道/群组链接</label><input id="manualSource" placeholder="https://t.me/源频道名" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px"></div>
+        <div style="flex:1;min-width:200px"><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">目标频道/群组链接</label><input id="manualTarget" placeholder="https://t.me/目标频道名" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px"></div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+        <div style="flex:1;min-width:200px"><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">源频道Bot Token（可选，私有频道需要）</label><input id="manualSourceToken" placeholder="123456:ABC-DEF..." style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px"></div>
+        <div style="flex:1;min-width:200px"><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">目标频道Bot Token（必须，目标频道管理员）</label><input id="manualTargetToken" placeholder="123456:ABC-DEF..." style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px"></div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <input id="manualLink" placeholder="https://t.me/频道名/消息ID" style="flex:1;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px">
+        <button class="btn-primary" onclick="adminManualForward()">转发此消息</button>
+      </div>
+      <div id="manualResult" class="notice" style="display:none;margin-top:10px"></div>
+    </div>
     <div id="fwResult" class="notice" style="display:none"></div>
   </div>`;
   document.getElementById("tgSubmenuContent").innerHTML=html;
   adminRenderFwTasks();
 }
+
+// 手动转发指定消息
+async function adminManualForward(){
+  const link=document.getElementById('manualLink').value.trim();
+  const source=document.getElementById('manualSource').value.trim();
+  const target=document.getElementById('manualTarget').value.trim();
+  const sourceToken=document.getElementById('manualSourceToken').value.trim();
+  const targetToken=document.getElementById('manualTargetToken').value.trim();
+  const result=document.getElementById('manualResult');
+  if(!link){alert('请输入消息链接');return;}
+  if(!target||!targetToken){alert('请填写目标频道和目标Bot Token');return;}
+  result.style.display='';result.textContent='正在转发...';result.style.color='#64748b';
+  try{
+    const r=await wApi("/api/forward-manual",{link:link,source:source,target:target,source_bot_token:sourceToken,target_bot_token:targetToken});
+    if(r.ok){result.textContent='✓ '+r.message;result.style.color='#16a34a';}
+    else{result.textContent='✗ '+(r.message||r.error);result.style.color='#dc2626';}
+  }catch(e){result.textContent='转发失败：'+e.message;result.style.color='#dc2626';}
+}
+
 
 // 转发任务配置函数
 function adminRenderFwTasks(){
