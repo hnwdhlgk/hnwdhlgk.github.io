@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-31T11:30:59.296Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: ↗️九月宝库刷新来啦！"
+  },
+  {
     "time": "2026-08-31T11:30:52.022Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -790,13 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "无按钮"
-  },
-  {
-    "time": "2026-08-30T21:30:16.642Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
   }
 ]
