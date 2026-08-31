@@ -1658,11 +1658,22 @@ async function adminSaveFwConfig(){
     const result=document.getElementById('fwResult');
     if(result){result.style.display='';result.textContent='正在保存...';result.style.color='#64748b';}
     await wApi("/api/forward-config",{forward:window._adminFwConfig});
-    if(result){result.style.display='';result.textContent='✓ 转发设置已保存';result.style.color='#16a34a';}
-    setTimeout(()=>{if(result)result.style.display='none';},3000);
+    // 保存成功后以列表形式显示配置
+    const channels=window._adminFwConfig.channels||[];
+    let listHtml='<div style="color:#16a34a;font-weight:600;margin-bottom:8px">✓ 转发设置已保存（'+channels.length+'个任务，间隔'+interval+'分钟）</div>';
+    listHtml+='<ul style="margin:0;padding-left:20px;color:#475569;font-size:13px;line-height:1.8">';
+    channels.forEach((ch,i)=>{
+      const sources=Array.isArray(ch.sources)?ch.sources:(ch.source?[ch.source]:[]);
+      const srcText=sources.length?sources.map(s=>s.replace(/https?:\/\/t\.me\//,'@').split('?')[0]).join(', '):'未设置';
+      const tgtText=ch.target?ch.target.replace(/https?:\/\/t\.me\//,'@').split('?')[0]:'未设置';
+      listHtml+='<li>任务'+(i+1)+': '+srcText+' → '+tgtText+'</li>';
+    });
+    listHtml+='</ul>';
+    if(result){result.style.display='';result.innerHTML=listHtml;result.style.color='#16a34a';result.style.background='#f0fdf4';result.style.padding='12px';result.style.borderRadius='6px';result.style.border='1px solid #bbf7d0';}
+    setTimeout(()=>{if(result)result.style.display='none';},8000);
   }catch(e){
     const result=document.getElementById('fwResult');
-    if(result){result.style.display='';result.textContent='✗ 保存失败：'+e.message;result.style.color='#dc2626';}
+    if(result){result.style.display='';result.textContent='✗ 保存失败：'+e.message;result.style.color='#dc2626';result.style.background='';result.style.padding='';result.style.borderRadius='';result.style.border='';}
     else alert('保存失败：'+e.message);
   }
 }
