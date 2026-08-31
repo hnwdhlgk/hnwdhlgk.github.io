@@ -141,7 +141,7 @@
         "text_replace": ""
       }
     ],
-    "enabled": true,
-    "interval": 1
+    "enabled": false,
+    "interval": 5
   }
 }
