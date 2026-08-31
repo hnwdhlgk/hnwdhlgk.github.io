@@ -127,5 +127,19 @@
     "contact": "如@hainanguanlibot",
     "contact2": "如@hainanguanlibot",
     "contact3": "如@hainanguanlibot 切记要@开头"
+  },
+  "forward": {
+    "enabled": true,
+    "mode": "copy",
+    "channels": [
+      {
+        "source": "https://t.me/hainanhuisuo",
+        "target": "https://t.me/jiaoshouceshizhuanfa",
+        "bot_token": "8799802007:AAGFPGggxjDBvWb-4_fzc_rx8RpAFcIRpRo",
+        "mode": "copy",
+        "tag_map": "",
+        "batch_size": 10
+      }
+    ]
   }
 }
