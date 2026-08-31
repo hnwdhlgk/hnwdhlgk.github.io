@@ -1301,21 +1301,21 @@ window.saveTelegram=function(){
   try{
   if(window.collectTgMap)window.collectTgMap();
   CONFIG.telegram=CONFIG.telegram||{};
-  CONFIG.telegram.enabled=$('tg_enabled').value==='true';
-  CONFIG.telegram.ocr_api_key=$('tg_ocr_key').value.trim();
+  CONFIG.telegram.enabled=($('tg_enabled')&&$('tg_enabled').value==='true');
+  CONFIG.telegram.ocr_api_key=($('tg_ocr_key')?$('tg_ocr_key').value.trim():'');
   CONFIG.fetch_interval=parseInt($('tg_fetch_interval')?$('tg_fetch_interval').value:10)||10;
   // 收集多频道配置
   var channels=[];
-  window._tgChannels.forEach(function(ch,i){
+  (window._tgChannels||[]).forEach(function(ch,i){
     var tokenEl=$('tgc_token_'+i);if(!tokenEl)return;
     channels.push({
       bot_token:tokenEl.value.trim(),
-      channel:$('tgc_channel_'+i).value.trim(),
-      default_category:$('tgc_category_'+i).value.trim(),
-      default_status:$('tgc_status_'+i).value,
-      enabled:$('tgc_enabled_'+i).value==='true',
-      target_channel:$('tgc_target_channel_'+i).value.trim(),
-      target_bot_token:$('tgc_target_bot_token_'+i).value.trim(),
+      channel:($('tgc_channel_'+i)?$('tgc_channel_'+i).value.trim():''),
+      default_category:($('tgc_category_'+i)?$('tgc_category_'+i).value.trim():''),
+      default_status:($('tgc_status_'+i)?$('tgc_status_'+i).value:'pending'),
+      enabled:($('tgc_enabled_'+i)?$('tgc_enabled_'+i).value==='true':true),
+      target_channel:($('tgc_target_channel_'+i)?$('tgc_target_channel_'+i).value.trim():''),
+      target_bot_token:($('tgc_target_bot_token_'+i)?$('tgc_target_bot_token_'+i).value.trim():''),
       tag_maps:ch.tag_maps||[]
     });
   });
