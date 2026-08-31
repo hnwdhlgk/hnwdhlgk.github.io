@@ -2007,7 +2007,7 @@ function closeAdminModal(){
 
 // ====== 用户转发管理 ======
 let _editingUserForward = null;
-async function loadUserForwardList(){
+async async function loadUserForwardList(){
   try{
     const r = await fetch(CONFIG.worker_url + "/api/forward-config-all", {method:"GET"});
     const d = await r.json();
