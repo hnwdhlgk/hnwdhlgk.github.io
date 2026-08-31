@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-31T10:31:05.318Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "消息无法解析为有效兼职（标题无效）"
+  },
+  {
     "time": "2026-08-31T10:31:01.582Z",
     "type": "telegram",
     "channel": "@hainanchayi",
@@ -790,13 +798,5 @@
     "count": 19,
     "status": "success",
     "message": "抓取19个按钮"
-  },
-  {
-    "time": "2026-08-30T20:30:17.199Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
   }
 ]
