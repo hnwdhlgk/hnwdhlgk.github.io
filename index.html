@@ -692,7 +692,7 @@ async function loadOnDuty(){
     }).join("");
   }catch(e){if(section)section.style.display="none"}
 }
-async function init(){renderAuth();if(me)loadUserPerms();await loadConfig();if(WORKER_URL&&!sessionStorage.getItem("tracked_"+Date.now().toString().slice(0,10))){sessionStorage.setItem("tracked_"+Date.now().toString().slice(0,10),"1");wApi("/api/track-view",{}).catch(()=>{})}try{[categories,jobs]=await Promise.all([getJson("categories.json"),getJson("jobs.json")])}catch(e){categories=[];jobs=[]}jobs=jobs.filter(j=>j.status==="approved");/* 加载评论数量 */const commentCounts=await loadAllComments();jobs.forEach(j=>{j.commentCount=commentCounts[j.id]||0});renderAll();loadOnDuty()}
+async function init(){renderAuth();if(me)await loadUserPerms();await loadConfig();if(WORKER_URL&&!sessionStorage.getItem("tracked_"+Date.now().toString().slice(0,10))){sessionStorage.setItem("tracked_"+Date.now().toString().slice(0,10),"1");wApi("/api/track-view",{}).catch(()=>{})}try{[categories,jobs]=await Promise.all([getJson("categories.json"),getJson("jobs.json")])}catch(e){categories=[];jobs=[]}jobs=jobs.filter(j=>j.status==="approved");/* 加载评论数量 */const commentCounts=await loadAllComments();jobs.forEach(j=>{j.commentCount=commentCounts[j.id]||0});renderAll();loadOnDuty()}
 function renderHeroBtns(btns){
   var container=document.getElementById("heroBtns");
   if(!container)return;
@@ -994,7 +994,7 @@ function doLogout(){me=null;sessionStorage.removeItem("gh_me");renderAuth();show
 
 /* ====== 视图切换 ====== */
 function showPublic(){editingMineId=null;activeCat="all";activeSub="all";activeSub2="all";activeTags=[];document.getElementById("publicView").style.display="";document.getElementById("myView").style.display="none";init()}
-function showMyView(){document.getElementById("publicView").style.display="none";document.getElementById("myView").style.display="";renderAdminShortcuts();loadMine();checkAdmin()}
+async function showMyView(){document.getElementById("publicView").style.display="none";document.getElementById("myView").style.display="";if(me&&!window._userPerms)await loadUserPerms();renderAdminShortcuts();loadMine();checkAdmin()}
 let isAdmin=false;
 async function checkAdmin(){
   try{await wApi("/api/pending-jobs",{username:me});isAdmin=true;document.getElementById("adminPanel").style.display="";loadPending()}
