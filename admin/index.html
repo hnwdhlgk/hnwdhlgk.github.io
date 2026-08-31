@@ -355,8 +355,11 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
   <!-- 链接抓取 -->
   <div id="view-telegram-link" class="view">
     <div class="card"><h3>抓取指定链接 / 监控指定频道</h3>
-      <p class="muted">支持两种输入：①具体消息链接（如 https://t.me/hnwdhlgk/123）抓取单条消息；②频道主页链接（如 https://t.me/hnwdhlgk）自动抓取该频道最新消息。频道需为公开频道。</p>
-      <label>消息链接或频道链接</label><input id="tg_link" placeholder="https://t.me/频道名/消息ID 或 https://t.me/频道名">
+      <p class="muted">支持两种输入：①具体消息链接（如 https://t.me/hnwdhlgk/123）抓取单条消息；②频道主页链接（如 https://t.me/hnwdhlgk）自动抓取该频道最新消息。私有频道需配置Bot Token。</p>
+      <div class="row">
+        <div style="flex:2"><label>消息链接或频道链接</label><input id="tg_link" placeholder="https://t.me/频道名/消息ID 或 https://t.me/频道名" style="width:100%"></div>
+        <div><label>源频道Bot Token（可选，私有频道必填）</label><input id="tg_link_bot_token" placeholder="123456:ABC-DEF..." style="width:200px"></div>
+      </div>
       <div class="ops"><button onclick="fetchByLink()">抓取此消息</button><span id="tgLinkResult" class="muted" style="margin-left:10px"></span></div>
     </div>
     <div class="card" id="tgPreviewCard" style="display:none"><h3>抓取预览 <span class="muted" style="font-size:13px;font-weight:normal">确认无误后点击发布</span></h3>
