@@ -1,7 +1,7 @@
 [
   {
     "title": "🧚‍♀️ 丫丫",
-    "description": "<a href=\"https://t.me/hainanxiuche_bot?start=commentTeacher-TE178600356882\" target=\"_blank\" rel=\"noopener\">❣️     给丫丫写评价</a>\n<a href=\"https://t.me/hainanxiuche_bot?start=teacherComment-TE178600356882\" target=\"_blank\" rel=\"noopener\">❣️  查看老师所有评价</a>",
+    "description": "<a href=\"https://t.me/hainanxiuche_bot?start=commentTeacher-TE178600356882\" target=\"_blank\" rel=\"noopener\">❣️     给丫丫写评价</a>&nbsp;<div><br></div><div><a href=\"https://t.me/hainanxiuche_bot?start=teacherComment-TE178600356882\" target=\"_blank\" rel=\"noopener\">❣️  查看老师所有评价</a></div>",
     "salary": "95 6p 13pp",
     "location": "",
     "contact": "<a href=\"https://t.me/Looi255\" target=\"_blank\" rel=\"noopener\">@Looi255</a>",
@@ -21,7 +21,13 @@
     "created_at": "2026-08-31T08:42:10.372Z",
     "views": 0,
     "telegram_msg_id": 10278,
-    "telegram_channel": "hnwdhlgk"
+    "telegram_channel": "hnwdhlgk",
+    "contact_link": "",
+    "contact2_link": "",
+    "contact3_link": "",
+    "image_link": "",
+    "show_verified": true,
+    "verified": false
   },
   {
     "title": "🧚‍♀️ 依依",
