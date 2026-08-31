@@ -1544,9 +1544,12 @@ async function renderTgForwardPanel(){
   window._adminFwConfig=JSON.parse(JSON.stringify(fw));
   
   let html=`<div style="margin-bottom:16px">
-    <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
       <label style="display:flex;align-items:center;gap:6px;font-size:14px">
         <input type="checkbox" id="fwEnabled" ${fw.enabled?"checked":""}> 启用自动转发
+      </label>
+      <label style="display:flex;align-items:center;gap:6px;font-size:14px">
+        转发间隔(分钟): <input type="number" id="fwInterval" value="${fw.interval||5}" min="1" max="1440" style="width:80px;padding:6px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px">
       </label>
       <button class="btn-primary" onclick="adminTestForward()">立即测试转发</button>
     </div>
@@ -1649,7 +1652,9 @@ function adminRemoveFwSource(i,j){
 async function adminSaveFwConfig(){
   try{
     const enabled=document.getElementById('fwEnabled')?document.getElementById('fwEnabled').checked:false;
+    const interval=document.getElementById('fwInterval')?parseInt(document.getElementById('fwInterval').value)||5:5;
     window._adminFwConfig.enabled=enabled;
+    window._adminFwConfig.interval=interval;
     await wApi("/api/admin/save-config",{username:me,key:"forward",value:window._adminFwConfig});
     const result=document.getElementById('fwResult');
     if(result){result.style.display='';result.textContent='✓ 转发设置已保存';result.style.color='#16a34a';}
