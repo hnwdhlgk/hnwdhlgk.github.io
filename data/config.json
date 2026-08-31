@@ -129,18 +129,19 @@
     "contact3": "如@hainanguanlibot 切记要@开头"
   },
   "forward": {
-    "enabled": true,
-    "mode": "copy",
     "channels": [
       {
-        "source": "https://t.me/hainanhuisuo",
+        "sources": [
+          "https://t.me/hainanhuisuo"
+        ],
         "target": "https://t.me/jiaoshouceshizhuanfa",
         "bot_token": "8799802007:AAGFPGggxjDBvWb-4_fzc_rx8RpAFcIRpRo",
-        "mode": "copy",
+        "batch_size": 3,
         "tag_map": "",
-        "batch_size": 1,
-        "text_replace": "@HaiKouShi:@hainanxiuche_bot"
+        "text_replace": ""
       }
-    ]
+    ],
+    "enabled": true,
+    "interval": 1
   }
 }
