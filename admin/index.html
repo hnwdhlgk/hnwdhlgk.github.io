@@ -388,7 +388,8 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
     <div class="card"><h3>频道内容转发</h3>
       <p class="muted">设置源频道/群组，自动将内容1:1复制或按标签映射后转发到目标频道/群组。目标频道的Bot需设为管理员。</p>
       <div class="row"><div><label>启用转发</label><select id="fw_enabled"><option value="false">关闭</option><option value="true">开启</option></select></div>
-      <div><label>转发模式</label><select id="fw_mode"><option value="copy">1:1原样复制</option><option value="map">标签映射后转发</option></select></div></div>
+      <div><label>转发模式</label><select id="fw_mode"><option value="copy">1:1原样复制</option><option value="map">标签映射后转发</option></select></div>
+      <div><label>转发间隔（分钟）</label><input id="fw_interval" type="number" value="5" min="1" max="1440" placeholder="5"></div></div>
       <div id="fwChannelsList" style="margin:16px 0"></div>
       <div style="margin-top:16px;padding-top:16px;border-top:1px solid #e2e8f0">
         <label><b>手动转发指定消息</b></label>
@@ -1300,6 +1301,7 @@ var FW_CONFIG={channels:[]};
 window.renderForward=function(){
   var cfg=CONFIG.forward||{};
   if($('fw_enabled'))$('fw_enabled').value=cfg.enabled?'true':'false';
+  if($('fw_interval'))$('fw_interval').value=cfg.interval||5;
   FW_CONFIG.channels=cfg.channels||[];
   if(FW_CONFIG.channels.length===0){
     FW_CONFIG.channels.push({sources:[''],target:'',source_bot_token:'',bot_token:'',batch_size:3,tag_map:'',text_replace:''});
@@ -1355,7 +1357,7 @@ window.removeFwChannel=function(i){
 }
 window.saveForward=function(){
   stat('正在保存转发设置…','wait');
-  var cfg={enabled:$('fw_enabled').value==='true',mode:$('fw_mode').value,channels:FW_CONFIG.channels};
+  var cfg={enabled:$('fw_enabled').value==='true',mode:$('fw_mode').value,interval:parseInt($('fw_interval').value)||5,channels:FW_CONFIG.channels};
   fetch(CONFIG.worker_url+'/api/forward-config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({forward:cfg})}).then(function(r){return r.json()}).then(function(d){
     if(d.ok){stat('转发设置已保存','ok');CONFIG.forward=cfg;loadAll();}
     else stat('保存失败：'+(d.message||d.error),'err');
