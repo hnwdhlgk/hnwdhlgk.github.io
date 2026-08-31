@@ -629,7 +629,7 @@ function sub2Name(catSlug,subSlug,sub2Slug){
 }
 
 async function getJson(f){const r=await fetch("./data/"+f+"?v="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error(r.status);return r.json()}
-async async function loadConfig(){try{const c=await getJson("config.json");cfg=Object.assign({},DEFAULTS,c);WORKER_URL=c.worker_url||""}catch(e){cfg=DEFAULTS}
+async function loadConfig(){try{const c=await getJson("config.json");cfg=Object.assign({},DEFAULTS,c);WORKER_URL=c.worker_url||""}catch(e){cfg=DEFAULTS}
   document.title=cfg.site_title||DEFAULTS.site_title;
   document.getElementById("brandTitle").textContent=cfg.site_title||DEFAULTS.site_title;
   document.getElementById("heroSub").textContent=cfg.site_subtitle||DEFAULTS.site_subtitle;
