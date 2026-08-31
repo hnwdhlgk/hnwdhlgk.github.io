@@ -83,6 +83,7 @@
       "tg.channels",
       "tg.link",
       "tg.forward"
-    ]
+    ],
+    "role": "admin"
   }
 ]
