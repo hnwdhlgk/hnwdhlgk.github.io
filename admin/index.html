@@ -1238,6 +1238,52 @@ window.saveTelegram=function(){
 }
 var _tgPreview=null;
 // 在岗老师多频道管理
+// 频道转发配置
+var FW_CONFIG={channels:[]};
+window.renderForward=function(){
+  var cfg=CONFIG.forward||{};
+  if($('fw_enabled'))$('fw_enabled').value=cfg.enabled?'true':'false';
+  if($('fw_mode'))$('fw_mode').value=cfg.mode||'copy';
+  FW_CONFIG.channels=cfg.channels||[];
+  var html='';
+  (FW_CONFIG.channels||[]).forEach(function(ch,i){
+    html+='<div class="channel-item" style="border:1px solid #e2e8f0;border-radius:8px;padding:12px;margin-bottom:10px">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'+
+      '<b>转发任务 '+(i+1)+'</b>'+
+      '<button class="danger" onclick="removeFwChannel('+i+')" style="background:#b3261e;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer">删除</button></div>'+
+      '<div class="row"><div><label>源频道/群组链接</label><input value="'+esc(ch.source||'')+'" placeholder="https://t.me/频道名" onchange="FW_CONFIG.channels['+i+'].source=this.value"></div>'+
+      '<div><label>目标频道/群组链接</label><input value="'+esc(ch.target||'')+'" placeholder="https://t.me/频道名" onchange="FW_CONFIG.channels['+i+'].target=this.value"></div></div>'+
+      '<div class="row"><div><label>目标Bot Token</label><input value="'+esc(ch.bot_token||'')+'" placeholder="123456:ABC-DEF..." style="width:100%" onchange="FW_CONFIG.channels['+i+'].bot_token=this.value"></div>'+
+      '<div><label>转发模式</label><select onchange="FW_CONFIG.channels['+i+'].mode=this.value;renderForward()"><option value="copy"'+(ch.mode==='copy'?' selected':'')+'>1:1原样复制</option><option value="map"'+(ch.mode==='map'?' selected':'')+'>标签映射</option></select></div></div>'+
+      (ch.mode==='map'?'<div><label>标签映射（源标签:目标标签，每行一个）</label><textarea rows="3" style="width:100%" placeholder="#嫩妹:#清纯&#xA;#御姐:#性感" onchange="FW_CONFIG.channels['+i+'].tag_map=this.value">'+esc(ch.tag_map||'')+'</textarea></div>':'')+
+      '</div>';
+  });
+  if($('fwChannelsList'))$('fwChannelsList').innerHTML=html||'<p class="muted">暂无转发任务，点击下方按钮添加</p>';
+}
+window.addFwChannel=function(){
+  FW_CONFIG.channels.push({source:'',target:'',bot_token:'',mode:'copy',tag_map:''});
+  renderForward();
+}
+window.removeFwChannel=function(i){
+  FW_CONFIG.channels.splice(i,1);
+  renderForward();
+}
+window.saveForward=function(){
+  stat('正在保存转发设置…','wait');
+  var cfg={enabled:$('fw_enabled').value==='true',mode:$('fw_mode').value,channels:FW_CONFIG.channels};
+  wApi('/api/forward-config',{forward:cfg}).then(function(d){
+    if(d.ok){stat('转发设置已保存','ok');CONFIG.forward=cfg;loadAll();}
+    else stat('保存失败：'+(d.message||d.error),'err');
+  }).catch(function(e){stat('保存失败：'+e.message,'err')});
+}
+window.testForwardNow=function(){
+  stat('正在测试转发…','wait');
+  wApi('/api/forward-test',{}).then(function(d){
+    if(d.ok){stat('转发测试完成','ok');if($('fwResult'))$('fwResult').textContent=d.message||'';}
+    else stat('转发失败：'+(d.message||d.error),'err');
+  }).catch(function(e){stat('转发失败：'+e.message,'err')});
+}
+
 window._odChannels=[];
 function renderOdChannels(){
   var od=CONFIG.on_duty||{};
