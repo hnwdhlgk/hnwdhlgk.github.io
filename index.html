@@ -1399,18 +1399,25 @@ window.adminSaveConfig=async function(){
   alert('配置已保存');
 };
 async function renderAdminTelegram(){
-  // 子菜单导航
-  let html=`<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;border-bottom:1px solid #e2e8f0;padding-bottom:12px">
-    <button class="tg-submenu-btn active" data-sub="channels" onclick="switchTgSubmenu('channels')" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:13px">多频道抓取</button>
-    <button class="tg-submenu-btn" data-sub="onduty" onclick="switchTgSubmenu('onduty')" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:13px">在岗老师</button>
-    <button class="tg-submenu-btn" data-sub="link" onclick="switchTgSubmenu('link')" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:13px">链接抓取</button>
-    <button class="tg-submenu-btn" data-sub="tagmap" onclick="switchTgSubmenu('tagmap')" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:13px">标签映射</button>
-    <button class="tg-submenu-btn" data-sub="forward" onclick="switchTgSubmenu('forward')" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:13px">频道转发</button>
-    <button class="tg-submenu-btn" data-sub="logs" onclick="switchTgSubmenu('logs')" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:13px">抓取日志</button>
-  </div>
-  <div id="tgSubmenuContent"></div>`;
+  // 子菜单导航（根据权限显示）
+  let btns=[];
+  if(hasPerm('tg.channels'))btns.push({key:'channels',label:'多频道抓取'});
+  if(hasPerm('tg.onduty'))btns.push({key:'onduty',label:'在岗老师'});
+  if(hasPerm('tg.link'))btns.push({key:'link',label:'链接抓取'});
+  if(hasPerm('tg.tagmap'))btns.push({key:'tagmap',label:'标签映射'});
+  if(hasPerm('tg.forward'))btns.push({key:'forward',label:'频道转发'});
+  if(hasPerm('tg.logs'))btns.push({key:'logs',label:'抓取日志'});
+  if(btns.length===0){
+    document.getElementById("adminPanels").innerHTML='<p style="color:var(--muted);padding:20px;text-align:center">您没有Telegram抓取相关权限</p>';
+    return;
+  }
+  let html=`<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;border-bottom:1px solid #e2e8f0;padding-bottom:12px">`;
+  btns.forEach((b,i)=>{
+    html+=`<button class="tg-submenu-btn ${i===0?'active':''}" data-sub="${b.key}" onclick="switchTgSubmenu('${b.key}')" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:6px;background:${i===0?'#0d47a1':'#fff'};color:${i===0?'#fff':'#1e293b'};cursor:pointer;font-size:13px">${b.label}</button>`;
+  });
+  html+=`</div><div id="tgSubmenuContent"></div>`;
   document.getElementById("adminPanels").innerHTML=html;
-  switchTgSubmenu('channels');
+  switchTgSubmenu(btns[0].key);
 }
 
 window._tgCurrentSub='channels';
