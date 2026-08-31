@@ -1517,7 +1517,7 @@ async function renderTgTagmapPanel(){
 }
 
 // 频道转发面板
-async async function renderTgForwardPanel(){
+async function renderTgForwardPanel(){
   let cfg={};
   try{const r=await wApi("/api/admin/config",{username:me});cfg=r.config||{};}catch(e){cfg={};}
   const fw=cfg.forward||{};
