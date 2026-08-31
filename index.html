@@ -973,34 +973,21 @@ function hasPerm(key){
 function renderAdminShortcuts(){
   const box=document.getElementById("adminShortcuts");
   if(!box)return;
-  let html='';
-  // 概览统计：所有登录用户可见
-  html+='<button class="shortcut-item" onclick="showAdminPanel('dashboard')"><span class="shortcut-ic">📊</span><span>概览统计</span></button>';
-  // 分类管理
-  if(hasPerm('settings')||hasPerm('jobs.view')){
-    html+='<button class="shortcut-item" onclick="showAdminPanel('categories')"><span class="shortcut-ic">📁</span><span>分类管理</span></button>';
-  }
-  // 兼职管理
-  if(hasPerm('jobs.view')||hasPerm('jobs.edit')||hasPerm('jobs.delete')||hasPerm('jobs.approve')){
-    html+='<button class="shortcut-item" onclick="showAdminPanel('jobs')"><span class="shortcut-ic">📋</span><span>兼职管理</span></button>';
-  }
-  // 站点配置
-  if(hasPerm('settings')){
-    html+='<button class="shortcut-item" onclick="showAdminPanel('config')"><span class="shortcut-ic">⚙️</span><span>站点配置</span></button>';
-  }
-  // 用户管理
-  if(hasPerm('users.view')||hasPerm('users.edit')||hasPerm('users.delete')){
-    html+='<button class="shortcut-item" onclick="showAdminPanel('users')"><span class="shortcut-ic">👥</span><span>用户管理</span></button>';
-  }
-  // Telegram抓取（只要有任意tg权限就显示）
-  if(hasPerm('tg.channels')||hasPerm('tg.onduty')||hasPerm('tg.link')||hasPerm('tg.tagmap')||hasPerm('tg.forward')||hasPerm('tg.logs')){
-    html+='<button class="shortcut-item" onclick="showAdminPanel('telegram')"><span class="shortcut-ic">✈️</span><span>Telegram抓取</span></button>';
-  }
-  // 抓取日志
-  if(hasPerm('tg.logs')){
-    html+='<button class="shortcut-item" onclick="showAdminPanel('logs')"><span class="shortcut-ic">📜</span><span>抓取日志</span></button>';
-  }
-  box.innerHTML=html;
+  let items=[];
+  items.push({icon:"📊",label:"概览统计",panel:"dashboard",show:true});
+  items.push({icon:"📁",label:"分类管理",panel:"categories",show:hasPerm("settings")||hasPerm("jobs.view")});
+  items.push({icon:"📋",label:"兼职管理",panel:"jobs",show:hasPerm("jobs.view")||hasPerm("jobs.edit")||hasPerm("jobs.delete")||hasPerm("jobs.approve")});
+  items.push({icon:"⚙️",label:"站点配置",panel:"config",show:hasPerm("settings")});
+  items.push({icon:"👥",label:"用户管理",panel:"users",show:hasPerm("users.view")||hasPerm("users.edit")||hasPerm("users.delete")});
+  items.push({icon:"✈️",label:"Telegram抓取",panel:"telegram",show:hasPerm("tg.channels")||hasPerm("tg.onduty")||hasPerm("tg.link")||hasPerm("tg.tagmap")||hasPerm("tg.forward")||hasPerm("tg.logs")});
+  items.push({icon:"📜",label:"抓取日志",panel:"logs",show:hasPerm("tg.logs")});
+  let h="";
+  items.forEach(function(it){
+    if(it.show){
+      h+='<button class="shortcut-item" onclick="showAdminPanel(\''+it.panel+'\')"><span class="shortcut-ic">'+it.icon+'</span><span>'+it.label+'</span></button>';
+    }
+  });
+  box.innerHTML=h;
 }
 
 function doLogout(){me=null;sessionStorage.removeItem("gh_me");renderAuth();showPublic()}
