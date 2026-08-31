@@ -2004,6 +2004,99 @@ function closeAdminModal(){
   if(mask)mask.style.display='none';
 }
 
+
+// ====== 用户转发管理 ======
+let _editingUserForward = null;
+async function loadUserForwardList(){
+  try{
+    const adminUser = localStorage.getItem("admin_user") || "";
+    const r = await fetch(CONFIG.worker_url + "/api/forward-config-all?admin=" + encodeURIComponent(adminUser), {method:"GET"});
+    const d = await r.json();
+    if(d.error) throw new Error(d.error);
+    const list = d.list || [];
+    const container = document.getElementById("userForwardList");
+    if(list.length === 0){
+      container.innerHTML = '<p class="muted">暂无用户配置转发任务</p>';
+      return;
+    }
+    let html = '<table style="width:100%;border-collapse:collapse;font-size:14px">';
+    html += '<thead><tr style="background:#f1f5f9;text-align:left">';
+    html += '<th style="padding:10px;border-bottom:2px solid #e2e8f0">用户名</th>';
+    html += '<th style="padding:10px;border-bottom:2px solid #e2e8f0">状态</th>';
+    html += '<th style="padding:10px;border-bottom:2px solid #e2e8f0">间隔</th>';
+    html += '<th style="padding:10px;border-bottom:2px solid #e2e8f0">任务数</th>';
+    html += '<th style="padding:10px;border-bottom:2px solid #e2e8f0">已转发</th>';
+    html += '<th style="padding:10px;border-bottom:2px solid #e2e8f0">上次执行</th>';
+    html += '<th style="padding:10px;border-bottom:2px solid #e2e8f0">操作</th>';
+    html += '</tr></thead><tbody>';
+    list.forEach(item => {
+      const lastTime = item.last_forward ? new Date(item.last_forward).toLocaleString("zh-CN") : "从未执行";
+      html += '<tr style="border-bottom:1px solid #f1f5f9">';
+      html += '<td style="padding:10px"><b>' + item.username + '</b> <span style="color:#94a3b8;font-size:12px">(' + item.role + ')</span></td>';
+      html += '<td style="padding:10px"><span style="color:' + (item.enabled ? '#16a34a' : '#dc2626') + '">' + (item.enabled ? '● 运行中' : '○ 已关闭') + '</span></td>';
+      html += '<td style="padding:10px">' + item.interval + '分钟</td>';
+      html += '<td style="padding:10px">' + item.task_count + '</td>';
+      html += '<td style="padding:10px">' + item.total_forwarded + '</td>';
+      html += '<td style="padding:10px;font-size:12px;color:#64748b">' + lastTime + '</td>';
+      html += '<td style="padding:10px"><button onclick="editUserForward(\'' + item.username + '\')" style="padding:4px 12px;background:#0f766e;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px">编辑</button></td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    container.innerHTML = html;
+  }catch(e){
+    document.getElementById("userForwardList").innerHTML = '<p style="color:#dc2626">加载失败：' + e.message + '</p>';
+  }
+}
+function editUserForward(username){
+  _editingUserForward = username;
+  document.getElementById("ufModalTitle").textContent = "编辑用户 " + username + " 的转发配置";
+  const body = document.getElementById("ufModalBody");
+  body.innerHTML = "加载中...";
+  document.getElementById("userForwardModal").style.display = "flex";
+  // 加载用户配置
+  fetch(CONFIG.worker_url + "/api/forward-config?username=" + encodeURIComponent(username), {method:"GET"})
+    .then(r => r.json())
+    .then(d => {
+      const fw = d.forward || {};
+      let html = '<div style="margin-bottom:12px"><label style="display:block;margin-bottom:6px;font-weight:600">启用自动转发</label>';
+      html += '<select id="uf_enabled" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px"><option value="true"' + (fw.enabled?' selected':'') + '>开启</option><option value="false"' + (!fw.enabled?' selected':'') + '>关闭</option></select></div>';
+      html += '<div style="margin-bottom:12px"><label style="display:block;margin-bottom:6px;font-weight:600">转发间隔（分钟）</label>';
+      html += '<input id="uf_interval" type="number" value="' + (fw.interval || 5) + '" min="1" max="1440" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px"></div>';
+      html += '<div style="margin-bottom:12px"><label style="display:block;margin-bottom:6px;font-weight:600">转发任务（JSON格式）</label>';
+      html += '<p class="muted" style="font-size:12px;margin:0 0 6px">直接编辑channels数组，每个任务包含sources(源频道数组)、target(目标频道)、bot_token(目标Bot Token)、batch_size、tag_map、text_replace等字段</p>';
+      html += '<textarea id="uf_channels" rows="12" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-family:monospace;font-size:12px">' + JSON.stringify(fw.channels || [], null, 2) + '</textarea></div>';
+      body.innerHTML = html;
+    })
+    .catch(e => { body.innerHTML = '<p style="color:#dc2626">加载失败：' + e.message + '</p>'; });
+}
+function closeUserForwardModal(){
+  document.getElementById("userForwardModal").style.display = "none";
+  _editingUserForward = null;
+}
+async function saveUserForwardConfig(){
+  if(!_editingUserForward) return;
+  try{
+    const adminUser = localStorage.getItem("admin_user") || "";
+    const channels = JSON.parse(document.getElementById("uf_channels").value);
+    const forward = {
+      enabled: document.getElementById("uf_enabled").value === "true",
+      interval: parseInt(document.getElementById("uf_interval").value) || 5,
+      channels: channels
+    };
+    const r = await fetch(CONFIG.worker_url + "/api/forward-config-admin", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({admin: adminUser, username: _editingUserForward, forward: forward})
+    });
+    const d = await r.json();
+    if(d.error) throw new Error(d.error);
+    alert("保存成功！");
+    closeUserForwardModal();
+    loadUserForwardList();
+  }catch(e){
+    alert("保存失败：" + e.message);
+  }
+}
 </script>
 
 <!-- 通用弹窗 -->
