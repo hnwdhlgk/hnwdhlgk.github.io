@@ -692,7 +692,7 @@ async function loadOnDuty(){
     }).join("");
   }catch(e){if(section)section.style.display="none"}
 }
-async async function init(){renderAuth();if(me)await loadUserPerms();await loadConfig();if(WORKER_URL&&!sessionStorage.getItem("tracked_"+Date.now().toString().slice(0,10))){sessionStorage.setItem("tracked_"+Date.now().toString().slice(0,10),"1");wApi("/api/track-view",{}).catch(()=>{})}try{[categories,jobs]=await Promise.all([getJson("categories.json"),getJson("jobs.json")])}catch(e){categories=[];jobs=[]}jobs=jobs.filter(j=>j.status==="approved");/* 加载评论数量 */const commentCounts=await loadAllComments();jobs.forEach(j=>{j.commentCount=commentCounts[j.id]||0});renderAll();loadOnDuty()}
+async function init(){renderAuth();if(me)await loadUserPerms();await loadConfig();if(WORKER_URL&&!sessionStorage.getItem("tracked_"+Date.now().toString().slice(0,10))){sessionStorage.setItem("tracked_"+Date.now().toString().slice(0,10),"1");wApi("/api/track-view",{}).catch(()=>{})}try{[categories,jobs]=await Promise.all([getJson("categories.json"),getJson("jobs.json")])}catch(e){categories=[];jobs=[]}jobs=jobs.filter(j=>j.status==="approved");/* 加载评论数量 */const commentCounts=await loadAllComments();jobs.forEach(j=>{j.commentCount=commentCounts[j.id]||0});renderAll();loadOnDuty()}
 function renderHeroBtns(btns){
   var container=document.getElementById("heroBtns");
   if(!container)return;
