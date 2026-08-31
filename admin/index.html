@@ -367,6 +367,14 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       <div class="row"><div><label>启用转发</label><select id="fw_enabled"><option value="false">关闭</option><option value="true">开启</option></select></div>
       <div><label>转发模式</label><select id="fw_mode"><option value="copy">1:1原样复制</option><option value="map">标签映射后转发</option></select></div></div>
       <div id="fwChannelsList" style="margin:16px 0"></div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid #e2e8f0">
+        <label><b>手动转发指定消息</b></label>
+        <div class="row">
+          <div style="flex:2"><input id="fw_manual_link" placeholder="https://t.me/频道名/消息ID" style="width:100%"></div>
+          <div><button onclick="manualForward()">转发此消息</button></div>
+        </div>
+        <p class="muted" style="margin-top:6px">支持私有频道消息（需配置源频道Bot Token）。1:1复制包含超链接、图片、视频、文本格式。</p>
+      </div>
       <div class="ops">
         <button class="ghost" onclick="addFwChannel()">+ 添加转发任务</button>
         <button onclick="saveForward()">保存转发设置</button>
@@ -1298,6 +1306,15 @@ window.saveForward=function(){
     if(d.ok){stat('转发设置已保存','ok');CONFIG.forward=cfg;loadAll();}
     else stat('保存失败：'+(d.message||d.error),'err');
   }).catch(function(e){stat('保存失败：'+e.message,'err')});
+}
+window.manualForward=function(){
+  var link=$('fw_manual_link').value.trim();
+  if(!link){alert('请输入消息链接');return;}
+  stat('正在转发指定消息…','wait');
+  fetch(CONFIG.worker_url+'/api/forward-manual',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({link:link,channels:FW_CONFIG.channels})}).then(function(r){return r.json()}).then(function(d){
+    if(d.ok){stat('转发成功：'+(d.message||''),'ok');$('fwResult').textContent=d.message||'';}
+    else stat('转发失败：'+(d.message||d.error),'err');
+  }).catch(function(e){stat('转发失败：'+e.message,'err')});
 }
 window.testForwardNow=function(){
   stat('正在测试转发…','wait');
