@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-31T09:31:04.496Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 13,
+    "status": "success",
+    "message": "抓取13个按钮"
+  },
+  {
     "time": "2026-08-31T09:31:01.728Z",
     "type": "telegram",
     "channel": "@hainanchayi",
@@ -790,13 +798,5 @@
     "count": 1,
     "status": "success",
     "message": "指定链接抓取1条兼职: 👆  <a href=\"https://t.me/HaiNanXObot?start=ugc_-1002560770194_good_feier099\" target=\"_blank\" rel=\"noopener\">【点击查看评价】</a>"
-  },
-  {
-    "time": "2026-08-30T19:35:24.891Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "抓取1条新兼职(网页抓取)"
   }
 ]
