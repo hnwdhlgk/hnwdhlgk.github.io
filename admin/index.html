@@ -1294,14 +1294,14 @@ window.removeFwChannel=function(i){
 window.saveForward=function(){
   stat('正在保存转发设置…','wait');
   var cfg={enabled:$('fw_enabled').value==='true',mode:$('fw_mode').value,channels:FW_CONFIG.channels};
-  wApi('/api/forward-config',{forward:cfg}).then(function(d){
+  fetch(CONFIG.worker_url+'/api/forward-config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({forward:cfg})}).then(function(r){return r.json()}).then(function(d){
     if(d.ok){stat('转发设置已保存','ok');CONFIG.forward=cfg;loadAll();}
     else stat('保存失败：'+(d.message||d.error),'err');
   }).catch(function(e){stat('保存失败：'+e.message,'err')});
 }
 window.testForwardNow=function(){
   stat('正在测试转发…','wait');
-  wApi('/api/forward-test',{}).then(function(d){
+  fetch(CONFIG.worker_url+'/api/forward-test',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({})}).then(function(r){return r.json()}).then(function(d){
     if(d.ok){stat('转发测试完成','ok');if($('fwResult'))$('fwResult').textContent=d.message||'';}
     else stat('转发失败：'+(d.message||d.error),'err');
   }).catch(function(e){stat('转发失败：'+e.message,'err')});
