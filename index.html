@@ -1350,20 +1350,48 @@ window.adminSaveConfig=async function(){
   alert('配置已保存');
 };
 async function renderAdminTelegram(){
-  // 加载当前配置
+  // 子菜单导航
+  let html=`<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;border-bottom:1px solid #e2e8f0;padding-bottom:12px">
+    <button class="tg-submenu-btn active" data-sub="channels" onclick="switchTgSubmenu('channels')" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:13px">多频道抓取</button>
+    <button class="tg-submenu-btn" data-sub="onduty" onclick="switchTgSubmenu('onduty')" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:13px">在岗老师</button>
+    <button class="tg-submenu-btn" data-sub="link" onclick="switchTgSubmenu('link')" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:13px">链接抓取</button>
+    <button class="tg-submenu-btn" data-sub="tagmap" onclick="switchTgSubmenu('tagmap')" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:13px">标签映射</button>
+    <button class="tg-submenu-btn" data-sub="forward" onclick="switchTgSubmenu('forward')" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:13px">频道转发</button>
+    <button class="tg-submenu-btn" data-sub="logs" onclick="switchTgSubmenu('logs')" style="padding:8px 16px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:13px">抓取日志</button>
+  </div>
+  <div id="tgSubmenuContent"></div>`;
+  document.getElementById("adminPanels").innerHTML=html;
+  switchTgSubmenu('channels');
+}
+
+window._tgCurrentSub='channels';
+window.switchTgSubmenu=function(sub){
+  window._tgCurrentSub=sub;
+  // 更新按钮状态
+  document.querySelectorAll('.tg-submenu-btn').forEach(function(btn){
+    if(btn.dataset.sub===sub){
+      btn.style.background='#0d47a1';btn.style.color='#fff';btn.style.borderColor='#0d47a1';
+    }else{
+      btn.style.background='#fff';btn.style.color='#1e293b';btn.style.borderColor='#e2e8f0';
+    }
+  });
+  const content=document.getElementById('tgSubmenuContent');
+  if(sub==='channels') renderTgChannelsPanel();
+  else if(sub==='onduty') renderTgOnDutyPanel();
+  else if(sub==='link') renderTgLinkPanel();
+  else if(sub==='tagmap') renderTgTagmapPanel();
+  else if(sub==='forward') renderTgForwardPanel();
+  else if(sub==='logs') renderTgLogsPanel();
+}
+
+// 多频道抓取面板
+async function renderTgChannelsPanel(){
   let cfg={};
-  try{
-    const r=await wApi("/api/admin/config",{username:me});
-    cfg=r.config||{};
-  }catch(e){cfg={};}
+  try{const r=await wApi("/api/admin/config",{username:me});cfg=r.config||{};}catch(e){cfg={};}
   const tg=cfg.telegram||{};
-  // 兼容旧配置
   let channels=[];
-  if(Array.isArray(tg.channels)&&tg.channels.length>0){
-    channels=tg.channels;
-  }else if(tg.bot_token&&tg.channel){
-    channels=[{bot_token:tg.bot_token,channel:tg.channel,default_category:tg.default_category||"personal",default_status:tg.default_status||"pending",enabled:true}];
-  }
+  if(Array.isArray(tg.channels)&&tg.channels.length>0){channels=tg.channels;}
+  else if(tg.bot_token&&tg.channel){channels=[{bot_token:tg.bot_token,channel:tg.channel,default_category:tg.default_category||"personal",default_status:tg.default_status||"pending",enabled:true}];}
   window._adminTgChannels=JSON.parse(JSON.stringify(channels));
   window._adminTgEnabled=tg.enabled!==false;
 
@@ -1382,10 +1410,119 @@ async function renderAdminTelegram(){
     <button class="btn-ghost" onclick="adminAddTgChannel()">+ 添加频道</button>
     <button class="btn-primary" onclick="adminSaveTgConfig()">保存配置</button>
   </div>
-  <p style="color:var(--muted);font-size:12px;margin-top:8px">每个频道使用独立的Bot Token，Bot需设为对应频道的管理员。标签映射规则请在完整后台 admin/ 配置。</p>`;
-  document.getElementById("adminPanels").innerHTML=html;
+  <p style="color:var(--muted);font-size:12px;margin-top:8px">每个频道使用独立的Bot Token，Bot需设为对应频道的管理员。</p>`;
+  document.getElementById("tgSubmenuContent").innerHTML=html;
   adminRenderTgChannels();
 }
+
+// 在岗老师面板
+async function renderTgOnDutyPanel(){
+  let cfg={};
+  try{const r=await wApi("/api/admin/config",{username:me});cfg=r.config||{};}catch(e){cfg={};}
+  const od=cfg.on_duty||{};
+  const channels=od.channels||[];
+  window._adminOdChannels=JSON.parse(JSON.stringify(channels));
+  
+  let html=`<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+    <button class="btn-primary" onclick="adminFetchOnDutyAll()">立即抓取全部</button>
+    <label style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:14px">
+      <input type="checkbox" id="odEnabled" ${od.enabled!==false?"checked":""}> 启用自动抓取
+    </label>
+  </div>
+  <div id="odResult" class="notice" style="display:none"></div>
+  <h4 style="margin:16px 0 10px">在岗老师频道配置</h4>
+  <div id="odChannelsList"></div>
+  <div style="margin:12px 0;display:flex;gap:10px">
+    <button class="btn-ghost" onclick="adminAddOdChannel()">+ 添加频道</button>
+    <button class="btn-primary" onclick="adminSaveOdConfig()">保存配置</button>
+  </div>`;
+  document.getElementById("tgSubmenuContent").innerHTML=html;
+  adminRenderOdChannels();
+}
+
+// 链接抓取面板
+function renderTgLinkPanel(){
+  let html=`<div style="margin-bottom:16px">
+    <h4 style="margin:0 0 10px">抓取指定链接</h4>
+    <p style="color:var(--muted);font-size:13px;margin:0 0 12px">输入Telegram消息链接，抓取为兼职信息</p>
+    <div style="display:flex;gap:10px">
+      <input id="tgLinkInput" placeholder="https://t.me/频道名/消息ID" style="flex:1;padding:10px;border:1px solid #cbd5e1;border-radius:6px;font-size:14px">
+      <button class="btn-primary" onclick="adminFetchLink()">抓取</button>
+    </div>
+    <div id="tgLinkResult" class="notice" style="display:none;margin-top:12px"></div>
+  </div>`;
+  document.getElementById("tgSubmenuContent").innerHTML=html;
+}
+
+// 标签映射面板
+async function renderTgTagmapPanel(){
+  let cfg={};
+  try{const r=await wApi("/api/admin/config",{username:me});cfg=r.config||{};}catch(e){cfg={};}
+  const tagMap=cfg.tag_map||{};
+  window._adminTagMap=JSON.parse(JSON.stringify(tagMap));
+  
+  let html=`<div style="margin-bottom:16px">
+    <h4 style="margin:0 0 10px">标签映射规则</h4>
+    <p style="color:var(--muted);font-size:13px;margin:0 0 12px">设置抓取到的标签自动映射为网站标签</p>
+    <div id="tagMapList"></div>
+    <div style="margin:12px 0;display:flex;gap:10px">
+      <button class="btn-ghost" onclick="adminAddTagMap()">+ 添加映射</button>
+      <button class="btn-primary" onclick="adminSaveTagMap()">保存映射</button>
+    </div>
+  </div>`;
+  document.getElementById("tgSubmenuContent").innerHTML=html;
+  adminRenderTagMap();
+}
+
+// 频道转发面板
+async function renderTgForwardPanel(){
+  let cfg={};
+  try{const r=await wApi("/api/admin/config",{username:me});cfg=r.config||{};}catch(e){cfg={};}
+  const fw=cfg.forward||{};
+  window._adminFwConfig=JSON.parse(JSON.stringify(fw));
+  
+  let html=`<div style="margin-bottom:16px">
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">
+      <label style="display:flex;align-items:center;gap:6px;font-size:14px">
+        <input type="checkbox" id="fwEnabled" ${fw.enabled?"checked":""}> 启用自动转发
+      </label>
+      <button class="btn-primary" onclick="adminTestForward()">立即测试转发</button>
+    </div>
+    <h4 style="margin:16px 0 10px">转发任务配置</h4>
+    <div id="fwList"></div>
+    <div style="margin:12px 0;display:flex;gap:10px">
+      <button class="btn-ghost" onclick="adminAddFwTask()">+ 添加转发任务</button>
+      <button class="btn-primary" onclick="adminSaveFwConfig()">保存转发设置</button>
+    </div>
+    <div id="fwResult" class="notice" style="display:none"></div>
+  </div>`;
+  document.getElementById("tgSubmenuContent").innerHTML=html;
+  adminRenderFwTasks();
+}
+
+// 抓取日志面板
+async function renderTgLogsPanel(){
+  let html=`<div style="margin-bottom:16px">
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">
+      <h4 style="margin:0">抓取日志</h4>
+      <button class="btn-ghost" onclick="renderTgLogsPanel()">刷新</button>
+    </div>
+    <div id="tgLogsList" style="max-height:500px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:8px;padding:12px;background:#f8fafc;font-size:12px;font-family:monospace">加载中...</div>
+  </div>`;
+  document.getElementById("tgSubmenuContent").innerHTML=html;
+  try{
+    const r=await wApi("/api/admin/fetch-logs",{username:me});
+    const logs=r.logs||[];
+    const list=document.getElementById('tgLogsList');
+    if(!logs.length){list.innerHTML='<p style="color:var(--muted)">暂无日志</p>';return;}
+    list.innerHTML=logs.slice(-50).reverse().map(function(l){
+      return '<div style="padding:4px 0;border-bottom:1px solid #e2e8f0"><span style="color:#64748b">'+(l.time||'')+'</span> <span style="color:'+(l.status==='success'?'#16a34a':'#dc2626')+'">['+(l.type||'')+']</span> '+(l.message||'')+'</div>';
+    }).join('');
+  }catch(e){
+    document.getElementById('tgLogsList').innerHTML='<p style="color:#dc2626">加载失败: '+e.message+'</p>';
+  }
+}
+
 function adminRenderTgChannels(){
   const list=document.getElementById("tgChannelsList");
   const channels=window._adminTgChannels||[];
