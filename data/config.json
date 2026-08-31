@@ -138,7 +138,7 @@
         "bot_token": "8799802007:AAGFPGggxjDBvWb-4_fzc_rx8RpAFcIRpRo",
         "mode": "copy",
         "tag_map": "",
-        "batch_size": 10,
+        "batch_size": 1,
         "text_replace": "@HaiKouShi:@hainanxiuche_bot"
       }
     ]
