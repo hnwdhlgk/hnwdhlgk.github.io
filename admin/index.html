@@ -2058,16 +2058,61 @@ function editUserForward(username){
     .then(r => r.json())
     .then(d => {
       const fw = d.forward || {};
+      window._ufChannels = JSON.parse(JSON.stringify(fw.channels || []));
+      renderUfChannels();
       let html = '<div style="margin-bottom:12px"><label style="display:block;margin-bottom:6px;font-weight:600">启用自动转发</label>';
       html += '<select id="uf_enabled" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px"><option value="true"' + (fw.enabled?' selected':'') + '>开启</option><option value="false"' + (!fw.enabled?' selected':'') + '>关闭</option></select></div>';
       html += '<div style="margin-bottom:12px"><label style="display:block;margin-bottom:6px;font-weight:600">转发间隔（分钟）</label>';
       html += '<input id="uf_interval" type="number" value="' + (fw.interval || 5) + '" min="1" max="1440" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px"></div>';
-      html += '<div style="margin-bottom:12px"><label style="display:block;margin-bottom:6px;font-weight:600">转发任务（JSON格式）</label>';
-      html += '<p class="muted" style="font-size:12px;margin:0 0 6px">直接编辑channels数组，每个任务包含sources(源频道数组)、target(目标频道)、bot_token(目标Bot Token)、batch_size、tag_map、text_replace等字段</p>';
-      html += '<textarea id="uf_channels" rows="12" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-family:monospace;font-size:12px">' + JSON.stringify(fw.channels || [], null, 2) + '</textarea></div>';
+      html += '<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><label style="font-weight:600;margin:0">转发任务列表</label><button onclick="ufAddTask()" style="padding:4px 12px;background:#0f766e;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px">+ 添加任务</button></div>';
+      html += '<div id="ufChannelsList"></div></div>';
       body.innerHTML = html;
+      renderUfChannels();
     })
     .catch(e => { body.innerHTML = '<p style="color:#dc2626">加载失败：' + e.message + '</p>'; });
+}
+function renderUfChannels(){
+  const list = document.getElementById("ufChannelsList");
+  if(!list) return;
+  const channels = window._ufChannels || [];
+  if(channels.length === 0){
+    list.innerHTML = '<p class="muted" style="font-size:13px">暂无转发任务，点击「添加任务」创建</p>';
+    return;
+  }
+  list.innerHTML = channels.map((ch,i) => {
+    const sources = Array.isArray(ch.sources) ? ch.sources : (ch.source ? [ch.source] : ['']);
+    let sourcesHtml = sources.map((s,j) => '<div style="display:flex;gap:6px;margin-bottom:4px"><input value="' + (s||'') + '" placeholder="https://t.me/源频道名" style="flex:1;padding:6px;border:1px solid #cbd5e1;border-radius:4px;font-size:12px" onchange="window._ufChannels[' + i + '].sources[' + j + ']=this.value">' + (sources.length>1 ? '<button onclick="ufRemoveSource(' + i + ',' + j + ')" style="background:#b3261e;color:#fff;border:none;padding:2px 8px;border-radius:4px;cursor:pointer;font-size:11px">删除</button>' : '') + '</div>').join('');
+    sourcesHtml += '<button onclick="ufAddSource(' + i + ')" style="margin-bottom:6px;padding:2px 8px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:4px;cursor:pointer;font-size:11px">+ 添加源频道</button>';
+    return '<div style="border:1px solid #e2e8f0;border-radius:6px;padding:10px;margin-bottom:8px;background:#f8fafc">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><strong style="font-size:13px">任务 ' + (i+1) + '</strong>' + (channels.length>1 ? '<button onclick="ufRemoveTask(' + i + ')" style="background:#b3261e;color:#fff;border:none;padding:2px 8px;border-radius:4px;cursor:pointer;font-size:11px">删除任务</button>' : '') + '</div>' +
+      '<div style="margin-bottom:6px"><label style="font-size:11px;color:#64748b;display:block;margin-bottom:2px">任务名称（可选）</label><input value="' + (ch.name||'') + '" placeholder="例如：会所转发" style="width:100%;padding:6px;border:1px solid #cbd5e1;border-radius:4px;font-size:12px" onchange="window._ufChannels[' + i + '].name=this.value"></div>' +
+      '<div style="margin-bottom:6px"><label style="font-size:11px;color:#64748b;display:block;margin-bottom:2px">源频道/群组链接（可多选）</label>' + sourcesHtml + '</div>' +
+      '<div style="margin-bottom:6px"><label style="font-size:11px;color:#64748b;display:block;margin-bottom:2px">目标频道/群组链接</label><input value="' + (ch.target||'') + '" placeholder="https://t.me/目标频道名" style="width:100%;padding:6px;border:1px solid #cbd5e1;border-radius:4px;font-size:12px" onchange="window._ufChannels[' + i + '].target=this.value"></div>' +
+      '<div style="display:flex;gap:6px;margin-bottom:6px"><div style="flex:1"><label style="font-size:11px;color:#64748b;display:block;margin-bottom:2px">目标频道Bot Token</label><input value="' + (ch.bot_token||'') + '" placeholder="123456:ABC..." style="width:100%;padding:6px;border:1px solid #cbd5e1;border-radius:4px;font-size:12px" onchange="window._ufChannels[' + i + '].bot_token=this.value"></div><div style="width:80px"><label style="font-size:11px;color:#64748b;display:block;margin-bottom:2px">每次条数</label><input type="number" value="' + (ch.batch_size||3) + '" min="1" max="10" style="width:100%;padding:6px;border:1px solid #cbd5e1;border-radius:4px;font-size:12px" onchange="window._ufChannels[' + i + '].batch_size=parseInt(this.value)||3"></div></div>' +
+      '<div style="margin-bottom:6px"><label style="font-size:11px;color:#64748b;display:block;margin-bottom:2px">标签映射（源标签:目标标签，每行一个）</label><textarea rows="2" style="width:100%;padding:6px;border:1px solid #cbd5e1;border-radius:4px;font-size:12px" placeholder="#嫩妹:#清纯" onchange="window._ufChannels[' + i + '].tag_map=this.value">' + (ch.tag_map||'') + '</textarea></div>' +
+      '<div><label style="font-size:11px;color:#64748b;display:block;margin-bottom:2px">文本替换（原文本:替换文本，每行一个）</label><textarea rows="2" style="width:100%;padding:6px;border:1px solid #cbd5e1;border-radius:4px;font-size:12px" placeholder="嫩妹:小美" onchange="window._ufChannels[' + i + '].text_replace=this.value">' + (ch.text_replace||'') + '</textarea></div>' +
+    '</div>';
+  }).join('');
+}
+function ufAddTask(){
+  if(!window._ufChannels) window._ufChannels = [];
+  window._ufChannels.push({name:'',sources:[''],target:'',bot_token:'',batch_size:3,tag_map:'',text_replace:''});
+  renderUfChannels();
+}
+function ufRemoveTask(i){
+  if(!confirm('确定删除此转发任务？')) return;
+  window._ufChannels.splice(i,1);
+  renderUfChannels();
+}
+function ufAddSource(i){
+  if(!window._ufChannels[i].sources) window._ufChannels[i].sources = [];
+  window._ufChannels[i].sources.push('');
+  renderUfChannels();
+}
+function ufRemoveSource(i,j){
+  window._ufChannels[i].sources.splice(j,1);
+  if(window._ufChannels[i].sources.length === 0) window._ufChannels[i].sources.push('');
+  renderUfChannels();
 }
 function closeUserForwardModal(){
   document.getElementById("userForwardModal").style.display = "none";
@@ -2076,7 +2121,16 @@ function closeUserForwardModal(){
 async function saveUserForwardConfig(){
   if(!_editingUserForward) return;
   try{
-    const channels = JSON.parse(document.getElementById("uf_channels").value);
+    // 从可视化界面收集数据（确保sources是数组）
+    const channels = (window._ufChannels || []).map(ch => ({
+      name: ch.name || '',
+      sources: Array.isArray(ch.sources) ? ch.sources.filter(s => s && s.trim()) : (ch.source ? [ch.source] : []),
+      target: ch.target || '',
+      bot_token: ch.bot_token || '',
+      batch_size: parseInt(ch.batch_size) || 3,
+      tag_map: ch.tag_map || '',
+      text_replace: ch.text_replace || ''
+    }));
     const forward = {
       enabled: document.getElementById("uf_enabled").value === "true",
       interval: parseInt(document.getElementById("uf_interval").value) || 5,
