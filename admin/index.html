@@ -152,6 +152,7 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
       </div>
     </div>
     <div class="menu-item" data-view="users" onclick="showView('users')"><span class="mi-ic">👥</span>用户管理</div>
+    <div class="menu-item" data-view="user-forward" onclick="showView('user-forward')"><span class="mi-ic">🔄</span>用户转发管理</div>
   </nav>
   <div class="sidebar-footer"><div class="who" id="whoami">—</div><button onclick="logoutGithub()">退出登录</button></div>
 </aside>
@@ -412,6 +413,32 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
         <button onclick="saveForward()">保存转发设置</button>
         <button class="ghost" onclick="testForwardNow()">立即测试转发</button>
         <span id="fwResult" class="muted" style="margin-left:10px"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 用户转发管理 -->
+  <div id="view-user-forward" class="view">
+    <div class="card">
+      <div class="ops" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h2 style="margin:0">用户转发管理</h2>
+        <button class="ghost" onclick="loadUserForwardList()">刷新列表</button>
+      </div>
+      <p class="muted">查看和编辑每位用户的转发任务配置与执行状态</p>
+      <div id="userForwardList" style="margin-top:16px">加载中...</div>
+    </div>
+    <!-- 编辑用户转发配置弹窗 -->
+    <div class="modal-mask" id="userForwardModal" style="display:none">
+      <div class="modal" style="max-width:700px;max-height:80vh;overflow-y:auto">
+        <div class="modal-header">
+          <h3 id="ufModalTitle">编辑用户转发配置</h3>
+          <button onclick="closeUserForwardModal()" style="background:none;border:none;font-size:20px;cursor:pointer">×</button>
+        </div>
+        <div class="modal-body" id="ufModalBody"></div>
+        <div class="modal-footer">
+          <button class="ghost" onclick="closeUserForwardModal()">取消</button>
+          <button class="primary" onclick="saveUserForwardConfig()">保存</button>
+        </div>
       </div>
     </div>
   </div>
