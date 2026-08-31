@@ -552,7 +552,7 @@ function showView(name,param){
   if(name==='jobs'){if(param)currentFilter=param;renderJobs()}
   if(name==='config'&&param){var sec=$('sec-'+param);if(sec)setTimeout(function(){sec.scrollIntoView({behavior:'smooth',block:'start'})},100)}
   if(name==='dashboard')renderDashboard();
-  if(name==='user-forward')loadUserForwardList();
+
 
   closeSidebar();
 }
@@ -2020,6 +2020,18 @@ function closeAdminModal(){
 
 // ====== 用户转发管理 ======
 let _editingUserForward = null;
+function toggleUserForwardPanel(){
+  var panel = document.getElementById("userForwardPanel");
+  var icon = document.getElementById("ufToggleIcon");
+  if(panel.style.display === "none"){
+    panel.style.display = "block";
+    icon.style.transform = "rotate(180deg)";
+    loadUserForwardList();
+  }else{
+    panel.style.display = "none";
+    icon.style.transform = "rotate(0deg)";
+  }
+}
 async function loadUserForwardList(){
   try{
     const r = await fetch(CONFIG.worker_url + "/api/forward-config-all", {method:"GET"});
