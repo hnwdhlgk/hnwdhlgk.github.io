@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-31T09:01:07.872Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-08-31T09:01:06.669Z",
     "type": "telegram",
     "channel": "@hainanchayi",
@@ -790,13 +798,5 @@
     "count": 1,
     "status": "success",
     "message": "指定链接抓取1条兼职: 🧚‍♀️ 童童"
-  },
-  {
-    "time": "2026-08-30T19:00:19.293Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 19,
-    "status": "success",
-    "message": "抓取19个按钮"
   }
 ]
