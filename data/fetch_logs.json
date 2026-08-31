@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-08-31T12:00:26.589Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 14,
+    "status": "success",
+    "message": "抓取14个按钮"
+  },
+  {
     "time": "2026-08-31T12:00:21.129Z",
     "type": "telegram",
     "channel": "@hainanchayi",
@@ -785,14 +793,6 @@
   },
   {
     "time": "2026-08-30T22:11:24.114Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "无按钮"
-  },
-  {
-    "time": "2026-08-30T22:07:39.240Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
     "count": 0,
