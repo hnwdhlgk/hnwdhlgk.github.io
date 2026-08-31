@@ -2009,8 +2009,7 @@ function closeAdminModal(){
 let _editingUserForward = null;
 async function loadUserForwardList(){
   try{
-    const adminUser = localStorage.getItem("admin_user") || "";
-    const r = await fetch(CONFIG.worker_url + "/api/forward-config-all?admin=" + encodeURIComponent(adminUser), {method:"GET"});
+    const r = await fetch(CONFIG.worker_url + "/api/forward-config-all", {method:"GET"});
     const d = await r.json();
     if(d.error) throw new Error(d.error);
     const list = d.list || [];
@@ -2076,7 +2075,6 @@ function closeUserForwardModal(){
 async function saveUserForwardConfig(){
   if(!_editingUserForward) return;
   try{
-    const adminUser = localStorage.getItem("admin_user") || "";
     const channels = JSON.parse(document.getElementById("uf_channels").value);
     const forward = {
       enabled: document.getElementById("uf_enabled").value === "true",
@@ -2086,7 +2084,7 @@ async function saveUserForwardConfig(){
     const r = await fetch(CONFIG.worker_url + "/api/forward-config-admin", {
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({admin: adminUser, username: _editingUserForward, forward: forward})
+      body: JSON.stringify({username: _editingUserForward, forward: forward})
     });
     const d = await r.json();
     if(d.error) throw new Error(d.error);
