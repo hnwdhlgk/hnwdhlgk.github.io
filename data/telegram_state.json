@@ -1,10 +1,18 @@
 {
-  "processed": [
-    "link-hnwdhlgk-10325",
-    "link-hnwdhlgk-10307",
-    "link-hnwdhlgk-10298",
-    "link-hnwdhlgk-10278",
-    "link-hnwdhlgk-10259"
-  ],
-  "last_fetch": "2026-08-31T08:43:50.755Z"
+  "processed_map": {
+    "hnwdhlgk": [
+      "link-hnwdhlgk-10325",
+      "link-hnwdhlgk-10307",
+      "link-hnwdhlgk-10298",
+      "link-hnwdhlgk-10278",
+      "link-hnwdhlgk-10259",
+      "link-https://t.me/hnwdhlgk/10439",
+      "web-10439"
+    ],
+    "hainanchayi": [
+      "link-https://t.me/hainanchayi/9590",
+      "web-9590"
+    ]
+  },
+  "last_fetch": "2026-08-31T09:01:09.849Z"
 }
