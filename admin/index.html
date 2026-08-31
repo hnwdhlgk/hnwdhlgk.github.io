@@ -337,6 +337,7 @@ button.danger{background:#b3261e}button.ghost{background:#5f6b7a}button.small{pa
     <div class="card"><h3>多频道抓取设置</h3>
       <p class="muted">支持配置多个Telegram频道，每个频道使用独立的Bot Token。Bot需设为对应频道的管理员。</p>
       <div class="row"><div><label>启用自动抓取</label><select id="tg_enabled"><option value="false">关闭</option><option value="true">开启</option></select></div>
+      <div><label>抓取间隔（分钟）</label><input id="tg_fetch_interval" type="number" value="10" min="1" max="1440" placeholder="10" style="width:100px"></div>
       <div><label>OCR API Key（ocr.space，可选）</label><input id="tg_ocr_key" placeholder="K812345678（用于识别图片文字）" style="width:200px"></div></div>
       <div id="tgChannelsList" style="margin:16px 0"></div>
       <div class="ops"><button class="ghost" onclick="addTgChannel()">+ 添加频道</button><button onclick="saveTelegram()">保存所有设置</button><button class="ghost" onclick="manualFetchTelegram()">立即抓取全部</button><span id="tgFetchResult" class="muted" style="margin-left:10px"></span></div>
