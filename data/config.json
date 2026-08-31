@@ -144,5 +144,7 @@
     ],
     "enabled": true,
     "interval": 1
-  }
+  },
+  "fetch_interval": 30,
+  "onduty_interval": 30
 }
