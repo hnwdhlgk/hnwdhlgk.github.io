@@ -952,6 +952,7 @@ async function doLogin(){const u=document.getElementById("lu").value.trim(),p=do
 async function loadUserPerms(){
   window._userPerms=[];
   window._userRole='user';
+  window._permsLoaded=false;
   if(!me)return;
   try{
     const r=await wApi("/api/user/info",{username:me});
@@ -959,12 +960,19 @@ async function loadUserPerms(){
     if(u.username){
       window._userRole=u.role||'user';
       window._userPerms=u.permissions||[];
+      window._permsLoaded=true;
     }
-  }catch(e){console.log("加载用户权限失败:",e.message);}
+  }catch(e){
+    console.log("加载用户权限失败:",e.message);
+    // 接口不存在或加载失败时，默认显示所有功能（兼容旧版本）
+    window._permsLoaded=false;
+  }
 }
 // 检查是否有权限
 function hasPerm(key){
   if(window._userRole==='superadmin')return true;
+  // 如果权限未加载成功（接口不存在），默认显示所有功能（兼容旧版本）
+  if(window._permsLoaded===false)return true;
   // admin和普通用户都按照permissions字段判断
   return (window._userPerms||[]).indexOf(key)>=0;
 }
