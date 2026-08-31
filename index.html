@@ -550,14 +550,16 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:32px 0 40px;b
         <p class="card-subtitle">管理员权限：审核兼职、管理分类、站点配置等</p>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn-ghost" onclick="loadPending()">刷新待审核</button>
+        <button class="btn-ghost" id="refreshPendingBtn" onclick="loadPending()">刷新待审核</button>
       </div>
     </div>
     <div class="admin-shortcuts" id="adminShortcuts">
     </div>
     <div id="adminPanels" style="margin-top:20px"></div>
-    <h3 style="margin:20px 0 12px;font-size:16px;color:var(--sea)">待审核兼职</h3>
-    <div id="pendingList"></div>
+    <div id="pendingSection">
+      <h3 style="margin:20px 0 12px;font-size:16px;color:var(--sea)">待审核兼职</h3>
+      <div id="pendingList"></div>
+    </div>
   </div>
   
   <div class="user-card">
@@ -996,6 +998,12 @@ function renderAdminShortcuts(){
     }
   });
   box.innerHTML=h;
+  // 控制待审核兼职区域的显示（需要审核或查看兼职权限）
+  const pendingSection=document.getElementById("pendingSection");
+  const refreshBtn=document.getElementById("refreshPendingBtn");
+  const canViewPending=hasPerm("jobs.approve")||hasPerm("jobs.view")||hasPerm("jobs.edit");
+  if(pendingSection)pendingSection.style.display=canViewPending?"":"none";
+  if(refreshBtn)refreshBtn.style.display=canViewPending?"":"none";
 }
 
 function doLogout(){me=null;sessionStorage.removeItem("gh_me");renderAuth();showPublic()}
