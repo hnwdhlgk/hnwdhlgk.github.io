@@ -1502,7 +1502,11 @@ async function renderTgOnDutyPanel(){
 function renderTgLinkPanel(){
   let html=`<div style="margin-bottom:16px">
     <h4 style="margin:0 0 10px">抓取指定链接</h4>
-    <p style="color:var(--muted);font-size:13px;margin:0 0 12px">输入Telegram消息链接，抓取为兼职信息</p>
+    <p style="color:var(--muted);font-size:13px;margin:0 0 12px">输入Telegram消息链接，抓取为兼职信息。可设置目标频道，抓取后自动转发。</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+      <div style="flex:1;min-width:200px"><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">目标频道/群组链接（可选，抓取后自动转发）</label><input id="linkTargetChannel" placeholder="https://t.me/目标频道名" style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px"></div>
+      <div style="flex:1;min-width:200px"><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">目标频道Bot Token（可选）</label><input id="linkTargetToken" placeholder="123456:ABC-DEF..." style="width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px"></div>
+    </div>
     <div style="display:flex;gap:10px">
       <input id="tgLinkInput" placeholder="https://t.me/频道名/消息ID" style="flex:1;padding:10px;border:1px solid #cbd5e1;border-radius:6px;font-size:14px">
       <button class="btn-primary" onclick="adminFetchLink()">抓取</button>
