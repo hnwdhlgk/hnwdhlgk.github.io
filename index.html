@@ -954,10 +954,9 @@ async function loadUserPerms(){
   window._userRole='user';
   if(!me)return;
   try{
-    const r=await wApi("/api/admin/users",{username:me});
-    const users=r.users||[];
-    const u=users.find(x=>x.username===me);
-    if(u){
+    const r=await wApi("/api/user/info",{username:me});
+    const u=r.user||{};
+    if(u.username){
       window._userRole=u.role||'user';
       window._userPerms=u.permissions||[];
     }
