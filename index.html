@@ -553,15 +553,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:32px 0 40px;b
         <button class="btn-ghost" onclick="loadPending()">刷新待审核</button>
       </div>
     </div>
-    <div class="admin-shortcuts">
-      <button class="shortcut-item" onclick="showAdminPanel('dashboard')"><span class="shortcut-ic">📊</span><span>概览统计</span></button>
-      <button class="shortcut-item" onclick="showAdminPanel('categories')"><span class="shortcut-ic">📁</span><span>分类管理</span></button>
-      <button class="shortcut-item" onclick="showAdminPanel('jobs')"><span class="shortcut-ic">📋</span><span>兼职管理</span></button>
-      <button class="shortcut-item" onclick="showAdminPanel('config')"><span class="shortcut-ic">⚙️</span><span>站点配置</span></button>
-      <button class="shortcut-item" onclick="showAdminPanel('users')"><span class="shortcut-ic">👥</span><span>用户管理</span></button>
-      <button class="shortcut-item" onclick="showAdminPanel('telegram')"><span class="shortcut-ic">✈️</span><span>Telegram抓取</span></button>
-      <button class="shortcut-item" onclick="showAdminPanel('logs')"><span class="shortcut-ic">📜</span><span>抓取日志</span></button>
-
+    <div class="admin-shortcuts" id="adminShortcuts">
     </div>
     <div id="adminPanels" style="margin-top:20px"></div>
     <h3 style="margin:20px 0 12px;font-size:16px;color:var(--sea)">待审核兼职</h3>
@@ -954,12 +946,69 @@ function openModal(html){
 function closeModal(){document.getElementById("modalMask").style.display="none"}
 window.addEventListener("click",e=>{if(e.target.id==="modalMask")closeModal()});
 async function doRegister(){const u=document.getElementById("ru").value.trim(),p=document.getElementById("rp").value,p2=document.getElementById("rp2").value,e=document.getElementById("regErr");if(!/^[\w\u4e00-\u9fa5-]{2,20}$/.test(u)){e.textContent="用户名需为2-20位";return}if(p.length<6){e.textContent="密码至少6位";return}if(p!==p2){e.textContent="两次密码不一致";return}try{await wApi("/api/register",{username:u,password:p});me=u;sessionStorage.setItem("gh_me",u);closeModal();renderAuth();showMyView()}catch(err){e.textContent=err.message}}
-async function doLogin(){const u=document.getElementById("lu").value.trim(),p=document.getElementById("lp").value,e=document.getElementById("loginErr");try{await wApi("/api/login",{username:u,password:p});me=u;sessionStorage.setItem("gh_me",u);closeModal();renderAuth();showMyView()}catch(err){e.textContent=err.message}}
+async function doLogin(){const u=document.getElementById("lu").value.trim(),p=document.getElementById("lp").value,e=document.getElementById("loginErr");try{await wApi("/api/login",{username:u,password:p});me=u;sessionStorage.setItem("gh_me",u);await loadUserPerms();closeModal();renderAuth();showMyView()}catch(err){e.textContent=err.message}}
+
+// 加载当前用户权限
+async function loadUserPerms(){
+  window._userPerms=[];
+  window._userRole='user';
+  if(!me)return;
+  try{
+    const r=await wApi("/api/admin/users",{username:me});
+    const users=r.users||[];
+    const u=users.find(x=>x.username===me);
+    if(u){
+      window._userRole=u.role||'user';
+      window._userPerms=u.permissions||[];
+    }
+  }catch(e){console.log("加载用户权限失败:",e.message);}
+}
+// 检查是否有权限
+function hasPerm(key){
+  if(window._userRole==='superadmin')return true;
+  if(window._userRole==='admin')return true; // 管理员默认有权限
+  return (window._userPerms||[]).indexOf(key)>=0;
+}
+
+// 根据权限渲染管理后台快捷入口
+function renderAdminShortcuts(){
+  const box=document.getElementById("adminShortcuts");
+  if(!box)return;
+  let html='';
+  // 概览统计：所有登录用户可见
+  html+='<button class="shortcut-item" onclick="showAdminPanel('dashboard')"><span class="shortcut-ic">📊</span><span>概览统计</span></button>';
+  // 分类管理
+  if(hasPerm('settings')||hasPerm('jobs.view')){
+    html+='<button class="shortcut-item" onclick="showAdminPanel('categories')"><span class="shortcut-ic">📁</span><span>分类管理</span></button>';
+  }
+  // 兼职管理
+  if(hasPerm('jobs.view')||hasPerm('jobs.edit')||hasPerm('jobs.delete')||hasPerm('jobs.approve')){
+    html+='<button class="shortcut-item" onclick="showAdminPanel('jobs')"><span class="shortcut-ic">📋</span><span>兼职管理</span></button>';
+  }
+  // 站点配置
+  if(hasPerm('settings')){
+    html+='<button class="shortcut-item" onclick="showAdminPanel('config')"><span class="shortcut-ic">⚙️</span><span>站点配置</span></button>';
+  }
+  // 用户管理
+  if(hasPerm('users.view')||hasPerm('users.edit')||hasPerm('users.delete')){
+    html+='<button class="shortcut-item" onclick="showAdminPanel('users')"><span class="shortcut-ic">👥</span><span>用户管理</span></button>';
+  }
+  // Telegram抓取（只要有任意tg权限就显示）
+  if(hasPerm('tg.channels')||hasPerm('tg.onduty')||hasPerm('tg.link')||hasPerm('tg.tagmap')||hasPerm('tg.forward')||hasPerm('tg.logs')){
+    html+='<button class="shortcut-item" onclick="showAdminPanel('telegram')"><span class="shortcut-ic">✈️</span><span>Telegram抓取</span></button>';
+  }
+  // 抓取日志
+  if(hasPerm('tg.logs')){
+    html+='<button class="shortcut-item" onclick="showAdminPanel('logs')"><span class="shortcut-ic">📜</span><span>抓取日志</span></button>';
+  }
+  box.innerHTML=html;
+}
+
 function doLogout(){me=null;sessionStorage.removeItem("gh_me");renderAuth();showPublic()}
 
 /* ====== 视图切换 ====== */
 function showPublic(){editingMineId=null;activeCat="all";activeSub="all";activeSub2="all";activeTags=[];document.getElementById("publicView").style.display="";document.getElementById("myView").style.display="none";init()}
-function showMyView(){document.getElementById("publicView").style.display="none";document.getElementById("myView").style.display="";loadMine();checkAdmin()}
+function showMyView(){document.getElementById("publicView").style.display="none";document.getElementById("myView").style.display="";renderAdminShortcuts();loadMine();checkAdmin()}
 let isAdmin=false;
 async function checkAdmin(){
   try{await wApi("/api/pending-jobs",{username:me});isAdmin=true;document.getElementById("adminPanel").style.display="";loadPending()}
