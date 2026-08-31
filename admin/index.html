@@ -1045,6 +1045,7 @@ function renderTelegram(){
     od.channels=[{channel:od.channel,bot_token:od.bot_token||'',enabled:true}];
   }
   renderOdChannels();
+  try{renderForward()}catch(e){}
 }
 // 多频道管理
 window._tgChannels=[];
@@ -1196,6 +1197,7 @@ window.addTgMap=function(){
     od.channels=[{channel:od.channel,bot_token:od.bot_token||'',enabled:true}];
   }
   renderOdChannels();
+  try{renderForward()}catch(e){}
 }
 window.delTgMap=function(i){
   window.collectTgMap();
@@ -1208,6 +1210,7 @@ window.delTgMap=function(i){
     od.channels=[{channel:od.channel,bot_token:od.bot_token||'',enabled:true}];
   }
   renderOdChannels();
+  try{renderForward()}catch(e){}
 }
 window.saveTelegram=function(){
   if(window.collectTgMap)window.collectTgMap();
@@ -1328,11 +1331,13 @@ function renderOdChannels(){
 window.addOdChannel=function(){
   window._odChannels.push({channel:'',bot_token:'',enabled:true});
   renderOdChannels();
+  try{renderForward()}catch(e){}
 }
 window.delOdChannel=function(i){
   if(!confirm('确定删除此频道配置？'))return;
   window._odChannels.splice(i,1);
   renderOdChannels();
+  try{renderForward()}catch(e){}
 }
 window.addOdMsgId=function(i){
   // 先收集当前输入框的值，避免丢失
@@ -1344,6 +1349,7 @@ window.addOdMsgId=function(i){
   CONFIG.on_duty.channels[i].message_ids.push('');
   window._odChannels=JSON.parse(JSON.stringify(CONFIG.on_duty.channels));
   renderOdChannels();
+  try{renderForward()}catch(e){}
 }
 window.delOdMsgId=function(i,mi){
   collectOdMsgIds();
