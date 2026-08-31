@@ -1655,11 +1655,32 @@ async function adminSaveFwConfig(){
     const interval=document.getElementById('fwInterval')?parseInt(document.getElementById('fwInterval').value)||5:5;
     window._adminFwConfig.enabled=enabled;
     window._adminFwConfig.interval=interval;
-    await wApi("/api/admin/save-config",{username:me,key:"forward",value:window._adminFwConfig});
+    // 收集所有转发任务的配置
+    const tasks=[];
+    document.querySelectorAll('.fw-task').forEach(function(el,i){
+      const sources=[];
+      el.querySelectorAll('.fw-source-input').forEach(function(inp){if(inp.value.trim())sources.push(inp.value.trim());});
+      tasks.push({
+        sources:sources,
+        target:el.querySelector('.fw-target-input')?el.querySelector('.fw-target-input').value.trim():'',
+        source_bot_token:el.querySelector('.fw-source-token')?el.querySelector('.fw-source-token').value.trim():'',
+        bot_token:el.querySelector('.fw-target-token')?el.querySelector('.fw-target-token').value.trim():'',
+        batch_size:el.querySelector('.fw-batch-size')?parseInt(el.querySelector('.fw-batch-size').value)||3:3,
+        tag_map:el.querySelector('.fw-tag-map')?el.querySelector('.fw-tag-map').value.trim():'',
+        text_replace:el.querySelector('.fw-text-replace')?el.querySelector('.fw-text-replace').value.trim():''
+      });
+    });
+    window._adminFwConfig.channels=tasks;
     const result=document.getElementById('fwResult');
+    if(result){result.style.display='';result.textContent='正在保存...';result.style.color='#64748b';}
+    await wApi("/api/forward-config",{forward:window._adminFwConfig});
     if(result){result.style.display='';result.textContent='✓ 转发设置已保存';result.style.color='#16a34a';}
     setTimeout(()=>{if(result)result.style.display='none';},3000);
-  }catch(e){alert('保存失败：'+e.message);}
+  }catch(e){
+    const result=document.getElementById('fwResult');
+    if(result){result.style.display='';result.textContent='✗ 保存失败：'+e.message;result.style.color='#dc2626';}
+    else alert('保存失败：'+e.message);
+  }
 }
 async function adminTestForward(){
   try{
