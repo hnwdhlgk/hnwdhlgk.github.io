@@ -136,7 +136,7 @@
         ],
         "target": "https://t.me/jiaoshouceshizhuanfa",
         "bot_token": "8799802007:AAGFPGggxjDBvWb-4_fzc_rx8RpAFcIRpRo",
-        "batch_size": 3,
+        "batch_size": 10,
         "tag_map": "",
         "text_replace": ""
       }
