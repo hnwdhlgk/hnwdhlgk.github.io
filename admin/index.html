@@ -1757,7 +1757,13 @@ window.saveUserPerms=function(i){
   checks.forEach(function(c){perms.push(c.value);});
   USERS[i].permissions=perms;
   stat('正在保存权限…','wait');
-  writeFile('data/users.json',USERS,userSha,'更新用户权限').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();closeModal();stat('权限已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')});
+  // 先重新读取最新SHA，避免冲突
+  readFile('data/users.json').then(function(d){
+    USERS=d.data;userSha=d.sha;
+    // 重新应用权限修改（因为重新读取会覆盖）
+    USERS[i].permissions=perms;
+    return writeFile('data/users.json',USERS,userSha,'更新用户权限');
+  }).then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();closeModal();stat('权限已保存','ok')}).catch(function(e){stat('保存失败：'+e.message,'err')});
 }
 window.addUser=function(){var n=prompt('用户名');if(!n)return;if(USERS.some(function(u){return u.username===n})){alert('用户名已存在');return};USERS.push({username:n,pass:'',created_at:new Date().toISOString()});stat('正在添加…','wait');writeFile('data/users.json',USERS,userSha,'新增用户').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();stat('已添加','ok')}).catch(function(e){stat('添加失败：'+e.message,'err')})}
 window.delUser=function(i){if(!confirm('确定删除用户 '+USERS[i].username+'？'))return;USERS.splice(i,1);stat('正在删除…','wait');writeFile('data/users.json',USERS,userSha,'删除用户').then(function(){return readFile('data/users.json')}).then(function(d){USERS=d.data;userSha=d.sha;renderUsers();stat('已删除','ok')}).catch(function(e){stat('删除失败：'+e.message,'err')})}
