@@ -1261,7 +1261,27 @@ window.renderForward=function(){
       (ch.mode==='map'?'<div><label>标签映射（源标签:目标标签，每行一个）</label><textarea rows="3" style="width:100%" placeholder="#嫩妹:#清纯&#xA;#御姐:#性感" onchange="FW_CONFIG.channels['+i+'].tag_map=this.value">'+esc(ch.tag_map||'')+'</textarea></div>':'')+
       '</div>';
   });
-  if($('fwChannelsList'))$('fwChannelsList').innerHTML=html||'<p class="muted">暂无转发任务，点击下方按钮添加</p>';
+  // 如果没有转发任务，默认显示一个空表单
+  if(FW_CONFIG.channels.length===0){
+    FW_CONFIG.channels.push({source:'',target:'',bot_token:'',mode:'copy',tag_map:''});
+  }
+  var html='';
+  (FW_CONFIG.channels||[]).forEach(function(ch,i){
+    html+='<div class="channel-item" style="border:1px solid #e2e8f0;border-radius:8px;padding:12px;margin-bottom:10px">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'+
+      '<b>转发任务 '+(i+1)+'</b>'+
+      (FW_CONFIG.channels.length>1?'<button class="danger" onclick="removeFwChannel('+i+')" style="background:#b3261e;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer">删除</button>':'')+
+      '</div>'+
+      '<div class="row"><div><label>源频道/群组链接</label><input value="'+esc(ch.source||'')+'" placeholder="https://t.me/源频道名" onchange="FW_CONFIG.channels['+i+'].source=this.value"></div>'+
+      '<div><label>目标频道/群组链接</label><input value="'+esc(ch.target||'')+'" placeholder="https://t.me/目标频道名" onchange="FW_CONFIG.channels['+i+'].target=this.value"></div></div>'+
+      '<div class="row"><div><label>源频道Bot Token（可选，用于读取私有频道）</label><input value="'+esc(ch.source_bot_token||'')+'" placeholder="123456:ABC-DEF..." style="width:100%" onchange="FW_CONFIG.channels['+i+'].source_bot_token=this.value"></div>'+
+      '<div><label>目标频道Bot Token（必须，目标频道管理员）</label><input value="'+esc(ch.bot_token||'')+'" placeholder="123456:ABC-DEF..." style="width:100%" onchange="FW_CONFIG.channels['+i+'].bot_token=this.value"></div></div>'+
+      '<div class="row"><div><label>转发模式</label><select onchange="FW_CONFIG.channels['+i+'].mode=this.value;renderForward()"><option value="copy"'+(ch.mode==='copy'?' selected':'')+'>1:1原样复制</option><option value="map"'+(ch.mode==='map'?' selected':'')+'>标签映射</option></select></div>'+
+      '<div><label>每次转发条数</label><input type="number" value="'+(ch.batch_size||3)+'" min="1" max="10" style="width:100%" onchange="FW_CONFIG.channels['+i+'].batch_size=parseInt(this.value)||3"></div></div>'+
+      (ch.mode==='map'?'<div><label>标签映射（源标签:目标标签，每行一个）</label><textarea rows="3" style="width:100%" placeholder="#嫩妹:#清纯&#xA;#御姐:#性感" onchange="FW_CONFIG.channels['+i+'].tag_map=this.value">'+esc(ch.tag_map||'')+'</textarea></div>':'')+
+      '</div>';
+  });
+  if($('fwChannelsList'))$('fwChannelsList').innerHTML=html;
 }
 window.addFwChannel=function(){
   FW_CONFIG.channels.push({source:'',target:'',bot_token:'',mode:'copy',tag_map:''});
