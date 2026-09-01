@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-01T08:31:21.949Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无按钮"
+  },
+  {
     "time": "2026-09-01T08:31:17.941Z",
     "type": "telegram",
     "channel": "@hainanchayi",
@@ -790,13 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "无按钮"
-  },
-  {
-    "time": "2026-09-01T03:08:43.596Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
   }
 ]
