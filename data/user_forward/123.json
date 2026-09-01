@@ -12,6 +12,6 @@
       "text_replace": ""
     }
   ],
-  "enabled": false,
-  "interval": 5
+  "enabled": true,
+  "interval": 1
 }
