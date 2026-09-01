@@ -93,6 +93,7 @@
     "register_ip": "31.223.184.166",
     "permissions": [
       "tg.forward"
-    ]
+    ],
+    "role": "admin"
   }
 ]
