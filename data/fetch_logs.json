@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-01T05:47:48.103Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "消息无法解析为有效兼职（标题无效）"
+  },
+  {
     "time": "2026-09-01T05:47:37.056Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -790,13 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "无新消息"
-  },
-  {
-    "time": "2026-08-31T23:23:44.184Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 13,
-    "status": "success",
-    "message": "抓取13个按钮"
   }
 ]
