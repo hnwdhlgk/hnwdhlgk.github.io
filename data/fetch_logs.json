@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-01T11:12:40.656Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "消息无法解析为有效兼职（标题无效）"
+  },
+  {
     "time": "2026-09-01T11:12:38.202Z",
     "type": "telegram",
     "channel": "@hainanchayi",
@@ -790,13 +798,5 @@
     "count": 1,
     "status": "success",
     "message": "指定链接抓取1条兼职: 🎟 抽奖标题：三亚小美老师福利抽奖！🎁"
-  },
-  {
-    "time": "2026-09-01T10:52:40.154Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 19,
-    "status": "success",
-    "message": "抓取19个按钮"
   }
 ]
