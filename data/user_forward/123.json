@@ -1,0 +1,17 @@
+{
+  "channels": [
+    {
+      "name": "测试2",
+      "sources": [
+        "https://t.me/haikoudaxue"
+      ],
+      "target": "https://t.me/haikouxueyuan",
+      "bot_token": "8881085959:AAHHzDwtFd-GO2M5lDr9NCBM3WqnTKyxeGU",
+      "batch_size": 10,
+      "tag_map": "",
+      "text_replace": ""
+    }
+  ],
+  "enabled": false,
+  "interval": 5
+}
