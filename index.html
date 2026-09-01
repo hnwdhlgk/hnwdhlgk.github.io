@@ -957,7 +957,7 @@ async function loadUserPerms(){
   window._permsLoaded=false;
   if(!me)return;
   try{
-    const r=await wApi("/api/user/info",{username:me});
+    const r=await wApi("/api/user/info",{username:me.trim()});
     const u=r.user||{};
     if(u.username){
       window._userRole=u.role||'user';
@@ -973,8 +973,8 @@ async function loadUserPerms(){
 // 检查是否有权限
 function hasPerm(key){
   if(window._userRole==='superadmin')return true;
-  // 如果权限未加载成功（接口不存在），默认显示所有功能（兼容旧版本）
-  if(window._permsLoaded===false)return true;
+  // 如果权限未加载成功，不显示功能（避免越权）
+  if(window._permsLoaded===false)return false;
   // admin和普通用户都按照permissions字段判断
   return (window._userPerms||[]).indexOf(key)>=0;
 }
