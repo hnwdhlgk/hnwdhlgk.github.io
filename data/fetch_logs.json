@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-01T11:24:27.295Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 桃桃"
+  },
+  {
     "time": "2026-09-01T11:23:40.352Z",
     "type": "telegram",
     "channel": "@hainanchayi",
@@ -790,13 +798,5 @@
     "count": 1,
     "status": "success",
     "message": "抓取1条新兼职(网页抓取)"
-  },
-  {
-    "time": "2026-09-01T11:04:27.296Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🧚‍♀️ 桃桃"
   }
 ]
