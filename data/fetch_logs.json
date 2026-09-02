@@ -1,5 +1,21 @@
 [
   {
+    "time": "2026-09-02T15:39:05.550Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "从0条消息中（0条带按钮）提取0个按钮；getUpdates无任何更新（Bot可能从未收到频道消息，或更新已被确认清除）"
+  },
+  {
+    "time": "2026-09-02T15:37:55.411Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "从0条消息中（0条带按钮）提取0个按钮；getUpdates无任何更新（Bot可能从未收到频道消息，或更新已被确认清除）"
+  },
+  {
     "time": "2026-09-02T15:37:47.328Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
@@ -777,22 +793,6 @@
   },
   {
     "time": "2026-09-02T11:22:24.140Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "无按钮"
-  },
-  {
-    "time": "2026-09-02T11:22:21.036Z",
-    "type": "on_duty",
-    "channel": "",
-    "count": 0,
-    "status": "error",
-    "message": "is at 9328cfa172aa56c1c13a78e5aee03d7a75d8c330 but expected 95ba7360d78fe4c413d076a4f19d9ecd5eeeb757"
-  },
-  {
-    "time": "2026-09-02T11:22:18.681Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
     "count": 0,
