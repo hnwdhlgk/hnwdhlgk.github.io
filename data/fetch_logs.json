@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-02T15:06:06.950Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🎟 抽奖标题：三亚珊珊老师福利抽奖！🎁"
+  },
+  {
     "time": "2026-09-02T15:05:03.271Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -787,14 +795,6 @@
     "time": "2026-09-01T22:46:32.000Z",
     "type": "telegram",
     "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-01T22:46:25.632Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
     "count": 0,
     "status": "empty",
     "message": "无新消息"
