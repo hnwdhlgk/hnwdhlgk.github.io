@@ -1,5 +1,21 @@
 [
   {
+    "time": "2026-09-02T18:49:52.676Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无按钮"
+  },
+  {
+    "time": "2026-09-02T18:49:48.543Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无按钮"
+  },
+  {
     "time": "2026-09-02T18:49:22.206Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
@@ -777,22 +793,6 @@
   },
   {
     "time": "2026-09-02T13:13:56.625Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "无按钮（更新0条/频道消息0条/带按钮0条）"
-  },
-  {
-    "time": "2026-09-02T13:13:09.093Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "无按钮（更新0条/频道消息0条/带按钮0条）"
-  },
-  {
-    "time": "2026-09-02T13:12:46.972Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
     "count": 0,
