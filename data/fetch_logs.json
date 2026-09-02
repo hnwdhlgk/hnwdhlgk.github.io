@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-02T15:11:09.365Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🎟 抽奖标题：海口贝贝老师福利抽奖！🎁"
+  },
+  {
     "time": "2026-09-02T15:10:03.302Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -785,14 +793,6 @@
   },
   {
     "time": "2026-09-02T01:49:32.679Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-02T01:18:33.014Z",
     "type": "telegram",
     "channel": "@hainanchayi",
     "count": 0,
