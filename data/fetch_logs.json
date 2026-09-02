@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-02T18:51:31.869Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无按钮"
+  },
+  {
     "time": "2026-09-02T18:50:38.116Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
@@ -785,14 +793,6 @@
   },
   {
     "time": "2026-09-02T13:23:13.220Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "无按钮"
-  },
-  {
-    "time": "2026-09-02T13:21:55.395Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
     "count": 0,
