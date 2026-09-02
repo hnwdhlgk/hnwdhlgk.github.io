@@ -1,5 +1,21 @@
 [
   {
+    "time": "2026-09-02T23:59:06.970Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-02T23:28:08.534Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无按钮"
+  },
+  {
     "time": "2026-09-02T23:28:04.539Z",
     "type": "telegram",
     "channel": "@hainanchayi",
@@ -782,21 +798,5 @@
     "count": 0,
     "status": "error",
     "message": "自动抓取异常: Too many subrequests by single Worker invocation. To configure this limit, refer to https://developers.cloudflare.com/workers/wrangler/configuration/#limits"
-  },
-  {
-    "time": "2026-09-02T15:12:16.464Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 11,
-    "status": "success",
-    "message": "抓取11条新兼职(网页抓取)"
-  },
-  {
-    "time": "2026-09-02T15:11:55.401Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🎟 抽奖标题：海口贝贝老师福利抽奖！🎁"
   }
 ]
