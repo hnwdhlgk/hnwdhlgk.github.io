@@ -1,5 +1,29 @@
 [
   {
+    "time": "2026-09-02T10:59:28.249Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-02T10:28:34.977Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无按钮"
+  },
+  {
+    "time": "2026-09-02T10:28:32.498Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 1,
+    "status": "success",
+    "message": "抓取1条新兼职(网页抓取)"
+  },
+  {
     "time": "2026-09-02T10:28:31.282Z",
     "type": "telegram",
     "channel": "@hainanchayi",
@@ -769,30 +793,6 @@
   },
   {
     "time": "2026-09-01T13:36:15.234Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-01T13:06:13.254Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🧚‍♀️ 妍妍"
-  },
-  {
-    "time": "2026-09-01T12:49:10.083Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "无按钮"
-  },
-  {
-    "time": "2026-09-01T12:35:31.041Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
     "count": 0,
