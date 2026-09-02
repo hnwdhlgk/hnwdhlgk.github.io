@@ -1,5 +1,69 @@
 [
   {
+    "time": "2026-09-02T14:03:10.659Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-02T14:02:29.659Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无按钮"
+  },
+  {
+    "time": "2026-09-02T14:02:25.098Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 6,
+    "status": "success",
+    "message": "抓取6条新兼职(网页抓取)"
+  },
+  {
+    "time": "2026-09-02T14:02:25.098Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: #海口"
+  },
+  {
+    "time": "2026-09-02T14:02:22.153Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: #海口"
+  },
+  {
+    "time": "2026-09-02T14:02:19.127Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: #海口"
+  },
+  {
+    "time": "2026-09-02T14:02:16.171Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: #海口"
+  },
+  {
+    "time": "2026-09-02T14:02:13.024Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: #海口"
+  },
+  {
     "time": "2026-09-02T14:02:07.679Z",
     "type": "telegram",
     "channel": "@hainanchayi",
@@ -729,70 +793,6 @@
   },
   {
     "time": "2026-09-01T21:52:39.155Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "无按钮"
-  },
-  {
-    "time": "2026-09-01T21:49:44.581Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "无按钮"
-  },
-  {
-    "time": "2026-09-01T21:49:13.035Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "无按钮"
-  },
-  {
-    "time": "2026-09-01T21:45:53.666Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "无按钮"
-  },
-  {
-    "time": "2026-09-01T21:45:33.140Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-01T21:43:49.542Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "无按钮"
-  },
-  {
-    "time": "2026-09-01T21:41:44.077Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "无按钮"
-  },
-  {
-    "time": "2026-09-01T21:39:14.577Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "无按钮"
-  },
-  {
-    "time": "2026-09-01T21:38:41.607Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
     "count": 0,
