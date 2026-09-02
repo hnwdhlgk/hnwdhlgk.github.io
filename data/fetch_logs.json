@@ -1,5 +1,21 @@
 [
   {
+    "time": "2026-09-02T19:01:20.765Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无按钮"
+  },
+  {
+    "time": "2026-09-02T19:00:53.908Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无按钮"
+  },
+  {
     "time": "2026-09-02T19:00:44.450Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
@@ -782,21 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "无按钮"
-  },
-  {
-    "time": "2026-09-02T14:02:25.098Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 6,
-    "status": "success",
-    "message": "抓取6条新兼职(网页抓取)"
-  },
-  {
-    "time": "2026-09-02T14:02:25.098Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: #海口"
   }
 ]
