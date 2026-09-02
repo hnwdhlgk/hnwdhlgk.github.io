@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-02T18:49:22.206Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无按钮"
+  },
+  {
     "time": "2026-09-02T18:46:44.956Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
@@ -790,13 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "无按钮（更新0条/频道消息0条/带按钮0条）"
-  },
-  {
-    "time": "2026-09-02T13:01:37.588Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: #海口"
   }
 ]
