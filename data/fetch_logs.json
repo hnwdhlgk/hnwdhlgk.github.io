@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-02T01:49:32.679Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-09-02T01:18:33.014Z",
     "type": "telegram",
     "channel": "@hainanchayi",
@@ -785,14 +793,6 @@
   },
   {
     "time": "2026-09-01T11:30:42.152Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "消息无法解析为有效兼职（标题无效）"
-  },
-  {
-    "time": "2026-09-01T11:30:39.772Z",
     "type": "telegram",
     "channel": "@hainanchayi",
     "count": 0,
