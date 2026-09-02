@@ -1,5 +1,21 @@
 [
   {
+    "time": "2026-09-02T06:54:35.243Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "消息无法解析为有效兼职（标题无效）"
+  },
+  {
+    "time": "2026-09-02T06:23:36.352Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无按钮"
+  },
+  {
     "time": "2026-09-02T06:23:33.452Z",
     "type": "telegram",
     "channel": "@hainanchayi",
@@ -777,22 +793,6 @@
   },
   {
     "time": "2026-09-01T11:34:41.403Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "消息无法解析为有效兼职（标题无效）"
-  },
-  {
-    "time": "2026-09-01T11:34:40.451Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "消息无法解析为有效兼职（标题无效）"
-  },
-  {
-    "time": "2026-09-01T11:34:39.320Z",
     "type": "telegram",
     "channel": "@hainanchayi",
     "count": 0,
