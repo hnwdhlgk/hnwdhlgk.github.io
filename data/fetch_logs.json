@@ -1,5 +1,21 @@
 [
   {
+    "time": "2026-09-02T10:28:31.282Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🎟抽奖标题：抽奖活动"
+  },
+  {
+    "time": "2026-09-02T09:57:37.052Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无按钮"
+  },
+  {
     "time": "2026-09-02T09:57:34.434Z",
     "type": "telegram",
     "channel": "@hainanchayi",
@@ -779,22 +795,6 @@
     "time": "2026-09-01T12:35:31.041Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-01T12:05:38.723Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 19,
-    "status": "success",
-    "message": "抓取19个按钮"
-  },
-  {
-    "time": "2026-09-01T12:05:37.141Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
     "count": 0,
     "status": "empty",
     "message": "无新消息"
