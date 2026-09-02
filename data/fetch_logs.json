@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-02T15:48:26.787Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "从0条消息中（0条带按钮）提取0个按钮；getUpdates无任何更新（Bot可能从未收到频道消息，或更新已被确认清除）"
+  },
+  {
     "time": "2026-09-02T15:47:20.094Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
@@ -785,14 +793,6 @@
   },
   {
     "time": "2026-09-02T11:38:29.894Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "无按钮"
-  },
-  {
-    "time": "2026-09-02T11:38:04.743Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
     "count": 0,
