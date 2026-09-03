@@ -966,17 +966,16 @@ async function loadUserPerms(){
     }
   }catch(e){
     console.log("加载用户权限失败:",e.message);
-    // 接口不存在或加载失败时，如果已确认是管理员则显示所有功能
-    if(window.isAdmin){ window._userRole='admin'; window._permsLoaded=true; }
-    else window._permsLoaded=false;
+    // 接口不存在或加载失败时，默认不显示功能（避免越权）
+    window._permsLoaded=false;
   }
 }
 // 检查是否有权限
 function hasPerm(key){
-  if(window._userRole==='superadmin' || window._userRole==='admin')return true;
+  if(window._userRole==='superadmin')return true;
   // 如果权限未加载成功，不显示功能（避免越权）
   if(window._permsLoaded===false)return false;
-  // 普通用户按照permissions字段判断
+  // admin和普通用户都按照permissions字段判断
   return (window._userPerms||[]).indexOf(key)>=0;
 }
 
