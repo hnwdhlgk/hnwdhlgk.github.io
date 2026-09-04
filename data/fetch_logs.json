@@ -1,5 +1,29 @@
 [
   {
+    "time": "2026-09-04T11:13:41.711Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-04T10:42:42.260Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 24,
+    "status": "success",
+    "message": "兜底遍历2条置顶消息(17397,17395)提取24个按钮"
+  },
+  {
+    "time": "2026-09-04T10:42:37.465Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-09-04T10:42:34.674Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -769,30 +793,6 @@
   },
   {
     "time": "2026-09-03T17:24:41.152Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-03T16:54:48.636Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 28,
-    "status": "success",
-    "message": "兜底遍历2条置顶消息(17254,17253)提取28个按钮"
-  },
-  {
-    "time": "2026-09-03T16:54:43.893Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-03T16:54:41.113Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
     "count": 0,
