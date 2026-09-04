@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-04T21:27:40.113Z",
+    "type": "on_duty",
+    "channel": "",
+    "count": 0,
+    "status": "empty",
+    "message": "未启用"
+  },
+  {
     "time": "2026-09-04T21:00:36.296Z",
     "type": "on_duty",
     "channel": "",
