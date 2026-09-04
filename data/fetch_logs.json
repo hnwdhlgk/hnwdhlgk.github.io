@@ -1,5 +1,77 @@
 [
   {
+    "time": "2026-09-04T14:00:48.301Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无最新更新且置顶消息无按钮"
+  },
+  {
+    "time": "2026-09-04T14:00:43.223Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-04T14:00:41.117Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-04T14:00:36.062Z",
+    "type": "on_duty",
+    "channel": "",
+    "count": 0,
+    "status": "error",
+    "message": "Too many subrequests by single Worker invocation. To configure this limit, refer to https://developers.cloudflare.com/workers/wrangler/configuration/#limits"
+  },
+  {
+    "time": "2026-09-04T14:00:36.062Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无最新更新且置顶消息无按钮"
+  },
+  {
+    "time": "2026-09-04T14:00:29.241Z",
+    "type": "on_duty",
+    "channel": "",
+    "count": 0,
+    "status": "error",
+    "message": "Too many subrequests by single Worker invocation. To configure this limit, refer to https://developers.cloudflare.com/workers/wrangler/configuration/#limits"
+  },
+  {
+    "time": "2026-09-04T14:00:29.241Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无最新更新且置顶消息无按钮"
+  },
+  {
+    "time": "2026-09-04T14:00:26.066Z",
+    "type": "on_duty",
+    "channel": "",
+    "count": 0,
+    "status": "error",
+    "message": "Too many subrequests by single Worker invocation. To configure this limit, refer to https://developers.cloudflare.com/workers/wrangler/configuration/#limits"
+  },
+  {
+    "time": "2026-09-04T14:00:26.066Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无最新更新且置顶消息无按钮"
+  },
+  {
     "time": "2026-09-04T13:14:43.728Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -721,78 +793,6 @@
   },
   {
     "time": "2026-09-03T20:58:41.250Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-03T20:28:42.784Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 27,
-    "status": "success",
-    "message": "兜底遍历2条置顶消息(17287,17285)提取27个按钮"
-  },
-  {
-    "time": "2026-09-03T20:28:37.644Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-03T20:28:34.164Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-03T19:57:49.539Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 27,
-    "status": "success",
-    "message": "兜底遍历2条置顶消息(17279,17277)提取27个按钮"
-  },
-  {
-    "time": "2026-09-03T19:57:44.203Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-03T19:57:41.435Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-03T19:27:49.295Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 27,
-    "status": "success",
-    "message": "兜底遍历2条置顶消息(17279,17277)提取27个按钮"
-  },
-  {
-    "time": "2026-09-03T19:27:44.333Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-03T19:27:41.798Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
     "count": 0,
