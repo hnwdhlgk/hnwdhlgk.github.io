@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-04T13:14:43.728Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-09-04T12:44:41.579Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -785,14 +793,6 @@
   },
   {
     "time": "2026-09-03T19:27:41.798Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-03T18:56:41.104Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
     "count": 0,
