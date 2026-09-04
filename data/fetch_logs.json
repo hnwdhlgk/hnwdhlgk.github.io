@@ -1,5 +1,29 @@
 [
   {
+    "time": "2026-09-04T00:32:40.916Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-04T00:01:47.739Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 4,
+    "status": "success",
+    "message": "兜底遍历1条置顶消息(17317)提取4个按钮"
+  },
+  {
+    "time": "2026-09-04T00:01:44.151Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-09-04T00:01:41.302Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -774,29 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "无按钮"
-  },
-  {
-    "time": "2026-09-03T09:43:20.690Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-03T09:43:20.690Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "消息无法解析为有效兼职（标题无效）"
-  },
-  {
-    "time": "2026-09-03T09:43:15.704Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "消息无法解析为有效兼职（标题无效）"
   }
 ]
