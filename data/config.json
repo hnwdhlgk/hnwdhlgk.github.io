@@ -1,4 +1,160 @@
 {
-  "last_fetch": 1788614011068,
-  "last_onduty": 1788614191024
+  "site_title": "海南大学兼职公开榜",
+  "site_subtitle": "安全、可靠的兼职信息平台",
+  "worker_url": "https://ndx.8851366.workers.dev",
+  "telegram": {
+    "enabled": true,
+    "tag_maps": [
+      {
+        "tag": "【老师花名】：",
+        "type": "tag",
+        "value": "标题"
+      },
+      {
+        "tag": "【专属标签】：",
+        "type": "tag",
+        "value": "标签"
+      },
+      {
+        "tag": "【区域位置】：",
+        "type": "tag",
+        "value": "三级分类"
+      },
+      {
+        "tag": "【品茶价格】：",
+        "type": "salary",
+        "value": ""
+      },
+      {
+        "tag": "【联系方式】：",
+        "type": "contact",
+        "value": ""
+      },
+      {
+        "tag": " 双向 ",
+        "type": "contact2",
+        "value": ""
+      },
+      {
+        "tag": "【教师频道】：",
+        "type": "contact3",
+        "value": ""
+      }
+    ],
+    "channels": [
+      {
+        "bot_token": "8927173297:AAFq26hSzU2qByqCX6jX7bW4K3ea6cm-7a4",
+        "channel": "@hnwdhlgk",
+        "default_category": "personal",
+        "default_status": "pending",
+        "enabled": true,
+        "target_channel": "",
+        "target_bot_token": "",
+        "tag_maps": []
+      },
+      {
+        "bot_token": "8617518116:AAEN3qthanlGwyayKWIgq00FxLGglVY28o0",
+        "channel": "@hainanchayi",
+        "default_category": "personal",
+        "default_status": "pending",
+        "enabled": true,
+        "target_channel": "",
+        "target_bot_token": "",
+        "tag_maps": []
+      }
+    ],
+    "ocr_api_key": "K84664811188957"
+  },
+  "on_duty": {
+    "enabled": true,
+    "channels": [
+      {
+        "channel": "@hnwdhldh",
+        "bot_token": "8927173297:AAFq26hSzU2qByqCX6jX7bW4K3ea6cm-7a4",
+        "enabled": true,
+        "message_ids": []
+      }
+    ]
+  },
+  "background_image": "",
+  "official_links": [],
+  "social_links": [
+    {
+      "name": "Telegram",
+      "url": "https://t.me/hnwdhlgk",
+      "icon": "",
+      "color": "#0088cc"
+    }
+  ],
+  "link_rules": [
+    {
+      "char": "@",
+      "prefix": "https://t.me/"
+    }
+  ],
+  "hero_buttons": [
+    {
+      "text": "浏览兼职",
+      "url": "#jobSection",
+      "type": "primary"
+    },
+    {
+      "text": "了解平台",
+      "url": "#aboutSection",
+      "type": "outline"
+    },
+    {
+      "text": "加入我们",
+      "url": "https://t.me/hainanxueyuan",
+      "type": "outline"
+    },
+    {
+      "text": "联系我们",
+      "url": "https://t.me/hainanguanlibot",
+      "type": "outline"
+    }
+  ],
+  "hero_title": "",
+  "hero_description": "",
+  "about_title": "",
+  "about_text": "",
+  "safety_notice": "",
+  "labels": {},
+  "form_labels": {
+    "img": "老师照片"
+  },
+  "form_placeholders": {
+    "title": "请输入老师艺名",
+    "desc": "简单自我介绍",
+    "salary": "如:800p",
+    "loc": "如:月川北区",
+    "contact": "如@hainanguanlibot",
+    "contact2": "如@hainanguanlibot",
+    "contact3": "如@hainanguanlibot 切记要@开头"
+  },
+  "forward": {
+    "channels": [
+      {
+        "name": "测试转发",
+        "sources": [
+          "https://t.me/hainanhuisuo"
+        ],
+        "target": "https://t.me/jiaoshouceshizhuanfa",
+        "bot_token": "8799802007:AAGFPGggxjDBvWb-4_fzc_rx8RpAFcIRpRo",
+        "batch_size": 10,
+        "tag_map": "",
+        "text_replace": ""
+      }
+    ],
+    "enabled": true,
+    "interval": 1
+  },
+  "fetch_interval": 30,
+  "onduty_interval": 30,
+  "last_fetch": 1788530431048,
+  "last_onduty": 1788530431048,
+  "forward_users": [
+    "12345",
+    "123"
+  ]
 }
