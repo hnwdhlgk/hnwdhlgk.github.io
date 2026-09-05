@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-05T13:18:46.821Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 20,
+    "status": "success",
+    "message": "兜底遍历2条置顶消息(17533,17532)提取20个按钮"
+  },
+  {
     "time": "2026-09-05T13:16:31.024Z",
     "type": "on_duty",
     "channel": "",
