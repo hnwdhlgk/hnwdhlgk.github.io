@@ -1,5 +1,29 @@
 [
   {
+    "time": "2026-09-06T01:28:35.089Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-06T00:57:41.251Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 11,
+    "status": "success",
+    "message": "兜底遍历2条置顶消息(17606,17604)提取11个按钮"
+  },
+  {
+    "time": "2026-09-06T00:57:36.925Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-09-06T00:57:33.965Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
