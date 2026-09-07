@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-07T11:25:34.300Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-09-07T11:00:40.982Z",
     "type": "on_duty",
     "channel": "@hnwdhldh",
@@ -790,13 +798,5 @@
     "count": 21,
     "status": "success",
     "message": "兜底遍历2条置顶消息(17662,17660)提取21个按钮"
-  },
-  {
-    "time": "2026-09-06T04:01:34.622Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
   }
 ]
