@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-07T11:00:08.015Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 7,
+    "status": "success",
+    "message": "兜底遍历1条置顶消息(17813)提取7个按钮"
+  },
+  {
     "time": "2026-09-07T10:54:39.901Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -790,13 +798,5 @@
     "count": 11,
     "status": "success",
     "message": "兜底遍历2条置顶消息(17629,17627)提取11个按钮"
-  },
-  {
-    "time": "2026-09-06T03:30:47.017Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
   }
 ]
