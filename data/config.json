@@ -151,8 +151,8 @@
   },
   "fetch_interval": 30,
   "onduty_interval": 30,
-  "last_fetch": 1788864991002,
-  "last_onduty": 1788864991002,
+  "last_fetch": 1788866851065,
+  "last_onduty": 1788866851065,
   "forward_users": [
     "12345",
     "123"
