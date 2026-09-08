@@ -1,5 +1,29 @@
 [
   {
+    "time": "2026-09-08T10:24:34.364Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-08T10:23:53.955Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 21,
+    "status": "success",
+    "message": "兜底遍历2条置顶消息(17982,17980)提取21个按钮"
+  },
+  {
+    "time": "2026-09-08T10:23:48.759Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-09-08T10:23:46.123Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -774,29 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "无新消息"
-  },
-  {
-    "time": "2026-09-07T16:52:49.858Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 2,
-    "status": "success",
-    "message": "抓取2条新兼职(网页抓取)"
-  },
-  {
-    "time": "2026-09-07T16:52:49.858Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🧚‍♀️ 蚊子"
-  },
-  {
-    "time": "2026-09-07T16:52:46.929Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🧚‍♀️ 蚊子"
   }
 ]
