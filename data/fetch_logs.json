@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-09T06:57:43.045Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 悠悠"
+  },
+  {
     "time": "2026-09-09T06:18:46.921Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -790,13 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "无新消息"
-  },
-  {
-    "time": "2026-09-08T13:30:53.729Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 23,
-    "status": "success",
-    "message": "兜底遍历2条置顶消息(18011,18010)提取23个按钮"
   }
 ]
