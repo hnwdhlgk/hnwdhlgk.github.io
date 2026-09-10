@@ -1,5 +1,45 @@
 [
   {
+    "time": "2026-09-10T14:50:29.507Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-10T14:19:28.531Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无最新更新且置顶消息无按钮"
+  },
+  {
+    "time": "2026-09-10T14:19:21.502Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-10T14:19:20.550Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 2,
+    "status": "success",
+    "message": "抓取2条新兼职(网页抓取)"
+  },
+  {
+    "time": "2026-09-10T14:19:20.550Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 漫漫"
+  },
+  {
     "time": "2026-09-10T14:19:16.915Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -755,46 +795,6 @@
     "time": "2026-09-10T05:18:30.289Z",
     "type": "telegram",
     "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-10T05:18:27.391Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-10T04:29:25.399Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-10T03:59:33.073Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 15,
-    "status": "success",
-    "message": "兜底遍历2条置顶消息(18306,18305)提取15个按钮"
-  },
-  {
-    "time": "2026-09-10T03:59:27.837Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-10T03:59:25.792Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
     "count": 0,
     "status": "empty",
     "message": "无新消息"
