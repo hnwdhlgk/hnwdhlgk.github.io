@@ -1,5 +1,29 @@
 [
   {
+    "time": "2026-09-10T19:47:26.142Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-10T19:16:22.187Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 7,
+    "status": "success",
+    "message": "兜底遍历1条置顶消息(18413)提取7个按钮"
+  },
+  {
+    "time": "2026-09-10T19:16:17.084Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-09-10T19:16:14.701Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -774,29 +798,5 @@
     "count": 0,
     "status": "error",
     "message": "Too many subrequests by single Worker invocation. To configure this limit, refer to https://developers.cloudflare.com/workers/wrangler/configuration/#limits"
-  },
-  {
-    "time": "2026-09-10T06:49:42.686Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "无最新更新且置顶消息无按钮"
-  },
-  {
-    "time": "2026-09-10T06:49:38.989Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 3,
-    "status": "success",
-    "message": "抓取3条新兼职(网页抓取)"
-  },
-  {
-    "time": "2026-09-10T06:49:38.989Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 聊天群组 ｜ 提交报告"
   }
 ]
