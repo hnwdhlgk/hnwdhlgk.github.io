@@ -1,5 +1,29 @@
 [
   {
+    "time": "2026-09-11T06:27:26.456Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-11T05:57:34.981Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 25,
+    "status": "success",
+    "message": "兜底遍历2条置顶消息(18493,18492)提取25个按钮"
+  },
+  {
+    "time": "2026-09-11T05:57:29.498Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-09-11T05:57:26.978Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -774,29 +798,5 @@
     "count": 3,
     "status": "success",
     "message": "抓取3条新兼职(网页抓取)"
-  },
-  {
-    "time": "2026-09-10T13:47:34.633Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🧚‍♀️ 漫漫"
-  },
-  {
-    "time": "2026-09-10T13:47:32.826Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🧚‍♀️ 漫漫"
-  },
-  {
-    "time": "2026-09-10T13:47:28.783Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🧚‍♀️ 漫漫"
   }
 ]
