@@ -1,5 +1,45 @@
 [
   {
+    "time": "2026-09-13T13:40:28.527Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-13T13:39:27.539Z",
+    "type": "on_duty",
+    "channel": "",
+    "count": 0,
+    "status": "error",
+    "message": "Too many subrequests by single Worker invocation. To configure this limit, refer to https://developers.cloudflare.com/workers/wrangler/configuration/#limits"
+  },
+  {
+    "time": "2026-09-13T13:39:27.175Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 135,
+    "status": "success",
+    "message": "getUpdates从10条最新消息提取135个按钮"
+  },
+  {
+    "time": "2026-09-13T13:39:22.642Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 1,
+    "status": "success",
+    "message": "抓取1条新兼职(网页抓取)"
+  },
+  {
+    "time": "2026-09-13T13:39:22.642Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🔠🔠🔠     🔠🔠     🧸🧸🧸🧸  ⬇️♥️"
+  },
+  {
     "time": "2026-09-13T13:39:17.782Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -755,46 +795,6 @@
     "time": "2026-09-12T22:03:19.467Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-12T21:33:11.040Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 119,
-    "status": "success",
-    "message": "getUpdates从24条最新消息提取119个按钮"
-  },
-  {
-    "time": "2026-09-12T21:33:08.363Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-12T21:33:05.755Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-12T21:02:24.410Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 119,
-    "status": "success",
-    "message": "getUpdates从24条最新消息提取119个按钮"
-  },
-  {
-    "time": "2026-09-12T21:02:22.341Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
     "count": 0,
     "status": "empty",
     "message": "无新消息"
