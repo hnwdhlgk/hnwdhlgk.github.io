@@ -1,5 +1,29 @@
 [
   {
+    "time": "2026-09-15T10:00:25.760Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-15T09:29:16.466Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 28,
+    "status": "success",
+    "message": "getUpdates从2条最新消息提取28个按钮"
+  },
+  {
+    "time": "2026-09-15T09:29:14.390Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-09-15T09:29:11.289Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -774,29 +798,5 @@
     "count": 1,
     "status": "success",
     "message": "指定链接抓取1条兼职: 🧚‍♀️ 朵朵"
-  },
-  {
-    "time": "2026-09-14T14:06:23.579Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🧚‍♀️ 朵朵"
-  },
-  {
-    "time": "2026-09-14T12:21:08.907Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🧚‍♀️ 朵朵"
-  },
-  {
-    "time": "2026-09-14T12:20:38.419Z",
-    "type": "on_duty",
-    "channel": "",
-    "count": 0,
-    "status": "error",
-    "message": "Too many subrequests by single Worker invocation. To configure this limit, refer to https://developers.cloudflare.com/workers/wrangler/configuration/#limits"
   }
 ]
