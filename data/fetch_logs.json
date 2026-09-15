@@ -1,5 +1,53 @@
 [
   {
+    "time": "2026-09-15T09:29:11.289Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-15T09:28:27.243Z",
+    "type": "on_duty",
+    "channel": "",
+    "count": 0,
+    "status": "error",
+    "message": "Too many subrequests by single Worker invocation. To configure this limit, refer to https://developers.cloudflare.com/workers/wrangler/configuration/#limits"
+  },
+  {
+    "time": "2026-09-15T09:28:26.953Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 28,
+    "status": "success",
+    "message": "getUpdates从2条最新消息提取28个按钮"
+  },
+  {
+    "time": "2026-09-15T09:28:21.297Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-15T09:28:18.621Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 2,
+    "status": "success",
+    "message": "抓取2条新兼职(网页抓取)"
+  },
+  {
+    "time": "2026-09-15T09:28:18.621Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 小池"
+  },
+  {
     "time": "2026-09-15T09:28:14.114Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -750,53 +798,5 @@
     "count": 0,
     "status": "error",
     "message": "Too many subrequests by single Worker invocation. To configure this limit, refer to https://developers.cloudflare.com/workers/wrangler/configuration/#limits"
-  },
-  {
-    "time": "2026-09-14T12:20:38.419Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 0,
-    "status": "empty",
-    "message": "无最新更新且置顶消息无按钮"
-  },
-  {
-    "time": "2026-09-14T12:20:35.075Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-14T12:20:34.167Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 3,
-    "status": "success",
-    "message": "抓取3条新兼职(网页抓取)"
-  },
-  {
-    "time": "2026-09-14T12:20:34.167Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🧚‍♀️ 朵朵"
-  },
-  {
-    "time": "2026-09-14T12:20:32.389Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🧚‍♀️ 朵朵"
-  },
-  {
-    "time": "2026-09-14T12:20:28.310Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🧚‍♀️ 朵朵"
   }
 ]
