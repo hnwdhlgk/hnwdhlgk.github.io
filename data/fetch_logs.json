@@ -1,5 +1,61 @@
 [
   {
+    "time": "2026-09-15T14:13:05.348Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-15T14:12:33.977Z",
+    "type": "on_duty",
+    "channel": "",
+    "count": 0,
+    "status": "error",
+    "message": "Too many subrequests by single Worker invocation. To configure this limit, refer to https://developers.cloudflare.com/workers/wrangler/configuration/#limits"
+  },
+  {
+    "time": "2026-09-15T14:12:33.977Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无最新更新且置顶消息无按钮"
+  },
+  {
+    "time": "2026-09-15T14:12:30.268Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 3,
+    "status": "success",
+    "message": "抓取3条新兼职(网页抓取)"
+  },
+  {
+    "time": "2026-09-15T14:12:30.268Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 聊天群组 ｜ 提交报告"
+  },
+  {
+    "time": "2026-09-15T14:12:27.395Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 聊天群组 ｜ 提交报告"
+  },
+  {
+    "time": "2026-09-15T14:12:24.487Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 聊天群组 ｜ 提交报告"
+  },
+  {
     "time": "2026-09-15T14:12:18.006Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -737,62 +793,6 @@
   },
   {
     "time": "2026-09-15T04:12:22.032Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-15T04:12:17.386Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-14T16:39:19.425Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-14T16:09:24.062Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 127,
-    "status": "success",
-    "message": "getUpdates从13条最新消息提取127个按钮"
-  },
-  {
-    "time": "2026-09-14T16:09:21.497Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-14T16:09:19.193Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-14T15:38:24.167Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 107,
-    "status": "success",
-    "message": "getUpdates从13条最新消息提取107个按钮"
-  },
-  {
-    "time": "2026-09-14T15:38:22.278Z",
     "type": "telegram",
     "channel": "@hainanchayi",
     "count": 0,
