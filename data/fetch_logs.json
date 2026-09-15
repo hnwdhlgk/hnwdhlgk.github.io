@@ -1,5 +1,53 @@
 [
   {
+    "time": "2026-09-15T09:27:24.348Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 小池"
+  },
+  {
+    "time": "2026-09-15T08:56:21.706Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 2,
+    "status": "success",
+    "message": "getUpdates从1条最新消息提取2个按钮"
+  },
+  {
+    "time": "2026-09-15T08:56:16.946Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-15T08:56:16.244Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 3,
+    "status": "success",
+    "message": "抓取3条新兼职(网页抓取)"
+  },
+  {
+    "time": "2026-09-15T08:56:16.244Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 小池"
+  },
+  {
+    "time": "2026-09-15T08:56:14.455Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 小池"
+  },
+  {
     "time": "2026-09-15T08:56:09.675Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -750,53 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "无新消息"
-  },
-  {
-    "time": "2026-09-14T11:17:25.579Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 130,
-    "status": "success",
-    "message": "getUpdates从16条最新消息提取130个按钮"
-  },
-  {
-    "time": "2026-09-14T11:17:23.471Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-14T11:17:18.853Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-14T10:46:26.424Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 127,
-    "status": "success",
-    "message": "getUpdates从16条最新消息提取127个按钮"
-  },
-  {
-    "time": "2026-09-14T10:46:21.539Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 3,
-    "status": "success",
-    "message": "抓取3条新兼职(网页抓取)"
-  },
-  {
-    "time": "2026-09-14T10:46:21.539Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 聊天群组 ｜ 提交报告"
   }
 ]
