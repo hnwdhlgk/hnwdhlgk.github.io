@@ -1,5 +1,53 @@
 [
   {
+    "time": "2026-09-17T16:30:17.097Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 陈香香"
+  },
+  {
+    "time": "2026-09-17T16:00:14.389Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 86,
+    "status": "success",
+    "message": "getUpdates从7条最新消息提取86个按钮"
+  },
+  {
+    "time": "2026-09-17T16:00:08.869Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-17T16:00:08.075Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 3,
+    "status": "success",
+    "message": "抓取3条新兼职(网页抓取)"
+  },
+  {
+    "time": "2026-09-17T16:00:08.075Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 陈香香"
+  },
+  {
+    "time": "2026-09-17T16:00:06.266Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 陈香香"
+  },
+  {
     "time": "2026-09-17T16:00:01.868Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -750,53 +798,5 @@
     "count": 100,
     "status": "success",
     "message": "getUpdates从9条最新消息提取100个按钮"
-  },
-  {
-    "time": "2026-09-16T19:43:08.642Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-16T19:43:05.347Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-16T19:12:24.363Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 107,
-    "status": "success",
-    "message": "getUpdates从11条最新消息提取107个按钮"
-  },
-  {
-    "time": "2026-09-16T19:12:21.766Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-16T19:12:18.901Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-16T18:41:12.708Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 114,
-    "status": "success",
-    "message": "getUpdates从9条最新消息提取114个按钮"
   }
 ]
