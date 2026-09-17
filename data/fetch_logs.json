@@ -1,5 +1,29 @@
 [
   {
+    "time": "2026-09-17T01:18:10.466Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-17T00:48:14.924Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 106,
+    "status": "success",
+    "message": "getUpdates从15条最新消息提取106个按钮"
+  },
+  {
+    "time": "2026-09-17T00:48:12.739Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-09-17T00:48:10.116Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -769,30 +793,6 @@
   },
   {
     "time": "2026-09-16T00:46:05.474Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-16T00:15:22.794Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 63,
-    "status": "success",
-    "message": "getUpdates从6条最新消息提取63个按钮"
-  },
-  {
-    "time": "2026-09-16T00:15:20.787Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-16T00:15:18.481Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
     "count": 0,
