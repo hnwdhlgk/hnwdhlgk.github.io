@@ -1,5 +1,29 @@
 [
   {
+    "time": "2026-09-17T22:08:08.691Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-17T21:38:02.068Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 96,
+    "status": "success",
+    "message": "getUpdates从13条最新消息提取96个按钮"
+  },
+  {
+    "time": "2026-09-17T21:38:00.175Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-09-17T21:37:57.553Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -771,30 +795,6 @@
     "time": "2026-09-17T03:52:00.318Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-17T03:51:21.763Z",
-    "type": "on_duty",
-    "channel": "",
-    "count": 0,
-    "status": "error",
-    "message": "Too many subrequests by single Worker invocation. To configure this limit, refer to https://developers.cloudflare.com/workers/wrangler/configuration/#limits"
-  },
-  {
-    "time": "2026-09-17T03:51:21.503Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 105,
-    "status": "success",
-    "message": "getUpdates从19条最新消息提取105个按钮"
-  },
-  {
-    "time": "2026-09-17T03:51:19.618Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
     "count": 0,
     "status": "empty",
     "message": "无新消息"
