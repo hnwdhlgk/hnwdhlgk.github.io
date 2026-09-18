@@ -1,5 +1,29 @@
 [
   {
+    "time": "2026-09-18T11:21:15.881Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-18T10:50:04.701Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 103,
+    "status": "success",
+    "message": "getUpdates从14条最新消息提取103个按钮"
+  },
+  {
+    "time": "2026-09-18T10:50:02.272Z",
+    "type": "telegram",
+    "channel": "@hainanchayi",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-09-18T10:49:59.895Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -771,30 +795,6 @@
     "time": "2026-09-17T17:31:59.834Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-17T17:02:03.585Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🧚‍♀️ 陈香香"
-  },
-  {
-    "time": "2026-09-17T16:32:14.021Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 97,
-    "status": "success",
-    "message": "getUpdates从9条最新消息提取97个按钮"
-  },
-  {
-    "time": "2026-09-17T16:32:08.095Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
     "count": 0,
     "status": "empty",
     "message": "无新消息"
