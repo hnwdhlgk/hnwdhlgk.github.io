@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-20T22:42:08.868Z",
+  "updated_at": "2026-09-20T23:13:17.513Z",
   "channels": [
     "@hnwdhldh"
   ],
@@ -8,13 +8,13 @@
       "text": "以下为海口可约老师",
       "url": "https://t.me/hnwdhlgk",
       "source": "@hnwdhldh",
-      "message_id": 19456
+      "message_id": 19462
     },
     {
       "text": "✅ 棠棠│p3│评5",
       "url": "https://t.me/hnwdhlgk/10399",
       "source": "@hnwdhldh",
-      "message_id": 19456
+      "message_id": 19462
     },
     {
       "text": "以下为三亚可约老师",
@@ -98,25 +98,25 @@
       "text": "✅ 朵朵│p6│评0",
       "url": "https://t.me/hnwdhlgk/10595",
       "source": "@hnwdhldh",
-      "message_id": 19456
+      "message_id": 19462
     },
     {
       "text": "✅ 兔兔│p9│评37",
       "url": "https://t.me/hnwdhlgk/786",
       "source": "@hnwdhldh",
-      "message_id": 19456
+      "message_id": 19462
     },
     {
       "text": "✅ 小果冻│p6│评18",
       "url": "https://t.me/hnwdhlgk/10390",
       "source": "@hnwdhldh",
-      "message_id": 19456
+      "message_id": 19462
     },
     {
       "text": "✅ 悠悠│p8│评2",
       "url": "https://t.me/hnwdhlgk/10527",
       "source": "@hnwdhldh",
-      "message_id": 19456
+      "message_id": 19462
     },
     {
       "text": "✅ 珊珊│p10│评66",
@@ -161,28 +161,10 @@
       "message_id": 19460
     },
     {
-      "text": "✅ 小楸│p8│评22",
-      "url": "https://t.me/hnwdhlgk/9067",
-      "source": "@hnwdhldh",
-      "message_id": 19458
-    },
-    {
-      "text": "✅ 甜甜│p8│评69",
-      "url": "https://t.me/hnwdhlgk/208",
-      "source": "@hnwdhldh",
-      "message_id": 19458
-    },
-    {
-      "text": "⬅️上一页",
-      "url": "callback:botTimeSend-TS176052711357-1-10",
-      "source": "@hnwdhldh",
-      "message_id": 19458
-    },
-    {
       "text": "点击查看所有认证老师",
       "url": "https://t.me/hnwdhlgk",
       "source": "@hnwdhldh",
-      "message_id": 19456
+      "message_id": 19462
     }
   ]
 }
