@@ -1,5 +1,45 @@
 [
   {
+    "time": "2026-09-21T10:28:17.683Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 小冰"
+  },
+  {
+    "time": "2026-09-21T09:57:18.728Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 83,
+    "status": "success",
+    "message": "getUpdates从23条最新消息提取83个按钮"
+  },
+  {
+    "time": "2026-09-21T09:57:15.623Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 3,
+    "status": "success",
+    "message": "抓取3条新兼职(网页抓取)"
+  },
+  {
+    "time": "2026-09-21T09:57:15.623Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 小冰"
+  },
+  {
+    "time": "2026-09-21T09:57:13.544Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 小冰"
+  },
+  {
     "time": "2026-09-21T09:57:08.718Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -755,46 +795,6 @@
     "time": "2026-09-20T11:10:17.943Z",
     "type": "telegram",
     "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-20T11:10:15.074Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-19T18:03:42.556Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-19T17:33:17.565Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 102,
-    "status": "success",
-    "message": "getUpdates从11条最新消息提取102个按钮"
-  },
-  {
-    "time": "2026-09-19T17:33:16.054Z",
-    "type": "telegram",
-    "channel": "@hainanchayi",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-19T17:33:14.533Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
     "count": 0,
     "status": "empty",
     "message": "无新消息"
