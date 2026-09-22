@@ -1,5 +1,45 @@
 [
   {
+    "time": "2026-09-22T09:48:18.252Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 小爱"
+  },
+  {
+    "time": "2026-09-22T09:17:21.953Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 134,
+    "status": "success",
+    "message": "getUpdates从23条最新消息提取134个按钮"
+  },
+  {
+    "time": "2026-09-22T09:17:18.328Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 3,
+    "status": "success",
+    "message": "抓取3条新兼职(网页抓取)"
+  },
+  {
+    "time": "2026-09-22T09:17:18.328Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 小爱"
+  },
+  {
+    "time": "2026-09-22T09:17:16.098Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 小爱"
+  },
+  {
     "time": "2026-09-22T09:17:12.323Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -758,45 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "无新消息"
-  },
-  {
-    "time": "2026-09-21T06:54:13.648Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 95,
-    "status": "success",
-    "message": "getUpdates从24条最新消息提取95个按钮"
-  },
-  {
-    "time": "2026-09-21T06:54:11.121Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-21T06:23:18.093Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 95,
-    "status": "success",
-    "message": "getUpdates从24条最新消息提取95个按钮"
-  },
-  {
-    "time": "2026-09-21T06:23:15.263Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-21T05:52:08.964Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 89,
-    "status": "success",
-    "message": "getUpdates从23条最新消息提取89个按钮"
   }
 ]
