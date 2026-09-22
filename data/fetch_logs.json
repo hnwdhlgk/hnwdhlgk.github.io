@@ -1,5 +1,45 @@
 [
   {
+    "time": "2026-09-22T09:49:10.906Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-22T09:48:25.013Z",
+    "type": "on_duty",
+    "channel": "",
+    "count": 0,
+    "status": "error",
+    "message": "Too many subrequests by single Worker invocation. To configure this limit, refer to https://developers.cloudflare.com/workers/wrangler/configuration/#limits"
+  },
+  {
+    "time": "2026-09-22T09:48:25.013Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 0,
+    "status": "empty",
+    "message": "无最新更新且置顶消息无按钮"
+  },
+  {
+    "time": "2026-09-22T09:48:21.781Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 2,
+    "status": "success",
+    "message": "抓取2条新兼职(网页抓取)"
+  },
+  {
+    "time": "2026-09-22T09:48:21.781Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 小爱"
+  },
+  {
     "time": "2026-09-22T09:48:18.252Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -758,45 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "无最新更新且置顶消息无按钮"
-  },
-  {
-    "time": "2026-09-21T09:26:35.662Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 3,
-    "status": "success",
-    "message": "抓取3条新兼职(网页抓取)"
-  },
-  {
-    "time": "2026-09-21T09:26:35.662Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🧚‍♀️ 小冰"
-  },
-  {
-    "time": "2026-09-21T09:26:33.519Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🧚‍♀️ 小冰"
-  },
-  {
-    "time": "2026-09-21T09:26:29.966Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🧚‍♀️ 小冰"
-  },
-  {
-    "time": "2026-09-21T07:24:06.712Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
   }
 ]
