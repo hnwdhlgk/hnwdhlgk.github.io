@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-23T01:35:10.672Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-09-23T01:04:06.366Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -790,13 +798,5 @@
     "count": 97,
     "status": "success",
     "message": "getUpdates从18条最新消息提取97个按钮"
-  },
-  {
-    "time": "2026-09-22T00:37:06.194Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
   }
 ]
