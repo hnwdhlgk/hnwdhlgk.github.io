@@ -1,5 +1,45 @@
 [
   {
+    "time": "2026-09-29T12:19:29.545Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 宛如"
+  },
+  {
+    "time": "2026-09-29T11:49:32.830Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 69,
+    "status": "success",
+    "message": "getUpdates从25条最新消息提取69个按钮"
+  },
+  {
+    "time": "2026-09-29T11:49:29.248Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 3,
+    "status": "success",
+    "message": "抓取3条新兼职(网页抓取)"
+  },
+  {
+    "time": "2026-09-29T11:49:29.248Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 宛如"
+  },
+  {
+    "time": "2026-09-29T11:49:27.807Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 宛如"
+  },
+  {
     "time": "2026-09-29T11:49:24.296Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -758,45 +798,5 @@
     "count": 0,
     "status": "empty",
     "message": "无新消息"
-  },
-  {
-    "time": "2026-09-28T08:59:39.818Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 81,
-    "status": "success",
-    "message": "getUpdates从25条最新消息提取81个按钮"
-  },
-  {
-    "time": "2026-09-28T08:59:37.062Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-28T08:28:40.861Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 81,
-    "status": "success",
-    "message": "getUpdates从25条最新消息提取81个按钮"
-  },
-  {
-    "time": "2026-09-28T08:28:38.231Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-28T07:58:38.906Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 75,
-    "status": "success",
-    "message": "getUpdates从24条最新消息提取75个按钮"
   }
 ]
