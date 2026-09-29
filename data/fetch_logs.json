@@ -1,5 +1,45 @@
 [
   {
+    "time": "2026-09-29T12:49:42.212Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 宛如"
+  },
+  {
+    "time": "2026-09-29T12:19:40.145Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 69,
+    "status": "success",
+    "message": "getUpdates从25条最新消息提取69个按钮"
+  },
+  {
+    "time": "2026-09-29T12:19:35.561Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 3,
+    "status": "success",
+    "message": "抓取3条新兼职(网页抓取)"
+  },
+  {
+    "time": "2026-09-29T12:19:35.561Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 宛如"
+  },
+  {
+    "time": "2026-09-29T12:19:33.415Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 1,
+    "status": "success",
+    "message": "指定链接抓取1条兼职: 🧚‍♀️ 宛如"
+  },
+  {
     "time": "2026-09-29T12:19:29.545Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -758,45 +798,5 @@
     "count": 94,
     "status": "success",
     "message": "getUpdates从25条最新消息提取94个按钮"
-  },
-  {
-    "time": "2026-09-28T11:01:49.298Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-28T10:31:35.751Z",
-    "type": "on_duty",
-    "channel": "@hnwdhldh",
-    "count": 91,
-    "status": "success",
-    "message": "getUpdates从25条最新消息提取91个按钮"
-  },
-  {
-    "time": "2026-09-28T10:31:32.209Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-28T10:01:19.384Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
-  },
-  {
-    "time": "2026-09-28T09:30:54.143Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
   }
 ]
