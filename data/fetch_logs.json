@@ -1,5 +1,21 @@
 [
   {
+    "time": "2026-09-30T15:35:29.595Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
+    "time": "2026-09-30T15:04:48.556Z",
+    "type": "on_duty",
+    "channel": "@hnwdhldh",
+    "count": 85,
+    "status": "success",
+    "message": "getUpdates从24条最新消息提取85个按钮"
+  },
+  {
     "time": "2026-09-30T15:04:45.151Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -782,21 +798,5 @@
     "count": 69,
     "status": "success",
     "message": "getUpdates从25条最新消息提取69个按钮"
-  },
-  {
-    "time": "2026-09-29T12:19:35.561Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 3,
-    "status": "success",
-    "message": "抓取3条新兼职(网页抓取)"
-  },
-  {
-    "time": "2026-09-29T12:19:35.561Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 1,
-    "status": "success",
-    "message": "指定链接抓取1条兼职: 🧚‍♀️ 宛如"
   }
 ]
