@@ -1,5 +1,13 @@
 [
   {
+    "time": "2026-09-30T11:29:44.475Z",
+    "type": "telegram",
+    "channel": "@hnwdhlgk",
+    "count": 0,
+    "status": "empty",
+    "message": "无新消息"
+  },
+  {
     "time": "2026-09-30T10:59:36.920Z",
     "type": "telegram",
     "channel": "@hnwdhlgk",
@@ -790,13 +798,5 @@
     "count": 1,
     "status": "success",
     "message": "指定链接抓取1条兼职: 🧚‍♀️ 宛如"
-  },
-  {
-    "time": "2026-09-29T11:17:35.247Z",
-    "type": "telegram",
-    "channel": "@hnwdhlgk",
-    "count": 0,
-    "status": "empty",
-    "message": "无新消息"
   }
 ]
